@@ -1,0 +1,27 @@
+\setglossarystyle{listgroup}   % Start from the listgroup style
+
+\setlist[description]{leftmargin=!, labelwidth=10em} % Fixed width for second column
+\renewcommand{\glsnamefont}[1]{\textmd{#1}}          % Regular font for acronym
+
+% large letters with spacing
+\renewcommand*{\glsgroupheading}[1]{
+    \item[\Large{\parbox{\textwidth}{\glsgetgrouptitle{#1}\vspace{2mm}}}]
+}
+
+% increase spacing after all acronyms with same initial
+\renewcommand*{\glsgroupskip}{
+    \vspace{1.5cm}
+}
+
+% reduce spacing between acronyms
+\renewcommand*{\glspostdescription}{
+    \vspace{-0.25cm}
+}
+
+% Print the glossary using the new style
+\printglossary[type=\acronymtype, title={Lijst van afkortingen}]
+%\printglossary[type=\acronymtype, title={List of Acronyms}] % English
+
+\glsaddallunused[\acronymtype]                              % make sure all unused acronyms are in list
+
+\setlist[description]{style=standard} % reset list settings back to default

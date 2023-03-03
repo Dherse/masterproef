@@ -1,0 +1,33 @@
+
+% Download the cover sheet from Plato
+\includepdf{0_preface/title_page.pdf}
+
+\include{0_preface/01_acknowledgment}
+\include{0_preface/02_disclaimer}
+\include{0_preface/03_abstract}
+% TODO: \include{chapters/4_extended_abstract}
+
+\tableofcontents\newpage
+\listoffigures\newpage
+\listoftables\newpage
+
+\include{0_preface/05_acronyms}
+\listoflistings\newpage
+
+%
+% Include the main chapters of the thesis below
+% Note: it's best to avoid spaces in filenames as Latex might complain about them.
+%
+\mainmatter
+\pagestyle{fancy} % Use header
+% \include{chapters/6_introduction}
+% \\include{chapters/7_chapter_2}
+% \\include{chapters/7_chapter_3}
+% \\include{chapters/7_chapter_4}
+% \\include{chapters/8_conclusion}
+% \\include{chapters/9_bibliography}
+
+\pagestyle{numberless} 
+\pagestyle{empty}
+% \\include{chapters/10_appendices}
+

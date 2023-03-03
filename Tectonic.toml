@@ -1,0 +1,8 @@
+[doc]
+name = 'masteproef'
+bundle = 'https://data1.fullyjustified.net/tlextras-2022.0r0.tar'
+
+[[output]]
+name = 'master_thesis'
+type = 'pdf'
+shell_escape = true

@@ -1,0 +1,168 @@
+%
+% Master thesis template for Ghent University (2021)
+%
+%
+%  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+%  !!        MAKE SURE TO SET XeLaTex AS LATEX ENGINE        !!
+%  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+%  !! For overleaf:                                          !!
+%  !!     1. click gear icon in top right                    !!
+%  !!     2. select `XeLaTex` in "latex engine"              !!
+%  !!     3. click "save project settings"                   !!
+%  !!                                                        !!
+%  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+%
+%
+%  History
+%    2014         Doctoral Thesis of Bruno Volckaert
+%    2017         Adapted to master thesis by Jerico Moeyersons
+%    2018         Cleanup by Merlijn Sebrechts
+%    2021         Update by Marleen Denert and Merlijn Sebrechts with feedback from Leen Pollefliet
+%    2022         Update by Merlijn Sebrechts
+%
+%  Latest version
+%    https://github.com/galgalesh/masterproef-template
+%
+
+% Note: remove `openany` for printed version
+\documentclass[11pt,a4paper,openany,english]{book}
+\usepackage[a4paper,includeheadfoot,margin=2.50cm]{geometry}
+
+\renewcommand{\baselinestretch}{1.2}  % stretch horizontal space between everything
+
+\usepackage[hyphens]{url} % Break line on hyphens in long urls
+\usepackage{graphicx}
+\graphicspath{{images/}}
+\usepackage{pdfpages}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[toc,page]{appendix}
+\usepackage{fontspec}
+\usepackage[T1]{fontenc}
+
+% Don't indent table of contents, list of figures, and list of tables
+\usepackage{tocloft}
+\setlength{\cftsecindent}{0pt}    % Remove indent for \section in Table of Contents
+\setlength{\cftsubsecindent}{0pt} % Remove indent for \subsection in Table of Contents
+\setlength{\cftfigindent}{0pt}    % remove indentation from figures in List of Figures
+\setlength{\cfttabindent}{0pt}    % remove indentation from tables in List of Tables
+
+\usepackage{parskip} % Add space between two paragraphs and don't indent the first line of the paragraph
+
+% To generate fake lorem ipsum text
+\usepackage{lipsum}
+
+
+%
+% UGent style guide
+%
+\setmainfont[
+	Path=fonts/,
+	BoldFont      =UGentPannoText-SemiBold.ttf,
+	ItalicFont    =UGentPannoText-Normal.ttf,
+	ItalicFeatures={FakeSlant=0.3},
+	BoldItalicFont=UGentPannoText-SemiBold.ttf,
+    BoldItalicFeatures={FakeSlant=0.3},
+]{UGentPannoText-Normal.ttf}
+\urlstyle{same}
+
+% Style Chapter titles so they have the chapter number in grey.
+\usepackage{color}
+\definecolor{chaptergrey}{rgb}{0.5,0.5,0.5}
+\usepackage[explicit, pagestyles]{titlesec}
+\titleformat{\chapter}[display]{\bfseries}{\color{chaptergrey}\fontfamily{pbk}\fontsize{80pt}{100pt}\selectfont\thechapter}{0pt}{\Huge #1}
+\titlespacing*{\chapter}{0pt}{-80pt}{30pt}
+
+
+% Header showing chapter number and title and footer showing page number
+\newpagestyle{fancy}{%
+  \sethead{} % left
+          {} % center
+          {\Large\thechapter~~\chaptertitle} %right
+  \setfoot{} % left
+          {\thepage} % center
+          {} %right
+  \setheadrule{0pt}
+}
+\pagestyle{fancy}
+
+% Header showing chapter title and footer showing page number
+\newpagestyle{numberless}{%
+  \sethead{} % left
+          {} % center
+          {\Large\chaptertitle} %right
+  \setfoot{} % left
+          {\thepage} % center
+          {} %right
+  \setheadrule{0pt}
+}
+
+% We use the package `minted` for modern code highlighting.
+\usepackage{shellesc}
+\usepackage[newfloat,chapter]{minted}
+% \SetupFloatingEnvironment{listing}{name=Codefragment, listname=Lijst van codefragmenten}
+\SetupFloatingEnvironment{listing}{name=Code Fragment, listname=List of Code Fragments} % lang:english
+
+
+\PassOptionsToPackage{hyphens}{url}
+\usepackage{hyperref}
+\usepackage{url}
+
+\usepackage[numbers]{natbib}       % For bibliography; use numeric citations
+\bibliographystyle{IEEEtran}
+\usepackage[nottoc]{tocbibind}     % Put Bibliography in ToC
+
+%
+% Defines \checkmark to draw a checkmark
+%
+\usepackage{tikz}
+\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
+
+%
+% For tables
+%
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{ragged2e}  % for '\RaggedRight' macro (allows hyphenation)
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+%
+% Support for splitting Dutch words correctly
+%
+\usepackage{polyglossia}
+% \setdefaultlanguage[babelshorthands=true]{dutch} % lang:dutch
+\setmainlanguage{english}                       % lang:english
+
+% Manually specify additional hypnations for words
+%
+% Translated strings. If these aren't set, the English words are used.
+%
+% \addto\captionsenglish{\renewcommand{\contentsname}{Inhoudsopgave}}   % lang:dutch
+
+% Fix error "Package hyperref Warning: The anchor of a bookmark and its parent's must not be the same. Added a new anchor on ..."
+\newcommand{\sectionbreak}{\phantomsection}
+
+% \renewcommand\appendixtocname{Bijlagen}                     % lang:dutch
+% \renewcommand\appendixpagename{Bijlagen}                    % lang:dutch
+
+
+\usepackage[toc,acronym]{glossaries}  % for list of acronyms
+\makeglossaries                       % start internal list of acronyms
+
+%
+% Set the title and your name
+%
+\input{config/personal_data}
+
+%
+%  END OF HEADER
+%  The actual latex document content starts here.
+%
+\begin{document}
+\frontmatter
+\pagestyle{empty}
+
