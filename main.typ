@@ -13,66 +13,95 @@
 = Acknowledgements
 I would like to give my most heartfelt thanks to the best friend one could ever ask for: Thomas Heuschling for his patience,
 friendship, guidance and all of the amazing moments we spent throughout our studies. I would also thank Prof. Wim Bogaerts and
-Prof. Dirk Stroobandt for their time, patience and trust in applying for an FWO proposal to extend this Master Thesis. And finally,
-I would like to thank Alexandre Bourbeillon for his help and advices for the creation of the grammar, parser and compiler of the PHÔS
-programming language.
+Prof. Dirk Stroobandt for their time, patience and trust in applying for an #emph[FWO] proposal to extend this Master Thesis. I also would like to thank Alexandre Bourbeillon for his help and advices for the creation of the grammar, parser and compiler of the PHÔS programming language and being a great friend for over a decade. Finally, I would like to thank my parents for their support and listening to my endless rambling about photonics and programming.
 
-#pagebreak()
+#pagebreak(weak: true)
 = Remark on the master's dissertation and the oral presentation
 This master's dissertation is part of an exam. Any comments formulated by the assessment committee during the oral
 presentation of the master's dissertation are not included in this text.
 
-#pagebreak()
+#pagebreak(weak: true)
 = Abstract
 
 #lorem(30)
 
 // Table of contents
-#pagebreak()
-#outline(title: "Table of contents", indent: true)
+#pagebreak(weak: true)
+#outline(title: "Table of contents", indent: true, depth: 3)
 
-#pagebreak()
-#include "./content/glossary.typ"
-#list_of_glossary_entries()
+#pagebreak(weak: true)
+#show: glossary.with((
+    (key: "prg", short: "PRG", long: "Photonics Research Group"),
+    (key: "fpga", short: "FPGA", long: "Field Programmable Gate Array"),
+    (key: "cpld", short: "CPLD", long: "Complex Programmable Logic Device"),
+    (key: "spice", short: "SPICE", long: "Simulation Program with Integrated Circuit Emphasis"),
+    (key: "phos", short: "PHÔS", long: "Photonic Hardware Description Language"),
+    (key: "pic", short: "PIC", long: "Photonic Integrated Circuit"),
+    (key: "rf", short: "RF", long: "Radio Frequency"),
+    (key: "verilog-ams", short: "Verilog-AMS", long: "Verilog for Analog and Mixed Signal"),
+    (
+        key: "verilog-a", 
+        short: "Verilog-A", 
+        long: [ A continuous-time subset of #gloss("verilog-ams") ]
+    ),
+    (key: "fir", short: "FIR", long: "Finite Impulse Response"),
+    (key: "iir", short: "IIR", long: "Infinite Impulse Response"),
+    (key: "dsp", short: "DSP", long: "Digital Signal Processor"),
+    (key: "fppga", short: "FPPGA", long: "Field Programmable Photonic Gate Array"),
+    (key: "2x2", short: "2x2 tunable coupler", long: "A tunable coupler with two inputs and two outputs"),
+    (key: "mems", short: "MEMS", long: "Microelectromechanical Systems"),
+    (key: "hdl", short: "HDL", long: "Hardware Description Language"),
+    (key: "rtl", short: "RTL", long: "Register Transfer Level"),
+    (key: "asic", short: "ASIC", long: "Application Specific Integrated Circuit"),
+    (key: "api", short: "API", long: "Application Programming Interface"),
+    (key: "dsl", short: "DSL", long: "Domain Specific Language"),
+    (key: "jtag", short: "JTAG", long: "Joint Test Action Group - A standard for testing integrated circuits"),
+    (key: "sql", short: "SQL", long: "Structured Query Language"),
+    (key: "ide", short: "IDE", long: "Integrated Development Environment"),
+    (key: "lsp", short: "LSP", long: "Language Server Protocol"),
+    (key: "tdd", short: "TDD", long: "Test Driven Development"),
+    (key: "http", short: "HTTP", long: "Hypertext Transfer Protocol -- the protocol used for web navigation"),
+    (key: "ip", short: "IP", long: "Intellectual Property"),
+))
 
-#pagebreak()
-#list_of_figures()
+#pagebreak(weak: true)
+#outline(title: "List of figures", target: figure.where(kind: image))
 
-#pagebreak()
-#list_of_tables()
+#pagebreak(weak: true)
+#outline(title: "List of tables", target: figure.where(kind: table))
 
-#pagebreak()
-#list_of_codes()
+#pagebreak(weak: true)
+#outline(title: "List of listings", target: figure.where(kind: raw))
 
 #show: content.with()
 
 #include "./content/0_introduction.typ"
 
-#pagebreak()
+#pagebreak(weak: true)
 #include "./content/1_background.typ"
 
-#pagebreak()
+#pagebreak(weak: true)
 #include "./content/2_ecosystem.typ"
 
-#pagebreak()
+#pagebreak(weak: true)
 #include "./content/3_translation.typ"
 
-#pagebreak()
+#pagebreak(weak: true)
 #include "./content/4_phos.typ"
 
-#pagebreak()
+#pagebreak(weak: true)
 #include "./content/5_examples.typ"
 
-#pagebreak()
+#pagebreak(weak: true)
 #include "./content/6_extending.typ"
 
-#pagebreak()
+#pagebreak(weak: true)
 #include "./content/7_simu.typ"
 
-#pagebreak()
+#pagebreak(weak: true)
 #include "./content/8_conclusion.typ"
 
-#pagebreak()
+#pagebreak(weak: true)
 #show bibliography: it => {
     set heading(outlined: false)
     show heading: it => [

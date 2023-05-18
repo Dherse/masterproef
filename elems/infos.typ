@@ -1,9 +1,15 @@
-#let info_settings = (
+#let info-settings = (
     info: (
         prefix: none,
         icon: "circle-info",
         fill_color: rgb("#e6f7ff"),
         stroke_color: rgb("#91d5ff"),
+    ),
+    definition: (
+        prefix: [ #underline(smallcaps[*Definition*]) #smallcaps[:]],
+        icon: "highlighter-solid",
+        fill_color: rgb("#B5E8E1").lighten(60%),
+        stroke_color: rgb("#B5E8E1").darken(40%),
     ),
     question: (
         prefix: none,
@@ -17,6 +23,18 @@
         fill_color: rgb("#228B22").lighten(90%),
         stroke_color: rgb("#228B22").darken(20%),
     ),
+    conclusion: (
+        prefix: none,
+        icon: "lightbulb-solid",
+        fill_color: rgb("#228B22").lighten(90%),
+        stroke_color: rgb("#228B22").darken(20%),
+    ),
+    good: (
+        prefix: none,
+        icon: "circle-check",
+        fill_color: rgb("#FFD700").lighten(90%),
+        stroke_color: rgb("#FFD700").darken(20%),
+    ),
     note: (
         prefix: [ *Remarks:* ],
         icon: "note-sticky",
@@ -25,10 +43,15 @@
     ),
 );
 
-#let info_stroke(kind: "info") = info_settings.at(kind).stroke_color
+#let info-stroke(kind: "good") = info-settings.at(kind).stroke_color
 
-#let info_box(body, kind: "info", radius: 5pt) = {
-    let settings = info_settings.at(kind);
+#let info-image(kind: "info", ..args) = {
+    let settings = info-settings.at(kind);
+    image("../assets/solid/" + settings.icon + ".svg", ..args)
+}
+
+#let info-box(body, kind: "info", radius: 5pt) = {
+    let settings = info-settings.at(kind);
     box(
         width: 0.8fr,
         fill: settings.fill_color,
@@ -37,11 +60,13 @@
         inset: 0pt,
     )[
         #table(
-            columns: (auto, 1fr),
+            columns: (38pt, 1fr),
             inset: 8pt,
             stroke: none,
             align: horizon,
-            image("../assets/solid/" + settings.icon + ".svg", width: 32pt, height: 32pt),
+            [
+                #image("../assets/solid/" + settings.icon + ".svg", width: 32pt)
+            ],
             [
                 #settings.prefix
                 #body
