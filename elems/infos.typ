@@ -1,21 +1,23 @@
+#import "./colors.typ": *
+
 #let info-settings = (
     info: (
         prefix: none,
         icon: "circle-info",
-        fill_color: rgb("#e6f7ff"),
-        stroke_color: rgb("#91d5ff"),
+        fill_color: ugent-blue.lighten(90%),
+        stroke_color: ugent-blue,
     ),
     definition: (
-        prefix: [ #underline(smallcaps[*Definition*]) #smallcaps[:]],
+        prefix: [ #underline(smallcaps[*Definition*])#smallcaps[:]],
         icon: "highlighter-solid",
-        fill_color: rgb("#B5E8E1").lighten(60%),
-        stroke_color: rgb("#B5E8E1").darken(40%),
+        fill_color: caribbean-current.lighten(90%),
+        stroke_color: caribbean-current,
     ),
     question: (
         prefix: none,
         icon: "circle-question",
-        fill_color: rgb("#8B008B").lighten(90%),
-        stroke_color: rgb("#8B008B").darken(20%),
+        fill_color: proper-purple.lighten(90%),
+        stroke_color: proper-purple,
     ),
     important: (
         prefix: none,
@@ -26,8 +28,8 @@
     conclusion: (
         prefix: none,
         icon: "lightbulb-solid",
-        fill_color: rgb("#228B22").lighten(90%),
-        stroke_color: rgb("#228B22").darken(20%),
+        fill_color: earth-yellow.lighten(90%),
+        stroke_color: earth-yellow,
     ),
     good: (
         prefix: none,
@@ -47,11 +49,25 @@
 
 #let info-image(kind: "info", ..args) = {
     let settings = info-settings.at(kind);
-    image("../assets/solid/" + settings.icon + ".svg", ..args)
+    image(
+        "../assets/solid/" + settings.icon + ".svg", ..args,
+        alt: settings.icon,
+    )
 }
 
-#let info-box(body, kind: "info", radius: 5pt) = {
+#let info-box(body, kind: "info", radius: 5pt, footer: none) = {
     let settings = info-settings.at(kind);
+    let extra = if footer == none {
+        none
+    } else {
+        align(right)[
+            #set par(leading: 0pt)
+            #set text(size: 10pt)
+            #v(-8pt)
+            #underline[#footer]
+        ]
+    }
+
     box(
         width: 0.8fr,
         fill: settings.fill_color,
@@ -70,7 +86,8 @@
             [
                 #settings.prefix
                 #body
-            ]
-        ) 
+                #extra
+            ],
+        )
     ]
 }

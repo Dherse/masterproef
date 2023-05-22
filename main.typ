@@ -11,25 +11,23 @@
 #show: preface.with()
 
 = Acknowledgements
-I would like to give my most heartfelt thanks to the best friend one could ever ask for: Thomas Heuschling for his patience,
-friendship, guidance and all of the amazing moments we spent throughout our studies. I would also thank Prof. Wim Bogaerts and
-Prof. Dirk Stroobandt for their time, patience and trust in applying for an #emph[FWO] proposal to extend this Master Thesis. I also would like to thank Alexandre Bourbeillon for his help and advices for the creation of the grammar, parser and compiler of the PHÔS programming language and being a great friend for over a decade. Finally, I would like to thank my parents for their support and listening to my endless rambling about photonics and programming.
+I would like to express my deepest gratitude to Prof. Wim Bogaerts and Prof. Dirk Stroobandt for their time, guidance, patience, and trust in applying for an #emph[FWO] proposal to extend this Master Thesis. Through their advice and guidance, I have gained a breadth of knowledge and understanding that I will carry with me for the rest of my career. It is with great pleasure that I write this document to share my findings with them and others within the community.
 
-#pagebreak(weak: true)
+I would also like to give my most heartfelt thanks to the best friend one could ever ask for: Thomas Heuschling, for his patience, friendship, guidance and all of the amazing moments we spent throughout our studies. I would also like to thank him for his help in proofreading this thesis and his advice on the PHÔS programming language. I also would like to thank Alexandre Bourbeillon for his help and advice for the creation of the formal grammar of the PHÔS programming language and being a great friend for over a decade.
+
+I must also thank the incredible people that helped me proofread and improve my thesis: Daniel Csillag and Mossa Merhi Reimert for their time, advice and support.
+
+Finally, my parents, Evelyne Dekens and Baudouin d'Herbais de Thun, were also there for me every step of the way and I deeply thank them for their support and listening to my endless rambling about photonics and programming. 
+
 = Remark on the master's dissertation and the oral presentation
 This master's dissertation is part of an exam. Any comments formulated by the assessment committee during the oral
 presentation of the master's dissertation are not included in this text.
 
-#pagebreak(weak: true)
 = Abstract
-
 #lorem(30)
 
 // Table of contents
-#pagebreak(weak: true)
 #outline(title: "Table of contents", indent: true, depth: 3)
-
-#pagebreak(weak: true)
 #show: glossary.with((
     (key: "prg", short: "PRG", long: "Photonics Research Group"),
     (key: "fpga", short: "FPGA", long: "Field Programmable Gate Array"),
@@ -62,43 +60,29 @@ presentation of the master's dissertation are not included in this text.
     (key: "tdd", short: "TDD", long: "Test Driven Development"),
     (key: "http", short: "HTTP", long: "Hypertext Transfer Protocol -- the protocol used for web navigation"),
     (key: "ip", short: "IP", long: "Intellectual Property"),
+    (key: "dry", short: "DRY", long: "Don't Repeat Yourself"),
+    (key: "hls", short: "HLS", long: "High Level Synthesis"),
+    (key: "vhsic", short: "VHSIC", long: "Very High Speed Integrated Circuit"),
+    (key: "vhdl", short: "VHDL", long: [ #gloss("vhsic") Hardware Description Language ]),
+    (key: "gpl-3-0", short: "GPL-3.0", long: "GNU General Public License version 3.0"),
 ))
 
-#pagebreak(weak: true)
 #outline(title: "List of figures", target: figure.where(kind: image))
-
-#pagebreak(weak: true)
 #outline(title: "List of tables", target: figure.where(kind: table))
-
-#pagebreak(weak: true)
 #outline(title: "List of listings", target: figure.where(kind: raw))
+
+#include "./content/this_document.typ"
 
 #show: content.with()
 
 #include "./content/0_introduction.typ"
-
-#pagebreak(weak: true)
 #include "./content/1_background.typ"
-
-#pagebreak(weak: true)
 #include "./content/2_ecosystem.typ"
-
-#pagebreak(weak: true)
 #include "./content/3_translation.typ"
-
-#pagebreak(weak: true)
 #include "./content/4_phos.typ"
-
-#pagebreak(weak: true)
 #include "./content/5_examples.typ"
-
-#pagebreak(weak: true)
 #include "./content/6_extending.typ"
-
-#pagebreak(weak: true)
 #include "./content/7_simu.typ"
-
-#pagebreak(weak: true)
 #include "./content/8_conclusion.typ"
 
 #pagebreak(weak: true)

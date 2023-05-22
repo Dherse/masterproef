@@ -1,6 +1,6 @@
 #import "../elems/acronyms.typ": *
 #import "../elems/infos.typ": *
-#import "../elems/template.typ": todo
+#import "../elems/template.typ": *
 
 = Programmable photonics
 
@@ -39,15 +39,8 @@ Therefore, looking at @pic_hierarchy, one can see that four large categories of 
 
 In this work, the focus will be on the fourth kind of tunability, the most generic. However, the work can also apply to photonic circuit design in general and is not limited to photonic processors. As will be discussed in @feedfoward_vs_recirculating, the recirculating mesh is the most general kind of programmable @pic, but also the most difficult to represent with a logic flow of operation due to the fact that the light can travel in either direction. Therefore, the following question may be asked:
 
-#info-box(kind: "question")[
+#info-box(kind: "question", footer: [ This will be answered in @feedforward_approx. ])[
     At a sufficiently high level of abstraction, can a photonic processor be considered to be equivalent to a feedforward architecture?
-
-    #box(stroke: none)[
-        #v(-12pt)
-        #set text(fill: info-stroke(kind: "question"))
-        #repeat(strong("  -  "))
-    ]
-    This will be answered in @feedforward_approx.
 ]
 
 This question, which will be the driving factor behind this first section, will be answered in @feedforward_approx. However, before answering this question, it is necessary to first discuss the different types of photonic processors and how they differ from each other. Additionally, the answer to that question will show that the solution suggested in this thesis is also applicable for feedfoward systems.
@@ -129,7 +122,8 @@ This therefore gives the first approximation: each physical port is split into t
 
 The second step in this approximation is to show that, given a sufficient level of abstraction, any circuit can be represented as an element that has zero or more input ports and zero or more output ports. But, as previously mentioned, some circuits, such as ring resonators, have an #gloss("iir", long: true) that requires a recirculating mesh to be built. This is where the abstraction comes into play. One can view a ring resonator as a black box that has input and output ports and that has a certain scattering matrix that links each pair of input and output port as can be seen in @black_box.
 
-#figure(
+#figurex(
+    title: [ A black box representation of a ring resonator. ],
     caption: [
         A black box representation of a ring resonator. The input and output ports are labeled as $a_"in", b_"in"$ and $a_"out", b_"out"$ respectively.",
     ],

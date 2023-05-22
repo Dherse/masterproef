@@ -1,4 +1,4 @@
-#import "./template.typ": todo
+#import "./template.typ": todo, section
 
 #let glossary_entries = state("glossary_entries", (:))
 
@@ -7,7 +7,13 @@
         if glossary_entries.at(loc).keys().contains(key) {
             let entry = glossary_entries.at(loc).at(key)
 
-            let long = if (entry.locations.len() <= 0 and short != true) or long == true {
+            let in_preface(l) = section.at(l) == "preface";
+            let is_first_in_preface = entry.locations.find((x) => in_preface(x)) == none;
+            let is_first = entry.locations.find((x) => not in_preface(x)) == none;
+
+            let long = if (in_preface(loc) and is_first_in_preface) or long == true {
+                [ (#emph(entry.long))]
+            } else if not in_preface(loc) and (is_first and short != true) or long == true {
                 [ (#emph(entry.long))]
             } else {
                 none
