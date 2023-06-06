@@ -3,23 +3,43 @@
 #import "../elems/tablex.typ": *
 #import "../elems/template.typ": *
 
-= Programming of photonic processors
+= Programming of photonic processors <sec_programming_photonic_processors>
 
 The primary objective of this chapter is to explore the different aspects of programming photonic processors. This chapter will start by looking at different traditional programming ecosystems and how different languages approach common problems when programming. Then an analysis of the existing software solutions and their limitations will be done. Finally, an analysis of relevant programming paradigms will be done. The secondary objective of this chapter is to make the reader familiar with concepts and terminology that will be used in the rest of the thesis. This chapter will also introduce the reader to different programming paradigms that are relevant for the research at hand, as well as programming language concept and components. As this chapter also serves as an introduction to programming language concepts, it is written in a more general way, exploring components of programming ecosystems -- in @sec_components -- before looking at specificities that are relevant for the programming of photonic processors.
 
-== Programming languages as a tool
+== Programming languages as a tool <sec_language_tool>
 
 #info-box(kind: "definition", footer: [ Adapted from @noauthor_imperative_2020 ])[
-    *Imperativeness* refers to whether the program specifies the expected results of the computation or the steps needed to perform this computation. These differences may be understood as the difference between _what_ and _how_, or what the program should do and how it should do it.
+    *Imperativeness* refers to whether the program specifies the expected results of the computation (declarative) or the steps needed to perform this computation (imperative). These differences may be understood as the difference between _what_ and _how_, or what the program should do and how it should do it.
 ]
 
 Programming languages, in the most traditional sense, are tools used to express _what_ and, depending on its imperativeness and paradigm, _how_ a device should perform a task. A device in this context, means any device that is capable of performing sequential operations, such as a processor, a microcontroller or another device. However, programming languages are not limited to programming computers, but are increasingly used for other tasks. So-called #gloss("dsl", long: true, suffix: [s]) are languages designed for specific purposes that may intersect with traditional computing or describe traditional computing tasks, but can also extend beyond traditional computing. @dsl[s] can be used to program digital devices such as @fpga[s], but also to program and simulate analog systems such as @verilog-ams or @spice.
 
 Additionally, programming languages can be used as a tool to build strong abstractions over traditional computing tasks. For example, @sql is a language designed to describe database queries, by describing the _what_ and not the _how_, making it easier to reason about the queries being executed. Other examples include _Typst_, the language used to create this document.
 
-Furthermore, some languages are designed to describe digital hardware, so-called @rtl #gloss("hdl", long: true, suffix: [s]). These languages are used to describe the hardware in a way that is closer to the actual hardware, and therefore, they are not used to describe the _what_ but the _how_. These languages are not the focus of this thesis, but they are important to understand the context of the research at hand, and they will be further examined in @sec_existing_eco where they applicability to the research at hand will be discussed.
+Furthermore, some languages are designed to describe digital hardware, so-called @rtl #gloss("hdl", long: true, suffix: [s]). These languages are used to describe the hardware in a way that is closer to the actual hardware, and therefore, they are not used to describe the _what_ but the _how_. These languages are not the focus of this thesis, but they are important to understand the context of the research at hand, and they will be further examined in @sec_ecosystem_components_summary where they applicability to the research at hand will be discussed.
 
 As such, programming languages can be seen, in a more generic way, as tools that can be used to build abstractions over complex systems, whether software systems or hardware systems, and therefore, the ecosystem surrounding a language can be seen as a toolbox providing many amenities to the user of the language. Is it therefore important to understand these components and reason about their importance, relevance and how they can best be used for a photonic processor.
+
+== Typing in programming languages <sec_typing>
+
+#info-box(kind: "definition", footer: [ Adapted from @cardelli_understanding_1985 ])[
+    A *type system* is a system made of rules that assigns a property called a type to values in a program. It dictates how to create them, what kind of operations can be done on those values, and how they can be combined.
+]
+
+#info-box(kind: "definition", footer: [ Adapted from @cardelli_understanding_1985 ])[
+    *Static or dynamic typing* refers to whether the type of arguments, variables and fields is known at compile time or at runtime. In statically typed languages, the type of values must be known at compile time, while in dynamically typed language the type of values is computed at runtime.
+]
+
+All languages have a type system, it provides the basis for the language to reason about values. It can be of two types: static or dynamic. Static typing allows the compiler to know ahead of executing the code what each value is and means. This allows the compiler to provide features such as type verification -- that a value has the correct type for an operation -- but also to optimize the code to improve performance. On the contrary, dynamic typing does not determine the type of values ahead of time, instead forcing the burden of type verification to the user. This practice makes development easier at the cost of increase overhead during execution and the loss of some optimizations @dot_analysis_2015. Additionally, dynamic typing is a common source of runtime errors for programs written in a dynamically typed language, something that is caught during the compilation process in statically typed languages.
+
+Therefore, static typing is generally preferred for applications where speed is a concern, as is the case in _C_ and _Rust_. However, dynamic typing is preferred for applications where iteration speed is more important, such as in _Python_. However, some languages exist at the intersection of these two paradigms, such as _Rust_ which can infer parts of the type system at compile time, allowing the user to write their code with fewer type annotations, while still providing the benefits of static typing. This is achieved through a process called type inference, where the compiler generally uses the de facto standard algorithm called _Hindley-Milner_ algorithm #cite("milner_theory_1978", "rust_compiler"), which will be discussed further in @sec_phos.
+
+== Explicitness in programming languages <sec_explicitness>
+
+In language design, one of the most important aspect to consider is the explicitness of the language, that is, how much details must the user manually specify and how much can be inferred. This is a trade-off between the expressiveness of the language and the complexity of the language. A language that is too explicit is both difficult to write and to read, while a language that is too implicit is difficult to understand and reason about, while also generally being more complex to implement. Therefore, it is important to find a balance between these two extremes. Another factor to take into account is that too much "magic", that is operations being done implicitly, can lead to difficult to understand code, unexpected results and bugs that are difficult to track down.
+
+Therefore, it is in the interest of the language designer and users to find a balance where the language is sufficiently expressive while also being sufficiently explicit. This is, generally, a difficult balance to find and can take several iterations to achieve. This balance is not the same for every programming languages either, the target audience of the language tends to govern, at least to some extent, which priorities are put in place. For example, performance focused systems, such as @hpc solutions, tend to be very explicit, with find grained control to eke out the most performance, while on the contrary, systems designed for beginners might want to be more implicit, sacrificing complexity and fine grained control for ease of use..
 
 == Components of a programming ecosystem <sec_components>
 
@@ -149,7 +169,7 @@ Interestingly, as in the case of _Clippy_, some rules can also be used to sugges
 
 As previously mentioned, most code editors also provide features aimed at software development. Features such as syntax highlighting: which provides the user with visual cues about the structure of the code, code completion: which suggest possible completions for the code the user is currently writing, and code navigation: allows the user to jump to the definition or user of a function, variable, or type. These features help the user be more productive and navigate codebases more easily.
 
-In general, it is not the responsibility of the programming language to make a code editor available. Fully features programming editors are generally called @ide[s]. Indeed, most users have a preferred choice of editor with the most popular being _Visual Studio Code_, _Visual Studio_ -- both from _Microsoft_ -- and _IntelliJ_ -- a _Java_-centric @ide from _JetBrains_ @stackoverflow_survey. Additionally, most editors have support for more than one language, either officially or through community maintained plugins -- additional software that extends the functionality of the editor.
+In general, it is not the responsibility of the programming language to make a code editor available. Fully featured programming editors are generally called @ide[s]. Indeed, most users have a preferred choice of editor with the most popular being _Visual Studio Code_, _Visual Studio_ -- both from _Microsoft_ -- and _IntelliJ_ -- a _Java_-centric @ide from _JetBrains_ @stackoverflow_survey. Additionally, most editors have support for more than one language, either officially or through community maintained plugins -- additional software that extends the functionality of the editor.
 
 When creating a new language, effort should therefore not go towards creating a new editor as much as supporting existing editors. This is usually done by creating plugins for common editors, however this approach leads to repetition has editors use different language for plugin development. Over the past few years, a new standard, @lsp, has established itself as a de-facto standard for editor support @kjaer_rask_specification_2021. Allowing language creators to provide an @lsp implementation and small wrapper plugins for multiple editors greatly reducing the effort required to support multiple editors. @lsp was originally introduced by _Microsoft_ for _Visual Studio Code_, but has since been adopted by most editors @kjaer_rask_specification_2021.
 
@@ -179,11 +199,11 @@ There exists a plethora of simulation tools, as previously mentioned, _Vivado Si
 
 Finally, there also exist tools for physical simulation, such as _Ansys Lumerical_ which are physical simulation tools that simulate the physical interactions of light with matter. These tools are used during the creation of photonic components used when creating @pic[s]. However, they are generally slow and require large amounts of computation power #cite("bogaerts_silicon_2018", "alerstam_parallel_2008"). Therefore, when creating an @api or a language for photonic processor development, it is desirable to consider how simulation will be performed and the level of details that this simulator will provide. The higher the amount of details, the higher the computational needs.
 
-==== Verification
-
-As previously mentioned, when writing @hdl code, it is desirable to simulate the code to check that it behaves correctly. Therefore, it may even be desirable to automatically simulate code in a similar way that unit tests are performed. This action of automatically testing through simulation is called _verification_.
-
-As verification is an important part of the @hdl workflow and ecosystem. It is critical that any photonic programming solution provides a way to perform verification. This would be done by providing both a simulator and a tester and then providing a way of interface both together to perform verification.
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Verification*]
+}
+As previously mentioned, when writing @hdl code, it is desirable to simulate the code to check that it behaves correctly. Therefore, it may even be desirable to automatically simulate code in a similar way that unit tests are performed. This action of automatically testing through simulation is called _verification_. As verification is an important part of the @hdl workflow and ecosystem. It is critical that any photonic programming solution provides a way to perform verification. This would be done by providing both a simulator and a tester and then providing a way of interface both together to perform verification.
 
 === Package manager
 
@@ -201,7 +221,7 @@ Finally, package managers usually handle nested dependencies, that is, they are 
 
 === Documentation generator
 
-#info-box(kind: "definition")[
+#info-box(kind: "definition", footer: [ Adapted from @sai_zhang_automated_2011])[
     A *documentation generator* is a tool that allows users to generate documentation for their code using their code. This is usually done by using special comments in the code that are then extracted and interpreted as documentation.
 ]
 
@@ -209,7 +229,7 @@ The most common document generators are _Doxygen_ used by the _C_ and _C++_ comm
 
 === Build system
 
-#info-box(kind: "definition")[
+#info-box(kind: "definition", footer: [ Adapted from @aho2006compilers ])[
     A *build system* is a tool that allows users to build their projects.
 ]
 
@@ -227,17 +247,11 @@ Additionally, build systems can provide advanced features that are of particular
 
 Whether providing the user with an @api or creating a new language, it is important to consider how the user's program must be built. As this task can quickly become quite complex. Enforcing a fixed folder structure and providing a ready-made build system that handles all common building tasks can greatly improve the user experience. And especially the experience of newcomers as it might avoid them having to do obscure tasks such as writing their own _CMake_ files.
 
-=== Summary
+=== Summary <sec_ecosystem_components_summary>
 
-As has been shown, in order to build a complete, user friendly ecosystem, a lot of components are necessary or desirable. Official support for these components might be preferred as they lead to lower fracturing of their respective ecosystems. In @tab_ecosystem_components, an overview of components that are required, desirable or not needed, along with a short description and their applicability for different scenarios are mentioned.
+As has been shown, in order to build a complete, user friendly ecosystem, a lot of components are necessary or desirable. Official support for these components might be preferred as they lead to lower fracturing of their respective ecosystems. In @tab_ecosystem_components, an overview of components that are required, desirable or not needed, along with a short description and their applicability for different scenarios are mentioned. Some components are more important than others and are required to build the ecosystem. Most notably the compiler, hardware-programmer, and testing and simulation tools. Without these components, the ecosystem is not usable for hardware development. However, while the other components are not strictly needed, a lot of them are desirable: having proper debugging facilities makes the ecosystem easier to use. Similarly, having a build system can help the users get started with their projects faster.
 
-Some components are more important than others and are required to build the ecosystem. Most notably the compiler, hardware-programmer, and testing and simulation tools. Without these components, the ecosystem is not usable for hardware development. However, while the other components are not strictly needed, a lot of them are desirable: having proper debugging facilities makes the ecosystem easier to use. Similarly, having a build system can help the users get started with their projects faster.
-
-In @tab_ecosystem_components, there is a distinction made on the type of design that is pursued, as will be discussed in @sec_phos, this thesis will create a new hardware description language, but the possibility of creating an @api was also discussed. And while, an @api is not the retained solution, one can use this information for the choice of the language in which this new language, called @phos, will be implemented. Indeed, the same components that make @api designing easy, also make language implementation easier.
-
-As will be discussed in @sec_language_summary, @phos will be implemented in _Rust_. The language meets all of the requirement by having first party support for all of the required and desired components for an @api design. Additionally, its high performance and safety features make it a good candidate for a reliable implementation of the @phos ecosystem.
-
-#pagebreak(weak: true)
+In @tab_ecosystem_components, there is a distinction made on the type of design that is pursued, as will be discussed in @sec_phos, this thesis will create a new hardware description language, but the possibility of creating an @api was also discussed. And while an @api is not the retained solution, one can use this information for the choice of the language in which this new language, called @phos, will be implemented. Indeed, the same components that make @api designing easy, also make language implementation easier. As will be discussed in @sec_language_summary, @phos will be implemented in _Rust_. The language meets all of the requirement by having first party support for all of the required and desired components for an @api design. Additionally, its high performance and safety features make it a good candidate for a reliable implementation of the @phos ecosystem.
 
 #figurex(
     caption: [
@@ -247,7 +261,7 @@ As will be discussed in @sec_language_summary, @phos will be implemented in _Rus
         + A code editor is provided as an external tool, however, support for the language must be provided by the ecosystem. That being said, it is not a requirement and is desired rather than required.
     ],
     title: [
-        Comparison of programming ecosystem components and their importance for @api development and language design.
+        Comparison of programming ecosystem components and their importance.
     ],
     kind: table,
 )[
@@ -329,7 +343,7 @@ As will be discussed in @sec_language_summary, @phos will be implemented in _Rus
     )
 ] <tab_ecosystem_components>
 
-Finally, @tab_ecosystem_compare compares the ecosystem of existing programming and hardware description languages and their components. It shows that some ecosystems, like _Python_'s, have a lot of components, but that not all of them are first party nor is there, always, an agreement within the community on the best tool. However _Rust_ is a particularly strong candidate in this regard, as it has first party support for all of the required components with the exception of hardware-programming and debugging tools. But as also noted in @tab_ecosystem_compare, most other languages don't come with first party support fot these tools either. However, as will be discussed in @sec_overview_of_syntax, it is difficult to learn, has not seen use in hardware synthesis and is therefore not a good fit for regular users. But its strong ecosystem makes it a good candidate for a language implementation, something for which is has a thriving ecosystem of many libraries, colloquially called _crates_, fit for this purpose.
+Finally, @tab_ecosystem_compare compares the ecosystem of existing programming and hardware description languages and their components. It shows that some ecosystems, like _Python_'s, have a lot of components, but that not all of them are first party nor is there always an agreement within the community on the best tool. However _Rust_ is a particularly strong candidate in this regard, as it has first party support for all of the required components with the exception of hardware-programming and debugging tools. But as also noted in @tab_ecosystem_compare, most other languages do not come with first party support fot these tools either. However, as will be discussed in @sec_overview_of_syntax, it is difficult to learn, has not seen use in hardware synthesis and is therefore not a good fit for regular users. But its strong ecosystem makes it a good candidate for a language implementation, something for which it has a thriving ecosystem of many libraries, colloquially called _crates_, fit for this purpose.
 
 One can also see from @tab_ecosystem_compare, that simulation and hardware description ecosystems tend to be highly proprietary and incomplete. This is a problem that can be solved by providing a common baseline for all task relating to photonic hardware description, where only the lowest level of the technology stack: the platform support is vendored. Forcing platforms, through an open source license such as @gpl-3-0, to provide a common interface for their hardware, will allow for a common ecosystem to be built on top of it. This is the approach that will hopefully be taken by @phos, which will be discussed in @sec_adopting.
 
@@ -467,9 +481,17 @@ One can also see from @tab_ecosystem_compare, that simulation and hardware descr
     )
 ] <tab_ecosystem_compare>
 
+#info-box(kind: "conclusion")[
+    With the previous sections, it can be seen that creating a user-friendly ecosystem revolves around the creation of tools to aid in development. The compiler and language cannot be created in isolation, and the ecosystem as a whole has to be considered to achieve the broadest possible adoption.
+
+    Depending on the choice of implementation, the components of the ecosystem will change. However, whether the language already exists or whether it is created for the purpose of programming photonic processors, special care needs to be taken to ensure high usability and productivity through the availability or creation of tools to aid in development.
+
+    As will be discussed in @sec_phos, the chosen solution will be the creation of a custom @dsl for photonic processors. This will be done due to the unique needs of photonic processors, and the lack of existing languages that can be used for development targetting such devices. And this ecosystem will need to be created from scratch. However, the analysis done in this section will be used to guide the development of this ecosystem.
+]
+
 == Overview of syntaxes <sec_overview_of_syntax>
 
-Following the analysis of programming ecosystem components, this section will analyse the different syntaxes employed by various, common, programming languages. The goal of this section is to build an intuition on what these syntaxes look like, what they mean and how they can be applied in @the_good_the_bad_and_the_ugly. As that section will compare simple examples and how one might implement simple photonic circuits in each of these languages. Additionally, this section will also analyse the syntaxes of existing @hdl[s] and other @dsl[s] that are used to program digital electronics -- most notably @fpga[s] -- and analog electronics. This analysis will also provide insight into whether these languages are suitable for programmable photonics. As programmable photonics works using different syntaxes than digital and analog electronics, it is important to understand these differences and why they makes these existing solutions unsuitable.
+Following the analysis of programming ecosystem components, this section will analyse the different syntaxes employed by various, common, programming languages. The goal of this section is to build an intuition on what these syntaxes look like, what they mean and how they can be applied in @the_good_the_bad_and_the_ugly. As that section will compare simple examples and how one might implement simple photonic circuits in each of these languages. Additionally, this section will also analyse the syntaxes of existing @hdl[s] and other @dsl[s] that are used to program digital electronics -- most notably @fpga[s] -- and analog electronics. This analysis will also provide insight into whether these languages are suitable for programmable photonics. As programmable photonics works using different paradigms than digital and analog electronics, it is important to understand these differences and why they makes these existing solutions unsuitable.
 
 The first analysis, which looks at traditional programming languages, will be done by looking at the syntaxes of the following languages: _C_, _Rust_, and _Python_. These languages have been chosen as they are some of the most popular languages in the world, but also because they each bring different strength and weaknesses with regards to the following aspects:
 - _C_ is a low-level language that is used as the building block for other non-traditional computation types such as @fpga[s] by being used for @hls @schafer_high_level_2020, but is also being used for novel use cases such as quantum programming @mccaskey_extending_2021.
@@ -496,11 +518,11 @@ A simple _C_ implementation of _FizzBuzz_ can be found in @lst_c_fizz, it shows 
 - statements are terminated by a semicolon (`;`), however curly braces can be omitted for single line statement;
 - variables are declared with a type and a name, and optionally initialized with a value;
 - functions are declared with a return type, a name, a list of arguments and a body;
-- ternary operators are available, for shorter, but less redable conditional statements;
+- ternary operators are available, for shorter, but less readable conditional statements;
 - _C_ lacks a lot of high level constructs such as string, relying instead on arrays of characters;
 - _C_ has a lot of low-level constructs such as pointers, which are used to pass arguments by reference;
-- _C_ is not linespace sensitive and statement can span multiple lines;
-- _C_ uses a preprocessor to perform test substitution, such as importing other files;
+- _C_ is not whitespace or line-space sensitive and statement can span multiple lines;
+- _C_ uses a preprocessor to perform text substitution, such as importing other files;
 - _C_ needs a `main` function to be defined, which is the entry point of the program.
 
 #figure(caption: [ _FizzBuzz_ implemented in _C_, based on the _Rosetta Code_ project @rosetta_code_sieve_2021.])[
@@ -513,33 +535,90 @@ The _Rust_ implementation of _FizzBuzz_ can be found in @lst_rust_fizz, it shows
 - loops use the range syntax (`..`) instead of manual iteration;
 - printing is done using the `print` and `println` macros, which are similar to _C_'s `printf`;
 - variables do not need to be declared with a type, as the compiler can infer it;
+- _Rust_ is not whitespace or line-space sensitive and statement can span multiple lines;
 - _Rust_ needs a `main` function to be defined, which is the entry point of the program.
 
 #figure(caption: [ _FizzBuzz_ implemented in _Rust_, based on the _Rosetta Code_ project @rosetta_code_sieve_2021])[
     #raw(read("../code/fizzbuzz/rust.rs"), lang: "rust")
 ] <lst_rust_fizz>
 
+The _Python_ implementation of _FizzBuzz_ can be found in @lst_python_fizz, it shows several important aspects of _Python_:
+- blocks of code are delimited by indentation;
+- statements are terminated by a newline;
+- loops use the `range` function instead of manual iteration;
+- printing is done using the `print` function;
+- variables do not need to be declared with a type, as the language is dynamically typed;
+- _Python_ is whitespace and line-space sensitive;
+- _Python_ does not need a `main` function to be defined, as the file itself is the entry point of the program.
+
 #figure(caption: [ _FizzBuzz_ implemented in _Python_, based on the _Rosetta Code_ project @rosetta_code_sieve_2021.])[
     #raw(read("../code/fizzbuzz/python.py"), lang: "python")
 ] <lst_python_fizz>
 
+These simple example show us some fundamental design decisions for _C_, _Rust_, and _Python_, most notably that _Python_ is whitespace and line-space sensitive, while _C_ and _Rust_ are not. This is a design feature of _Python_ that aids in making the code more readable and consistently formatted regardless of whether the user uses a formatter or not. Then, focusing on typing, _Python_ is dynamically typed which makes the work of any compiler more difficult. Dynamic typing is a feature that generally makes languages easier to use at the cost of runtime performance, as type checking has to be done as the code is running. Per contra, _Rust_ takes an intermediate approach between _Python_'s dynamic typing and _C_'s manual type annotation: _Rust_ uses type inference to infer the type of variables, that means that users still need to annotate some types, but overall most variables do not need type annotations. This makes _Rust_ easier to use than _C_, but also more difficult to use than _Python_ from a typing point of view.
+
+Additional features that the languages offer:
+- _Python_ and _Rust_ both offer iterators, which are a high level abstraction over loops;
+- _C_ and _Rust_ both offer more control over data movement through references and pointer;
+- _Python_ and _Rust_ both have an official package manager, while _C_ does not;
+- _Python_ and _Rust_ are both memory safe, meaning that memory management is automatic and not prone to errors;
+- _Rust_ is a thread-safe language, meaning that multithreaded programs are easier to write and less prone to errors;
+- _C_ and _Rust_ are both well suited for embedded development, while _Python_ has seen use in embedded development, it is not as well suited as the other two languages, due to performance constraints;
+- _Rust_ does not have truthiness: only `true` and `false` are considered boolean values, while _Python_ and _C_ have truthiness, meaning that several types of values can be used as a boolean value.
+
 === Digital hardware description languages
 
-This are a mistake.
+Unlike traditional programming languages, digital @hdl[s] try and represent digital circuitry using code. This means that the code is not executed, but rather synthesized into hardware that can be built. This hardware is generally in one of two forms: logic gates that can be built discretely, or @lut[s] programmed on an FPGA. Both processes involve "running" the code through a synthesizer that produces a netlist and a list of operations that are needed to implement the circuit. As was previously discussed, in @sec_language_tool, languages can serve as the foundation to build abstractions over complex systems, however, most @hdl[s] tend to only have an abstraction over the #gloss("rtl", long: true) level, which is the level that describes the movement, and processing of data between registers. Registers are memory cells commonly used in digital logic that store the result of operations between clock cycles. This means that the abstraction level of most @hdl[s] is very low.
+
+This low level of abstraction can be better understood by understanding three factors regarding digital logic programming, the first is the economic aspect, custom @ic[s] are very expensive to design and produce, as such, the larger the design, the larger the dies needed, which increases cost; and @fpga[s] are very expensive devices, the larger the design, the more space it physically occupies inside of the @fpga, increasing the size needed and therefore the cost. The second factor is the design complexity: the more complex the design, the more difficult it is to verify and the slower it is to simulate which decreases productivity. The third factor is with regard to performance, performance of a design is characterized by three criteria, one criterion is the speed of the algorithm being implemented, another one is the power consumed for a given operation, and the area that the circuit occupies. These performance definitions are often referred to be the acronym @ppa. As such, the design is generally done at a lower level of abstraction to try and meet performance targets.
+
+==== High-level synthesis
+
+#info-box(kind: "definition", footer: [ Adapter from #cite("schafer_high_level_2020", "meeus_overview_2012")])[
+    *High-level Synthesis (HLS)* is the process of translating high-level abstractions in a programming language into #gloss("rtl", long: true) level descriptions. This process is generally done by a compiler that takes as an input the high-level language and translates the code into a lower-level form. 
+]
+
+There has been a push in recent years towards higher level of abstraction for digital @hdl[s]. It takes the form of so-called #gloss("hls", long: true) languages. These languages allow the user to build their design at a higher level of abstraction, which is generally simpler and more productive @ye_scalehls_2022. Allowing the user to focus on the feature they are trying to build and not the low level implementation of those designs. As was discussed in @sec_language_tool, this can be seen as a move towards declarative programming, or at least, a less imperative programming model. Coupled with the rise of hardware accelerator in the data center and cloud markets, which are generally either @gpu[s] or @fpga[s], there has been an increased need for software developer to be able to use these @fpga based accelerators. Because these software developers are generally not electrical engineers, and due to the high complexity of @fpga[s], developing for such devices is not an easy skill to acquire. This has provided an industry drive towards economically viable @hls languages and tools that can be used by software developers to program @fpga based accelerators.
+
+Another advantage of @hls is the ability to test the hardware using traditional testing frameworks, as discussed in @sec_ecosystem_components_summary, testing systems for @hdl[s] tend to be vendored and therefore difficult to port. Additionally, they are based on simulation of the behaviour which is generally slower than running the equivalent @cpu instructions. Therefore, the ability to test the hardware using traditional testing frameworks is a major advantage of @hls languages. In the same way that it allows the use of regular testing frameworks, it also enables the reuse of well tested algorithms that may already be implemented in a given ecosystem which can drastically lower the development time of a given design, as well as reduce the risk of errors. In addition to being able to use existing testing framework, the code can be verified using provers and formal verification tools, which can prove the correctness of an implementation, something that does not exist for traditional @rtl level development.
+
+Given that @hls development is generally easier, more productive and allows for reuse of existing well-tested resources, it is a sensible alternative to traditional @rtl level development. However, it does come at the cost of generally higher resource usage, and lower performance. This is due to the fact that the @hls abstractions are still not mature enough to meet the performance of hand-written @hdl code. However, there has been a push towards greater level of optimization, such as using the breadth of optimization available in the @llvm compiler. This has allowed @hls to reach a level of performance that is acceptable for large swath of applications, especially when designed by non-specialists @lahti_are_2019. Other techniques such as machine learning based optimization techniques have been used to increase performance even further @shahzad_reinforcement_2022.
+
+==== Modern RTL languages
+
+In parallel to @hls development, a lot of higher level @rtl languages and libraries have been created, such as _MyHDL_, _Chisel_, and _SpinalHDL_. These alternative are positioned as an alternative to traditional @hdl[s] such as _SystemVerilog_, they are often libraries for existing languages such as _Python_, and therefore inherit their broad ecosystems. As discussed in @sec_ecosystem_components_summary, @hdl[s], tend to be lackluster -- or highly vendor-locked -- with regards to development tools. And just as in the case for @hls, this can be an argument in favour of using alternatives, such as these @hdl implemented inside of existing languages.
+
+These @hdl[s] are generally implemented as translators, where, instead of doing synthesis down to the netlist level, they translate the user's code into a traditional @hdl. As such, they are not a replacement for traditional @hdl[s], but offer a higher level of abstraction and better tooling through the use of more generic languages. This places these tools in an interesting place, where users can use them for their nicer ecosystems and easier development, but still have the low-level control that traditional @hdl[s] offer. This is in contrast to @hls, where this control is often lost due to the higher level of abstraction over the circuit's behaviour. Additionally, these tools often integrate well with existing package-managers which are available for the language of choice, allowing for easy reuse and sharing of existing libraries.
+
+=== Comparison
+
+For the comparison, three @hdl[s] of varying reach and abstraction levels will be used: #emph[@vhdl], #emph[MyHDL], and #emph[SystemC]. They each represent one of the aforementioned categories, being traditional @hdl[s], modern @rtl\-level languages, and @hls languages. For this comparison, a simple example of an $n$-bit adder will be used, where $n$ is a parameter of the design. This will allow the demonstration of procedural generation of hardware, as well as the use of modules and submodules to structure code.
+
+#info-box(kind: "info")[
+    Most @hdl languages come with pre-built implementations of adders. Usually, the best implementation of the adder is chosen by the compiler or synthesis tool based on constraints defined by the user. These constraints can relate to the area, power consumption or timing requirements. In this case, the adders implemented are simple combinatory ripple-carry adders, which are generally not the best implementation.
+]
+
+In the first example, in @lst_adder_vhdl, it can be seen that the @vhdl implementation is verbose, giving details for all parameters and having to import all of the basic packages (line $2$). In @vhdl, the ports, as well as other properties are defined in the `entity` and the implementation of the logic is done in an `architecture` block. This leads to functionality being spread over multiple locations, generally reducing readability.
+
+#figurex(
+    caption: [ Example of a $n$-bit adder in @vhdl, based on @vhdl-adder. ],
+)[
+    #raw(lang: "vhdl", read("../code/adder/vhdl.vhdl"))
+] <lst_adder_vhdl>
+
+#figurex(
+    caption: [ Example of a $n$-bit adder in _MyHDL_, based on @vhdl-adder. ],
+)[
+    #raw(lang: "python", read("../code/adder/myhdl.py"))
+] <lst_adder_my_hdl>
+
+#figurex(
+    caption: [ Example of a $n$-bit adder in _SystemC_, based on @vhdl-adder. ],
+)[
+    #raw(lang: "c", read("../code/adder/systemc.c"))
+] <lst_adder_systemc>
 
 === Analog simulation languages
-
-=== Summary
-
-== Comparison of existing programming ecosystems <sec_existing_eco>
-
-#info-box(kind: "conclusion")[
-    With the previous sections, it can be seen that creating a user-friendly ecosystem revolves around the creation of tools to aid in development. The compiler and language cannot be created in isolation, and the ecosystem as a whole has to be considered to achieve the broadest possible adoption.
-
-    Depending on the choice of implementation, the components of the ecosystem will change. However, whether the language already exists or whether it is created for the purpose of programming photonic processor, special care needs to be taken to ensure high usability and productivity through the creation of tools to aid in development.
-
-    As will be discussed in @sec_phos, the chosen solution will be the creation of a custom @dsl for photonic processors. This will be done due to the unique needs of photonic processors, and the lack of existing languages that can be used for the development of such devices. And this ecosystem will need to be created from scratch. However, the analysis done in this section will be used to guide the development of this ecosystem.
-]
 
 == Analysis of programming paradigms <sec_paradigms>
 
@@ -557,14 +636,90 @@ This are a mistake.
 
 == Long term compatibility and cross-vendor support
 
+== A primer on calculability and complexity
+
+== Hardware-software co-design
+
 == Summary <sec_language_summary>
 
-After comparing existing ecosystems as well as the existing framework used to program photonic processors, further discussion on ...
+From the aforementioned criteria, one may give a score for each of the discussed languages based on its suitability for a given application. This is done in @tbl_language_comparison. The score is given on a scale of 1 to 5, with 1 being the lowest and 5 being the highest. The score is given based on the following criteria: the maturity of the ecosystem and the suitability for different scenarios that were previously explored, notably: @api design, root language -- i.e as the basis for reusing the existing ecosystem and syntax -- and the implementation of a new language -- i.e using the language to build the ecosystem components of a new language. @rtl languages implemented on top of _Python_ are not included in the table. Neither is @spice due to its restrictive scope.
 
-#info-box(kind: "question")[
-    Should a new programming language be created for photonic processors?
-    - What type of programming paradigm should be used?
-    - What features should be included in the language?
-    - What tools should be created to aid in the development?
-    - What existing programming languages, if any, should be used as a base?
-]
+From @tbl_language_comparison, one can see that for the creation of a new language, the best languages to implement it in are _Rust_ and _C_. And the best languages to inspire the syntax and semantics are _Python_ and #emph[@verilog-ams], additionally, _C_ is also a good inspiration due its widespread use and the familiarity of its syntax. Finally, for the implementation of an @api, the best choice is _Python_ due to its maturity, simplicity and popularity in academic and engineering circles.
+
+#figurex(
+    caption: [
+        Comparison of the different languages based on the criteria discussed in @sec_language_summary.
+    ],
+    kind: table,
+)[
+    #tablex(
+        columns: (0.075fr, 0.1fr, 0.1fr, 0.1fr, 0.1fr),
+        align: center + horizon,
+        auto-vlines: false,
+        repeat-header: true,
+
+        rowspanx(2)[#smallcaps[ *Language* ]],
+        colspanx(4)[#smallcaps[ *Applications* ]],
+
+        (),
+        smallcaps[ *Ecosystem* ], 
+        smallcaps[ *@api design* ],
+        smallcaps[ *Root language* ], 
+        smallcaps[ *New language* ],
+
+        smallcaps[ *C* ],
+        score(3),
+        score(2),
+        score(2),
+        score(4),
+        hlinex(start: 1, end: 5, stroke: (thickness: 0.5pt, dash: "dashed")),
+        [],
+        colspanx(4)[#align(left)[
+            C is a fully featured low-level language, it is performant and has a simple syntax. However, it lacks some of the more modern ecosystem components, and is error prone. Because of this, it is unsuitable for @api design, since it would require the user to be familiar with memory management. It lacks a lot of the semantics of hardware description which makes it unsuitable as a root language. However, its large array of language-implementation libraries makes it a good candidate for the implementation of a new language.
+        ]],
+
+        smallcaps[ *Rust* ],
+        score(5),
+        score(2),
+        score(2),
+        score(5),
+        hlinex(start: 1, end: 5, stroke: (thickness: 0.5pt, dash: "dashed")),
+        [],
+        colspanx(4)[#align(left)[
+            Rust is a modern low-level language, it is very performant, has excellent first-party tooling, quickly growing in popularity, and has is memory safe. However, it has difficult syntax and semantics that is unwelcoming for non-developers, which makes it unsuitable for either @api design or as a root language. However, its large array of language-implementation libraries coupled with its memory and thread safety makes it an excellent candidate for the implementation of a new language.
+        ]],
+
+        smallcaps[ *Python* ],
+        score(4),
+        score(5),
+        score(4),
+        score(2),
+        hlinex(start: 1, end: 5, stroke: (thickness: 0.5pt, dash: "dashed")),
+        [],
+        colspanx(4)[#align(left)[
+            Python is a mature high-level language that sees wide use within the academic community, it has great third-party tooling, and is easy to learn. These factors make it an excellent candidate for @api design and as a root language. However, its slowness and error-prone dynamic typing make it an unsuitable candidate for the implementation of a new language.
+        ]],
+
+        smallcaps[ *Verilog-AMS* ],
+        score(1),
+        score(0),
+        score(3),
+        score(0),
+        hlinex(start: 1, end: 5, stroke: (thickness: 0.5pt, dash: "dashed")),
+        [],
+        colspanx(4)[#align(left)[
+            @verilog-ams is a mixed signal simulation software, its ecosystem is lackluster with many proprietary tools which incurs expensive licenses. It not a generic language and is therefore not design for an @api to be implemented in the language, nor is it suitable for the implementation of a new language. However, it is a mature language with a familiar syntax to electrical engineers which may make it suitable as the root language.
+        ]],
+
+        smallcaps[ *VHDL* ],
+        score(1),
+        score(0),
+        score(1),
+        score(0),
+        hlinex(start: 1, end: 5, stroke: (thickness: 0.5pt, dash: "dashed")),
+        [],
+        colspanx(4)[#align(left)[
+            VHDL is a mature language with a large ecosystem, but suffers from the same issues than @verilog-ams, most notably that most tools are proprietary and licensed. Similarly, its nature as a hardware description language makes it unsuitable for @api design or the creation of a new language. Its verbose syntax and semantics are difficult to learn and make the language difficult to read, which makes it unsuitable as a root language.
+        ]],
+    )
+] <tbl_language_comparison>

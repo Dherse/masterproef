@@ -2,4 +2,4 @@
 #import "../elems/infos.typ": *
 #import "../elems/template.typ": todo
 
-= Extending PHÔS to generic circuit design
+= Extending PHÔS

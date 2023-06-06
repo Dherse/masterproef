@@ -1,5 +1,2 @@
-= Simulation in PHÔS
+= Simulation in PHÔS <sec_simulation>
 
-== Co-simulation with digital electronic
-
-== Towards co-simulation with analog electronic

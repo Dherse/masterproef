@@ -55,7 +55,7 @@
     )
 }
 
-#let info-box(body, kind: "info", radius: 5pt, footer: none) = {
+#let info-box(body, kind: "info", radius: 5pt, footer: none, icon: true) = {
     let settings = info-settings.at(kind);
     let extra = if footer == none {
         none
@@ -75,19 +75,30 @@
         radius: radius,
         inset: 0pt,
     )[
+        #let contents = if icon {
+            (
+                image("../assets/solid/" + settings.icon + ".svg", width: 32pt),
+                {
+                    settings.prefix
+                    body
+                    extra
+                }
+            )
+        } else {
+            (
+                {
+                    settings.prefix
+                    body
+                    extra
+                },
+            )
+        }
         #table(
-            columns: (38pt, 1fr),
+            columns: if icon { (38pt, 1fr) } else { 1 },
             inset: 8pt,
             stroke: none,
             align: horizon,
-            [
-                #image("../assets/solid/" + settings.icon + ".svg", width: 32pt)
-            ],
-            [
-                #settings.prefix
-                #body
-                #extra
-            ],
+            ..contents,
         )
     ]
 }

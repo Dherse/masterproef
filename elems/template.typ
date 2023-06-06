@@ -3,19 +3,38 @@
 #import "tablex.typ": *
 #import "colors.typ": *
 
+#let mode = "print"
+
 #let font_size = 11pt
 #let section = state("section", "preface")
-
 
 // The project function defines how your document looks.
 // It takes your content and some metadata and formats it.
 #let project(title: "", authors: (), body) = {
     // Set the document's basic properties.
     set document(author: authors, title: title)
-    set text(font: "UGent Panno Text", lang: "en", size: font_size, fallback: false)
+    set text(
+        font: "UGent Panno Text",
+        lang: "en",
+        size: font_size,
+        fallback: false,
+        hyphenate: false,
+    )
     set page(
         number-align: right,
         margin: 2.5cm,
+        /*header: [
+            #set text(14pt)
+            #align(right)[
+                #locate(loc => {
+                    if section.at(loc) != "preface" {
+                        let title = query(heading.where(level: 1).before(loc), loc).last();
+                        let levels = counter(heading).at(title.location());
+                        smallcaps[#numbering("1.", ..levels) #title.body]
+                    }
+                })
+            ]
+        ],*/
     )
 
     // Main body.
@@ -35,8 +54,10 @@
                 show: underline.with()
                 it
             }
-            // text("\u{1F30D}", font: "Segoe UI Emoji", size: 8pt)
 
+            if mode != "print" {
+                text(" \u{1F30D}", font: "Segoe UI Emoji", size: 8pt)
+            }
         } else {
             it
         }
@@ -74,14 +95,12 @@
 }
 
 #let content(body) = {
-    set page(numbering: "1 of 1")
     set heading(numbering: "1.1.a", outlined: true)
     set cite(brackets: true, style: "numerical")
     set par(linebreaks: "optimized", justify: true)
     set enum(indent: 0.5cm)
     set list(indent: 0.5cm)
     show par: set block(spacing: 16pt)
-    locate(loc => counter(page).update(1))
     section.update("body")
 
     show link: it => {
@@ -97,8 +116,10 @@
     show heading: it => {
         let levels = counter(heading).at(it.location())
         if it.level == 1 {
-            pagebreak(weak: true)
-            block[
+            if levels.at(0) != 1 {
+                pagebreak(weak: true)
+            }
+            block(breakable: false)[
                 #set text(size: 48pt, font: "Bookman Old Style", weight: "thin", fill: rgb(50%, 50%, 50%))
                 #numbering("1.", ..levels)
                 
@@ -108,19 +129,19 @@
                 #v(10pt)
             ]
         } else if it.level == 2 {
-            block[
+            block(breakable: false)[
                 #set text(size: 22pt, weight: "extrabold", font: "UGent Panno Text", fill: rgb(30,100,200))
                 #numbering("1.1", ..levels) #underline(smallcaps(it.body), evade: true, offset: 3pt)
 
                 #v(10pt)
             ]
         } else if it.level == 3 {
-            block[
+            block(breakable: false)[
                 #set text(size: 18pt, weight: "extrabold", font: "UGent Panno Text", fill: rgb(30,100,200))
                 #numbering("1.1.a", ..levels) #smallcaps(it.body)
             ]
         } else {
-            block[
+            block(breakable: false)[
                 #set text(size: 14pt, weight: "extrabold", font: "UGent Panno Text", fill: rgb(30,100,200))
                 #smallcaps(it.body)
             ]
@@ -160,6 +181,14 @@
         )
     })
 
+    let languages = (
+        "rust": ("Rust", "\u{fa53}", rgb("#CE412B")),
+        "c": ("C", [], rgb("#283593")),
+        "python": ("Python", "\u{ed01}", rgb("#FFD43B")),
+        "verilog-ams": ("Verilog-AMS", [], rgb(30,100,200)),
+        "vhdl": ("VHDL", [</>], gray),
+        "spice": ("SPICE", [], rgb("#283593")),
+    )
     show figure.where(kind: raw): it => style(styles => {
         let content = ()
         let i = 1
@@ -175,8 +204,49 @@
             for item in it.body.children {
                 if item.func() == raw {
                     for line in item.text.split("\n") {
-                        content.push(str(i))
-                        content.push(raw(line, lang: item.lang))
+                        if i == 1 {
+                            let lang = languages.at(item.lang, default: (item.lang, none, black))
+                            
+                            let lang_icon = if lang.at(1) == none {
+                                none
+                            } else {
+                                text(
+                                    font: "tabler-icons", 
+                                    fallback: false, 
+                                    weight: "regular", 
+                                    size: 8pt,
+                                )[#lang.at(1)]
+                            }
+
+                            let line = layout(size => {
+                                let total_width = size.width
+                                let width = measure(box(
+                                    radius: 2pt, 
+                                    fill: lang.at(2).lighten(60%), 
+                                    inset: 0.32em
+                                )[
+                                    #lang_icon
+                                    #lang.at(0)
+                                ], styles).width
+
+                                place(dx: total_width - width, dy: -0.32em)[
+                                    #box(
+                                        radius: 2pt, 
+                                        fill: lang.at(2).lighten(60%), 
+                                        inset: 0.32em
+                                    )[
+                                        #lang_icon
+                                        #lang.at(0)
+                                    ]
+                                ]
+                                raw(line, lang: item.lang)
+
+                            })
+                            
+                            content.push(line)
+                        } else {
+                            content.push(raw(line, lang: item.lang))
+                        }
                         i += 1
                     }
                 }
@@ -204,24 +274,47 @@
         block(
             breakable: true,
         )[
+            #let width_numbers = content
+                .enumerate()
+                .map((it) => measure(str(it.at(0)), styles).width)
+                .fold(0pt, (a, b) => calc.max(a, b)) + 0.64em
             #align(center)[
-                #box(stroke: 1pt + gray, inset: 0pt, fill: rgb(99%, 99%, 99%), width: 0.8fr)[
-                    #set align(left)
-                    #table(
-                        columns: (auto, 1fr),
-                        inset: 5pt,
-                        stroke: none,
-                        fill: (_, row) => {
-                            if calc.odd(row) {
-                                luma(240)
-                            } else {
-                                white
-                            }
-                        },
-                        align: horizon,
-                        ..content
-                    )
-                ]
+                #set align(left)
+                #let border_color = luma(200) + 0.05em;
+                #let cell(i, len, body, ..args) = rect(
+                    inset: (left: width_numbers + 0.48em, rest: 0.48em),
+                    fill: if calc.mod(i, 2) == 0 {
+                        luma(240)
+                    } else {
+                        white
+                    },
+                    radius: if i == 0 {
+                        (top-left: 0.32em, top-right: 0.32em)
+                    } else if i == len - 1 {
+                        (bottom-left: 0.32em, bottom-right: 0.32em)
+                    } else {
+                        0pt
+                    },
+                    stroke: if i == 0 {
+                        (top: border_color, left: border_color, right: border_color)
+                    } else if i == len - 1 {
+                        (bottom: border_color, left: border_color, right: border_color)
+                    } else {
+                        (left: border_color, right: border_color)
+                    },
+                    width: 100%,
+                    ..args
+                )[#body]
+                #stack(
+                    dir: ttb,
+                    ..content.enumerate().map(x => {
+                        let (i, it) = x
+                        cell(i, content.len())[
+                            #place(dx: -width_numbers)[ #str(i + 1) ]
+                            #it
+                        ]
+                    })
+                )
             ]
             
             #v(-0.64em)
@@ -234,6 +327,8 @@
             )
         ]
     })
+    set page(numbering: "1 of 1")
+    counter(page).update(1)
 
     body
 }
@@ -258,14 +353,37 @@
     figure(caption: caption,..arg)
 }
 
-#let text_emoji(content, ..args) = [
-  #text(font: "Inter", fallback: false, weight: "extrabold", size: 14pt, ..args)[#content]
+#let text_emoji(content, ..args) = text.with(font: "tabler-icons", fallback: false, weight: "regular", size: 16pt, ..args)(content)
+
+#let lightbulb = text_emoji(fill: earth-yellow, size: font_size - 2.7pt)[\u{ea51}]
+#let lightning = text_emoji(fill: green, size: font_size - 2.7pt)[\u{ea38}]
+#let value = text_emoji(fill: rgb(30,100,200), size: font_size - 2.7pt)[\u{f61b}]
+
+#let required = text_emoji(fill: green)[\u{ea5e}]
+#let not_needed = text_emoji(fill: red)[\u{eb55}]
+#let desired = text_emoji(fill: rgb(30,100,200))[\u{f4a5}]
+
+#let required_sml = text_emoji(fill: green, size: font_size - 2.6pt)[\u{ea5e}]
+#let not_needed_sml = text_emoji(fill: red, size: font_size - 2.6pt)[\u{eb55}]
+#let desired_sml = text_emoji(fill: rgb(30,100,200), size: font_size - 2.6pt)[\u{f4a5}]
+
+#let blank-page() = page(numbering: none)[
+    #align(center + horizon)[
+        #text(fill: gray, size: 14pt)[This page is intentionally left blank.]
+    ]
 ]
 
-#let required = text_emoji(fill: green)[✓]
-#let not_needed = text_emoji(fill:  red)[\u{2717}]
-#let desired = text_emoji(fill: rgb(30,100,200))[\~]
+#let score(score, color: none) = {
+    let empty = "\u{ed27}"
+    let full  = "\u{f671}"
 
-#let required_sml = text_emoji(fill: green, size: font_size - 2pt)[✓]
-#let not_needed_sml = text_emoji(fill: red, size: font_size - 2pt)[\u{2717}]
-#let desired_sml = text_emoji(fill: rgb(30,100,200), size: font_size - 2pt)[\~]
+    let score = int(calc.round(score))
+
+    for _i_ in range(score) {
+        text_emoji(full, font: "tabler-icons")
+    }
+
+    for _i_ in range(5 - score) {
+        text_emoji(empty, font: "tabler-icons")
+    }
+}

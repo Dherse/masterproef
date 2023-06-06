@@ -1,12 +1,18 @@
+use std::fmt::Write;
+
 fn main() {
     for i in 1..=100 {
-        print!("{i}\r");
-        if i % 3 == 0 {
-            print!("Fizz");
+        let out = format!(
+            "{}{}",
+            if i % 3 == 0 { "Fizz" } else { "" },
+            if i % 5 == 0 { "Buzz" } else { "" }
+        );
+        
+
+        if out.len() == 0 {
+            println!("{i}");
+        } else {
+            println!("{out}");
         }
-        if i % 5 == 0 {
-            print!("Buzz");
-        }
-        println!();
     }
 }

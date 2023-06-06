@@ -2,7 +2,7 @@
 #import "../elems/infos.typ": *
 #import "../elems/template.typ": *
 
-= Programmable photonics
+= Programmable photonics <sec_programmable_photonics>
 
 As previously mentioned in @motivation, the primary goal of this thesis is to find which paradigms and languages are best suited for the programming of photonic @fpga[s]. However, before discussing these topics in detail, it is necessary to start discussing the basic of photonic processors. This chapter will therefore start by discussing what photonic processors are, what niche they fill and how they work. From this, the chapter will then move on to discuss the different types of photonic processors and how they differ from each other. Finally, this chapter will conclude with the first and most important assumption made in all subsequent design decisions.
 
@@ -18,7 +18,9 @@ However, it is interesting to note that, just like traditional @fpga[s], there a
 
 Therefore, looking at @pic_hierarchy, one can see that four large categories of @pic can be built based on their programmability. The first ones #link(label("pic_hierarchy"))[(a)] are not programmable at all, they require no tunable elements and are therefore the simplest. The second category #link(label("pic_hierarchy"))[(b)] contains circuits that have tunable elements but fixed function, the tunable element could be a tunable coupler, modulator, phase shifter, etc. and allows the designer to tweak the properties of their circuit during use, for purposes such as calibration, temperature compensation, signal modulation or more generally, altering the usage of the circuit. The third kind of @pic is the feedforward architecture #link(label("pic_hierarchy"))[(c)], which means that the light is expected to travel in a specific direction, it is composed of gates, generally containing tunable couplers and phase shifters. Additionally, external devices such as high speed modulators, amplifiers and other elements can be added. Finally, the most generic kind of programmable @pic is the recirculating mesh #link(label("pic_hierarchy"))[(d)], which, while also composed of tunable couplers and phase shifters, allows the light to travel in either direction, allowing for more general circuits to be built as explored in @feedfoward_vs_recirculating.
 
-#figure(
+#figurex(
+    kind: image,
+    title: [ A hierachy of programmable #gloss("pic", long: true, suffix: "s") ],
     caption: [
         A hierachy of programmable #gloss("pic", long: true, suffix: "s"), starting at the non-programmable single function @pic (a), moving then to the tunable @pic (b), the feedfoward architecture (c) and finally to the photonic processor (d).
     ],
@@ -59,7 +61,9 @@ A 2x2 tunable coupler is a structure that allows two waveguides to interact in a
 
 The first mode (b), allows light to travel without interacting, allowing for tight routing of light in a photonic mesh. The second mode is also useful for routing, by allowing signals to cross with little to no interference. The final state allows the user to interfere two optical signals together based on predefined proportions. This is useful for applications such as filtering for ring resonators or splitting.
 
-#figure(
+#figurex(
+    kind: image,
+    title: [ Different states of a 2x2 optical coupler ],
     caption: [
         Different states of a 2x2 optical coupler, (a) a simplified coupler, (b) in "bar" mode, (c) in "cross" mode, (d) in "partial" mode.
     ],
@@ -80,7 +84,7 @@ The first mode (b), allows light to travel without interacting, allowing for tig
 
 There are many construction techniques for building 2x2 couplers, each with their own advantages and disadvantages. The most common ones are the Mach-Zehnder interferometers with two phase shifters. However, other techniques involve the user of #gloss("mems") or liquid crystals #cite("bogaerts_programmable_2020-1", "capmany_programmable_2016", "perez_programmable_2019").
 
-==== Detectors
+==== Detectors <sec_detectors>
 
 #todo("todo")
 
@@ -109,6 +113,8 @@ As it has been shown#cite("perez_programmable_2019"), recirculating meshes offer
 === Embedding of photonic processor in a larger system <photonic_processors_in_systems>
 
 == Circuit representation <circuit_repr>
+
+=== Netlist and nets
 
 === Bi-directional systems
 

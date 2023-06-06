@@ -2,7 +2,7 @@
 #import "./elems/acronyms.typ": *
 
 #show: project.with(
-  title: "PHÔS: A Photonic Hardware Description Language",
+  title: "A software language approach for describing and programming photonics hardware",
   authors: (
     "Sébastien d'Herbais de Thun",
   ),
@@ -28,6 +28,7 @@ presentation of the master's dissertation are not included in this text.
 
 // Table of contents
 #outline(title: "Table of contents", indent: true, depth: 3)
+
 #show: glossary.with((
     (key: "prg", short: "PRG", long: "Photonics Research Group"),
     (key: "fpga", short: "FPGA", long: "Field Programmable Gate Array"),
@@ -53,18 +54,31 @@ presentation of the master's dissertation are not included in this text.
     (key: "asic", short: "ASIC", long: "Application Specific Integrated Circuit"),
     (key: "api", short: "API", long: "Application Programming Interface"),
     (key: "dsl", short: "DSL", long: "Domain Specific Language"),
-    (key: "jtag", short: "JTAG", long: "Joint Test Action Group - A standard for testing integrated circuits"),
+    (key: "jtag", short: "JTAG", long: [ Joint Test Action Group -- A standard for testing integrated circuits]),
     (key: "sql", short: "SQL", long: "Structured Query Language"),
     (key: "ide", short: "IDE", long: "Integrated Development Environment"),
     (key: "lsp", short: "LSP", long: "Language Server Protocol"),
     (key: "tdd", short: "TDD", long: "Test Driven Development"),
-    (key: "http", short: "HTTP", long: "Hypertext Transfer Protocol -- the protocol used for web navigation"),
+    (key: "http", short: "HTTP", long: [ Hypertext Transfer Protocol -- the protocol used for web navigation ]),
     (key: "ip", short: "IP", long: "Intellectual Property"),
     (key: "dry", short: "DRY", long: "Don't Repeat Yourself"),
     (key: "hls", short: "HLS", long: "High Level Synthesis"),
     (key: "vhsic", short: "VHSIC", long: "Very High Speed Integrated Circuit"),
-    (key: "vhdl", short: "VHDL", long: [ #gloss("vhsic") Hardware Description Language ]),
+    (key: "vhdl", short: "VHDL", long: [ #gloss("vhsic", short: true) Hardware Description Language ]),
     (key: "gpl-3-0", short: "GPL-3.0", long: "GNU General Public License version 3.0"),
+    (key: "ic", short: "IC", long: "Integrated Circuit"),
+    (key: "gpu", short: "GPU", long: [Graphics Processing Unit -- also commonly used for highly parallel computing and machine learning]),
+    (key: "cpu", short: "CPU", long: [Central Processing Unit]),
+    (key: "llvm", short: "LLVM", long: [Low Level Virtual Machine]),
+    (key: "hpc", short: "HPC", long: [High Performance Computing]),
+    (key: "fsr", short: "FSR", long: [Free Spectral Range]),
+    (key: "hal", short: "HAL", long: [Hardware Abstraction Layer]),
+    (key: "eda", short: "EDA", long: [Electronic Design Automation]),
+    (key: "lut", short: "LUT", long: [Look Up Table]),
+    (key: "mzi", short: "MZI", long: [Mach-Zehnder Interferometer]),
+    (key: "io", short: "I/O", long: [Input/Output]),
+    (key: "ppa", short: "PPA", long: [Power, Performance, Area]),
+    (key: "ecs", short: "ECS", long: [Entity-Component-System]),
 ))
 
 #outline(title: "List of figures", target: figure.where(kind: image))
@@ -73,7 +87,13 @@ presentation of the master's dissertation are not included in this text.
 
 #include "./content/this_document.typ"
 
-#show: content.with()
+#locate(loc => {
+    if calc.mod(counter(page).at(loc).at(0), 2) == 0 {
+        blank-page()
+    }
+})
+
+#show: content
 
 #include "./content/0_introduction.typ"
 #include "./content/1_background.typ"
