@@ -188,17 +188,21 @@
         "verilog-ams": ("Verilog-AMS", [], rgb(30,100,200)),
         "vhdl": ("VHDL", [</>], gray),
         "spice": ("SPICE", [], rgb("#283593")),
+        "ts": (ref(label("phos")), [], rgb("#de8f6e")),
     )
     show figure.where(kind: raw): it => style(styles => {
         let content = ()
         let i = 1
         if it.body.func() == raw {
-            if it.body.func() == raw {
-                for line in item.text.split("\n") {
-                    content.push(str(i))
+            for line in item.text.split("\n") {
+                content.push(str(i))
+
+                if line == "" {
+                    content.push(raw(" ", lang: item.lang))
+                } else {
                     content.push(raw(line, lang: item.lang))
-                    i += 1
                 }
+                i += 1
             }
         } else {
             for item in it.body.children {
@@ -239,13 +243,21 @@
                                         #lang.at(0)
                                     ]
                                 ]
-                                raw(line, lang: item.lang)
-
+                                
+                                if line == "" {
+                                    raw(" ", lang: item.lang)
+                                } else {
+                                    raw(line, lang: item.lang)
+                                }
                             })
                             
                             content.push(line)
                         } else {
-                            content.push(raw(line, lang: item.lang))
+                            if line == "" {
+                                content.push(raw(" ", lang: item.lang))
+                            } else {
+                                content.push(raw(line, lang: item.lang))
+                            }
                         }
                         i += 1
                     }
@@ -283,7 +295,7 @@
                 #let border_color = luma(200) + 0.05em;
                 #let cell(i, len, body, ..args) = rect(
                     inset: (left: width_numbers + 0.48em, rest: 0.48em),
-                    fill: if calc.mod(i, 2) == 0 {
+                    fill: if calc.rem(i, 2) == 0 {
                         luma(240)
                     } else {
                         white
@@ -337,7 +349,7 @@
     text(fill: red, body)
 }
 
-#let figurex(title: auto, caption: none, ..arg) = {
+#let figurex(title: auto, caption: none, breakable: true, ..arg) = {
     let caption = locate(loc => {
         if section.at(loc) == "preface" {
             if title == auto {

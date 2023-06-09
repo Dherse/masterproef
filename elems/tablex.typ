@@ -39,7 +39,8 @@
     stroke: auto,
     stop-pre-gutter: auto, gutter-restrict: none,
     stroke-expand: true,
-    expand: none
+    expand: none,
+    double: none,
 ) = (
     tablex-dict-type: "vline",
     start: start,
@@ -51,6 +52,7 @@
     stroke-expand: stroke-expand,
     expand: expand,
     parent: none,
+    double: double,
 )
 
 #let cellx(content,
@@ -1560,6 +1562,30 @@
     }
 }
 
+#let filter-vline(vline, initial_x: 0, initial_y: 0, columns: (), rows: (), stroke: auto, gutter: none, hlines: (), pre-gutter: false, stop-before-row-gutter: false) = {
+    let start = vline.start
+    let end = vline.end
+
+    if default-if-auto-or-none(start, 0) == default-if-auto-or-none(end, rows.len()) { return false }
+
+    if (pre-gutter and vline.gutter-restrict == right) or (not pre-gutter and vline.gutter-restrict == left) {
+        return false
+    }
+
+    let expand = get-actual-expansion(vline, spanned-tracks-len: rows.len())
+    let top-expand = default-if-auto-or-none(expand.at(0), 0pt)
+    let bottom-expand = default-if-auto-or-none(expand.at(1), 0pt)
+
+    let start_y = height-between(start: initial_y, end: start, rows: rows, gutter: gutter) - top-expand
+    let end_y = height-between(start: initial_y, end: end, rows: rows, gutter: gutter, pre-gutter: stop-before-row-gutter or vline.stop-pre-gutter == true) + bottom-expand
+
+    if end_y - start_y < 0pt {
+        return false // negative length
+    }
+
+    true
+}
+
 #let draw-vline(vline, initial_x: 0, initial_y: 0, columns: (), rows: (), stroke: auto, gutter: none, hlines: (), pre-gutter: false, stop-before-row-gutter: false) = {
     let start = vline.start
     let end = vline.end
@@ -1602,9 +1628,17 @@
 
     if stroke != auto {
         if stroke != none {
-            line(start: start, end: end, stroke: stroke)
+            let xoffset = 0pt
+            if vline.double != none {
+                xoffset = vline.double / 2
+                line(start: (start.at(0) + xoffset, start.at(1)), end: (end.at(0) + xoffset, end.at(1)), stroke: stroke)
+            }
+            line(start: (start.at(0) - xoffset, start.at(1)), end: (end.at(0) - xoffset, end.at(1)), stroke: stroke)
         }
     } else {
+        if vline.double != none {
+            line(start: (start.at(0) + vline.double, start.at(1)), end: (end.at(0) + vline.double, end.at(1)))
+        }
         line(start: start, end: end)
     }
 }

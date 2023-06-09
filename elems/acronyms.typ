@@ -48,7 +48,7 @@
     })
 
     let elems = ();
-    for entry in entries.sorted(key: (x) => x.short) {
+    for entry in entries.sorted(key: (x) => x.key) {
         elems.push[
             #heading(smallcaps(entry.short), level: 99)
             #label(entry.key)

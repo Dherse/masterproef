@@ -79,7 +79,12 @@ presentation of the master's dissertation are not included in this text.
     (key: "io", short: "I/O", long: [Input/Output]),
     (key: "ppa", short: "PPA", long: [Power, Performance, Area]),
     (key: "ecs", short: "ECS", long: [Entity-Component-System]),
+    (key: "adt", short: "ADT", long: [Algebraic Data Type]),
+    (key: "si", short: "SI", long: [Système international -- the international system of units]),
+    (key: "ast", short: "AST", long: [Abstract Syntax Tree]),
+    (key: "vm", short: "VM", long: [Virtual Machine]),
 ))
+
 
 #outline(title: "List of figures", target: figure.where(kind: image))
 #outline(title: "List of tables", target: figure.where(kind: table))
@@ -88,7 +93,7 @@ presentation of the master's dissertation are not included in this text.
 #include "./content/this_document.typ"
 
 #locate(loc => {
-    if calc.mod(counter(page).at(loc).at(0), 2) == 0 {
+    if calc.rem(counter(page).at(loc).at(0), 2) == 0 {
         blank-page()
     }
 })
@@ -101,9 +106,8 @@ presentation of the master's dissertation are not included in this text.
 #include "./content/3_translation.typ"
 #include "./content/4_phos.typ"
 #include "./content/5_examples.typ"
-#include "./content/6_extending.typ"
-#include "./content/7_simu.typ"
-#include "./content/8_conclusion.typ"
+#include "./content/6_future_work.typ"
+#include "./content/7_conclusion.typ"
 
 #pagebreak(weak: true)
 #show bibliography: it => {
@@ -118,3 +122,5 @@ presentation of the master's dissertation are not included in this text.
     it
 }
 #bibliography("references.bib", style: "ieee")
+
+#include "./content/a_annexes.typ"

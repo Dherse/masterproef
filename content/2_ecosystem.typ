@@ -638,7 +638,11 @@ In the first example, in @lst_adder_vhdl, it can be seen that the @vhdl implemen
 
 == A primer on calculability and complexity
 
-== Hardware-software co-design
+== Hardware-software codesign
+
+#info-box(kind: "definition", footer: [ Adapted from @darwish_trends_2005. ])[
+    *Hardware-software codesign* is the process of designing a system where both the hardware and software components are designed together, with the goal of interoperating hardware components and software systems more easily. And optimizing the system as a whole, rather than optimizing the hardware and software components separately.
+]
 
 == Summary <sec_language_summary>
 
@@ -686,7 +690,7 @@ From @tbl_language_comparison, one can see that for the creation of a new langua
         hlinex(start: 1, end: 5, stroke: (thickness: 0.5pt, dash: "dashed")),
         [],
         colspanx(4)[#align(left)[
-            Rust is a modern low-level language, it is very performant, has excellent first-party tooling, quickly growing in popularity, and has is memory safe. However, it has difficult syntax and semantics that is unwelcoming for non-developers, which makes it unsuitable for either @api design or as a root language. However, its large array of language-implementation libraries coupled with its memory and thread safety makes it an excellent candidate for the implementation of a new language.
+            Rust is a modern low-level language, it is very performant, has excellent first-party tooling, quickly growing in popularity, and is memory safe. However, it has difficult syntax and semantics that is unwelcoming for non-developers, which makes it unsuitable for either @api design or as a root language. However, its large array of language-implementation libraries coupled with its memory and thread safety makes it an excellent candidate for the implementation of a new language.
         ]],
 
         smallcaps[ *Python* ],
