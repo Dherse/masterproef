@@ -238,11 +238,11 @@ Build systems play an essential role in building complex software. As modern sof
 Additionally, build systems can provide advanced features that are of particular interest of hardware description languages. Features such as _feature flags_ are particularly useful. A feature flag is a property that can be enabled during building that is additive, it adds additional features to the program. As a simple example, consider the program in @prog_hello: it will print `"Hello, world!"` when it is called. A feature flag called `custom_hello` may be used to add the function in @prog_hello_custom which allows the user to specify a name to greet. It is purely additive: adding functionality to the previous library and uses the `custom_hello` feature flag to conditionally enable the additional feature. This example is trivial, but this idea can be expanded. Another example might be a feature flag that enables an additional type of modulator in a library of reusable photonic components. Some libraries even take a step further, where almost all of their features are gated, which allows them to be very lean and fast to compile, however this is not a common occurrence.
 
 #figure(caption: [ Simple function that prints `"Hello, world!"`, in _Rust_.])[
-    #raw(read("../code/hello_world/0.rs"), lang: "rust")
+    #raw(read("../code/hello_world/0.rs"), lang: "rust", block: true)
 ] <prog_hello>
 
 #figure(caption: [ Function that prints `"Hello, {name}!"` with a custom name, in _Rust_.])[
-    #raw(read("../code/hello_world/1.rs"), lang: "rust")
+    #raw(read("../code/hello_world/1.rs"), lang: "rust", block: true)
 ] <prog_hello_custom>
 
 Whether providing the user with an @api or creating a new language, it is important to consider how the user's program must be built. As this task can quickly become quite complex. Enforcing a fixed folder structure and providing a ready-made build system that handles all common building tasks can greatly improve the user experience. And especially the experience of newcomers as it might avoid them having to do obscure tasks such as writing their own _CMake_ files.
@@ -526,7 +526,7 @@ A simple _C_ implementation of _FizzBuzz_ can be found in @lst_c_fizz, it shows 
 - _C_ needs a `main` function to be defined, which is the entry point of the program.
 
 #figure(caption: [ _FizzBuzz_ implemented in _C_, based on the _Rosetta Code_ project @rosetta_code_sieve_2021.])[
-    #raw(read("../code/fizzbuzz/c.c"), lang: "c")
+    #raw(read("../code/fizzbuzz/c.c"), lang: "c", block: true)
 ] <lst_c_fizz>
 
 The _Rust_ implementation of _FizzBuzz_ can be found in @lst_rust_fizz, it shows several important aspects of _Rust_:
@@ -539,7 +539,7 @@ The _Rust_ implementation of _FizzBuzz_ can be found in @lst_rust_fizz, it shows
 - _Rust_ needs a `main` function to be defined, which is the entry point of the program.
 
 #figure(caption: [ _FizzBuzz_ implemented in _Rust_, based on the _Rosetta Code_ project @rosetta_code_sieve_2021])[
-    #raw(read("../code/fizzbuzz/rust.rs"), lang: "rust")
+    #raw(read("../code/fizzbuzz/rust.rs"), lang: "rust", block: true)
 ] <lst_rust_fizz>
 
 The _Python_ implementation of _FizzBuzz_ can be found in @lst_python_fizz, it shows several important aspects of _Python_:
@@ -552,7 +552,7 @@ The _Python_ implementation of _FizzBuzz_ can be found in @lst_python_fizz, it s
 - _Python_ does not need a `main` function to be defined, as the file itself is the entry point of the program.
 
 #figure(caption: [ _FizzBuzz_ implemented in _Python_, based on the _Rosetta Code_ project @rosetta_code_sieve_2021.])[
-    #raw(read("../code/fizzbuzz/python.py"), lang: "python")
+    #raw(read("../code/fizzbuzz/python.py"), lang: "python", block: true)
 ] <lst_python_fizz>
 
 These simple example show us some fundamental design decisions for _C_, _Rust_, and _Python_, most notably that _Python_ is whitespace and line-space sensitive, while _C_ and _Rust_ are not. This is a design feature of _Python_ that aids in making the code more readable and consistently formatted regardless of whether the user uses a formatter or not. Then, focusing on typing, _Python_ is dynamically typed which makes the work of any compiler more difficult. Dynamic typing is a feature that generally makes languages easier to use at the cost of runtime performance, as type checking has to be done as the code is running. Per contra, _Rust_ takes an intermediate approach between _Python_'s dynamic typing and _C_'s manual type annotation: _Rust_ uses type inference to infer the type of variables, that means that users still need to annotate some types, but overall most variables do not need type annotations. This makes _Rust_ easier to use than _C_, but also more difficult to use than _Python_ from a typing point of view.
@@ -603,7 +603,7 @@ In the first example, in @lst_adder_vhdl, it can be seen that the @vhdl implemen
 #figurex(
     caption: [ Example of a $n$-bit adder in @vhdl, based on @vhdl-adder. ],
 )[
-    #raw(lang: "vhdl", read("../code/adder/vhdl.vhdl"))
+    #raw(lang: "vhdl", read("../code/adder/vhdl.vhdl"), block: true)
 ] <lst_adder_vhdl>
 
 #figurex(

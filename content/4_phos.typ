@@ -3,7 +3,6 @@
 #import "../elems/template.typ": *
 #import "../elems/tablex.typ": *
 
-
 = The PHÔS programming language <sec_phos>
 
 Based on all of the information that has been presented so far regarding translation of intent and requirements (@sec_intent), programming paradigms (@sec_paradigms), and with the inadequacies of existing languages (@sec_language_summary), it is now apparent that it may be interesting to create a new language which would benefit from dedicated semantics, syntax, and integrates elements from fitting programming paradigms for the programming of photonic processors. This language should be designed in such a way that it is able to easily and clearly express the intent of the circuit designer, while also being able to translate this code into a programmable format for the hardware. Additionally, this language should be similar enough to languages that are common within the scientific community such that it is easy to learn for engineers, and leverage existing tools. Finally, this language should be created in such a way that it provides both the level of control needed for circuit design, and the level of abstraction needed to clearly express complex ideas. Indeed, the language that is presented in this thesis, @phos, is designed to fulfill these goals.
@@ -42,7 +41,7 @@ In the following sections, the initial specification, the syntax, constraint sys
 
 This section serves as an initial specification or reference to the @phos programming language. It contains the elements and semantics that have already been well defined and are unlikely to change. Therefore, this section is not a complete specification as that would require that the language be more mature, however it serves as an in-depth introduction into the concepts, paradigms, and semantics of the language. Most parts of the specification are companied by a short example to illustrate the syntax and the semantics of the language. Additionally, some elements are further explored in subsequent section of this chapter, with only the basics being presented here.
 
-=== Execution model
+=== Execution model <sec_exec_model>
 
 @phos is a photonic hardware description language, due to its unique requirements, it is not designed in a traditional way and instead separates the compilation to hardware into three distinct steps: compilation, evaluation, and synthesis. The compilation step is responsible for taking the source code, written in human-readable text, and turning it into an executable form called the bytecode, see @sec_mir_to_bytecode. Followed by the evaluation, the evaluation interprets the bytecode, performs several tasks discussed in @sec_vm, and produces a tree of intrinsic operations, constraints and collected stacks. This tree is then synthesized into the output artefacts of the language, namely, the user @hal and a programming file for programming the photonic processor. The execution model is shown graphically in @fig_exec_model, showing all of the major components of the language and how they interact with each other. Further on, more details will be added as more components are discussed.
 
@@ -51,7 +50,7 @@ This section serves as an initial specification or reference to the @phos progra
     caption: [
         Execution model of the @phos programming language, showing the three distinct stages: compilation, evaluation and synthesis. The compilation stage takes the user's source code along with the source code of the standard library, the platform support package -- that contains device-specific constraints and component implementations -- and produces bytecode. The evaluation stage takes the bytecode and produces a tree of intrinsic operations, constraints on those operations, and collected stacks. The evaluation uses the constraints solver and the _Z3_ prover to check for constraint satisfiability @z3. Finally, the synthesis stage takes the output of the evaluation stage, along with the @hal generator for the platform and the place-and-route implementation to produce the user @hal and the programming file for the photonic processor.
 
-        This figure uses the same color scheme as @fig_responsabilities, showing the ecosystem components in orange, the user's code in green, the platform specific code in blue, and the third party code in purple.
+        This figure uses the same color scheme as @fig_responsibilities, showing the ecosystem components in orange, the user's code in green, the platform specific code in blue, and the third party code in purple.
     ]
 )[
     #image(
@@ -195,6 +194,15 @@ _Hindley-Milner_ algorithm, which is a de-facto standard in modern programming l
     smallcaps[*Constraints and typing*]
 }
 In this initial design of @phos, constraints are seen as metadata on values and signals. This is a simpler approach that decreases the initial development complexity. However, it is limiting and makes design error only visible during the evaluation phase of the compiler. For this reason, it could be improved using the concept of _refinement types_ @freeman_refinement_1991, which would allow the compiler to check for errors in constraints earlier, this is further discussed in @sec_future_work.
+
+=== Mutability, memory management and purity
+
+@phos does only allow mutating of state, following the functional approach of limiting side effects @mailund_functional_2017, this makes the work of the prover used for reconfigurability easier. It also ensures that all functions are pure functions, something that can be exploited by the compiler to optimize the code, as well as be used in future iterations of the design to provide features such as memoization for faster compile time. This also means that @phos does not have a garbage collector, as it does not need to manage memory. As the lifetime of all values is predictable, @phos can simply discard values when they fall out of scope. This is done by the compiler, and does not require any action from the user. This is a deliberate choice to reduce the complexity of the compiler.
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Limitations of immutability and purity*]
+} Immutability make global state management difficult, requiring the user of a state monad to manage state @haskell_state_monad. However, @phos does not need global mutable state, as it is not a general purpose programming language. Indeed, due to the hardware-software codesign nature of @phos, it is expected that the user will manage global state within their own software layer, leaving their @phos codebase free of global state. Additionally, purity disallows the user of side effects, which removes the ability of the user from performing @io operations, such as reading from a file, which makes the language inherently safer to use. However, this also means that @phos cannot be used for general purpose programming, and is limited to the domain of photonic circuit design.
 
 === Signal types and semantics
 
@@ -352,7 +360,33 @@ type Voltage = int;
 
 === Automatic return values
 
+@phos support automatic return values, when the compiler sees that the final statement in a block is an expression that is not terminated by a semicolon, it will automatically return the value of that expression. This makes code more concise and readable, as shown in @lst_ex_auto_return, in (a) the example is shown with automatic return, and in (b) the example is shown with explicit return. Additionally, it allows code blocks to be used as expressions, which is generally a useful feature.
 
+#block(breakable: false)[
+    #figurex(
+        kind: raw,
+        caption: [ 
+            Example in @phos of automatic return values, showing the difference between automatic return (a) and explicit return (b).
+        ]
+    )[
+        #table(
+            columns: (1fr, 1fr),
+            stroke: none,
+            align: center + horizon,
+            ```ts
+fn add(a: int, b: int) -> int {
+    a + b
+}
+            ```,
+            ```ts
+fn add(a: int, b: int) -> int {
+    return a + b;
+}
+            ```,
+            [ (a) ], [ (b) ],
+        )
+    ] <lst_ex_auto_return>
+]
 
 
 === Units, prefixes, and unit semantics
@@ -915,7 +949,6 @@ Therefore, it is required the parts of the code that perform conversion between 
 
 Stack collection is therefore an automatic feature performed by the compiler, its goal is to evaluate as much as possible at compile time, as a means to decrease the amount of work being done inside of the user @hal, and collect the stack operations that are relevant to the conversion. From these collected stacks, it can easily evaluate the conditions that lead to reconfigurability, and package them into the user @hal. Nonetheless, one problem remains: which reconfigurability states must be kept past this point, as explained in @sec_tunability_reconfigurability, the compiler can discard as many reconfigurability states as possible based on constraints and using a prover like _Z3_ @z3. 
 
-#pagebreak(weak: true)
 === Language items and statements
 
 Language items and statements, are the hierarchy of language elements that can be used to create a program. They are the most basic elements of the language, and are used to create more complex elements. They are the building blocks of the language, and are the elements that are used to create the @ast. They are the most important elements of the language, and are the ones that are the most likely to be modified in the future. The language items and statements of @phos are listed in @tab_lang_items_statements along with a short description and a short example.
@@ -925,8 +958,7 @@ Language items and statements, are the hierarchy of language elements that can b
     title: [ The list of language items and statements supported in @phos ],
     caption: [ 
         The list of language items and statements supported in @phos, along with a short description and a short example. Additionally lists whether the element is an item or a statement, or both, where a statement is a language element that can be used as an expression, and an item is a language element that cannot be used as an expression, but can be used as a top level declaration.
-        
-        Legend: #required_sml means yes, #not_needed_sml means no.
+        #underline[Legend]: #required_sml means yes, #not_needed_sml means no.
     ]
 )[
     #tablex(
@@ -1038,7 +1070,7 @@ Expressions are a subset of statements, that operate on one or more values and m
     ]
 )[
     #tablex(
-        columns: (0.1fr, 0.5fr, 1fr, 0.8fr),
+        columns: (0.1fr, 0.5fr, 1fr, 1fr),
         align: left + horizon,
         auto-vlines: false,
         repeat-header: true,
@@ -1058,8 +1090,7 @@ Expressions are a subset of statements, that operate on one or more values and m
         ```ts
 {
     let a = 10;
-    let b = 20;
-    a + b
+    a + 20
 }
         ```,
 
@@ -1384,9 +1415,15 @@ The standard library should also decouple synthesizable blocks from computationa
 
 Finally, the standard library can serve as a series of examples for new users. A photonic engineer, that is knowledgeable with photonic circuit design would benefit from the standard library as a source of high quality examples onto which they may base themselves. Similarly, a software engineer, that is knowledgeable with software development, but not photonic circuit design, would benefit from the standard library as a source of high quality examples of basic building blocks of photonic circuits. The standard library should be written in a way that is easy to understand, and that is well documented, such that it can serve as a learning resource for new users.
 
+#pagebreak(weak: true)
 == Compiler architecture <sec_arch>
 
-The design of the @phos compiler is inspired in parts by @llvm, _Rust_'s compiler, and _Java_. As previously mentioned, the compilation of a @phos program into a circuit design that can be programmed onto a photonic processor is a three step process: compilation, evaluation, and synthesis. The compiler as it is referred as in this section performs the compilation step
+The design of the @phos compiler is inspired in parts by @llvm, _Rust_'s compiler, and _Java_'s compiler. As previously mentioned, the compilation of a @phos program into a circuit design that can be programmed onto a photonic processor is a three step process: compilation, evaluation, and synthesis. The compiler as it is referred in this section performs the compilation step. Therefore, as previously mentioned in @sec_exec_model, it has the task for taking the user's code as an input and producing bytecode for the #gloss("vm", long: true). The compiler is written in _Rust_, and is split into several components, each with a specific purpose. As will be discussed in subsequent sections, the @phos compiler is composed of a _lexer_, a _parser_, an _#gloss("ast", long: true)_, a _desugaring_ step, a _high-level intermediary representation_, a _medium-level intermediary representation_, and a _bytecode_ generator.
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Optical*]
+} Modularity is a key aspect of the compiler, as it allows for the compiler to be easily extended in the future. As @phos is a new language, it is expected that the compile will change significantly before the language is ready to be used in production environments. Additionally, this modularity makes the compiler easier to understand and maintain, as each component has a specific purpose, and can be understood in isolation.
 
 === Lexing <sec_lexing>
 

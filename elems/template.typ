@@ -183,162 +183,112 @@
 
     let languages = (
         "rust": ("Rust", "\u{fa53}", rgb("#CE412B")),
-        "c": ("C", [], rgb("#283593")),
+        "c": ("C", none, rgb("#283593")),
         "python": ("Python", "\u{ed01}", rgb("#FFD43B")),
-        "verilog-ams": ("Verilog-AMS", [], rgb(30,100,200)),
+        "verilog-ams": ("Verilog-AMS", none, rgb(30,100,200)),
         "vhdl": ("VHDL", [</>], gray),
-        "spice": ("SPICE", [], rgb("#283593")),
-        "ts": (ref(label("phos")), [], rgb("#de8f6e")),
+        "spice": ("SPICE", none, rgb("#283593")),
+        "ts": (ref(label("phos")), none, rgb("#de8f6e")),
     )
-    show figure.where(kind: raw): it => style(styles => {
-        let content = ()
-        let i = 1
-        if it.body.func() == raw {
-            for line in item.text.split("\n") {
-                content.push(str(i))
 
-                if line == "" {
-                    content.push(raw(" ", lang: item.lang))
-                } else {
-                    content.push(raw(line, lang: item.lang))
-                }
-                i += 1
-            }
+    show raw.where(block: true): it => style(styles => {
+        // Get the info of the language
+        let lang = languages.at(it.lang, default: (it.lang, none, black))
+        let lang_icon = if lang.at(1) == none {
+            none
         } else {
-            for item in it.body.children {
-                if item.func() == raw {
-                    for line in item.text.split("\n") {
-                        if i == 1 {
-                            let lang = languages.at(item.lang, default: (item.lang, none, black))
-                            
-                            let lang_icon = if lang.at(1) == none {
-                                none
-                            } else {
-                                text(
-                                    font: "tabler-icons", 
-                                    fallback: false, 
-                                    weight: "regular", 
-                                    size: 8pt,
-                                )[#lang.at(1)]
-                            }
+            text(
+                font: "tabler-icons", 
+                fallback: false, 
+                weight: "regular", 
+                size: 8pt,
+            )[#lang.at(1)]
+        }
+        let lang_icon_size = measure([#lang_icon#lang.at(0)], styles)
+        let lang_box = box(
+            radius: 2pt, 
+            fill: lang.at(2).lighten(60%), 
+            inset: 0.32em,
+            height: lang_icon_size.height + 2 * 0.32em,
+        )[#lang_icon#lang.at(0)]
 
-                            let line = layout(size => {
-                                let total_width = size.width
-                                let width = measure(box(
-                                    radius: 2pt, 
-                                    fill: lang.at(2).lighten(60%), 
-                                    inset: 0.32em
-                                )[
-                                    #lang_icon
-                                    #lang.at(0)
-                                ], styles).width
+        // Build the content
+        let contents = ()
+        let lines = it.text.split("\n").enumerate()
+        for (i, line) in lines {
+            let line = if line == "" { " " } else { line }
 
-                                place(dx: total_width - width, dy: -0.32em)[
-                                    #box(
-                                        radius: 2pt, 
-                                        fill: lang.at(2).lighten(60%), 
-                                        inset: 0.32em
-                                    )[
-                                        #lang_icon
-                                        #lang.at(0)
-                                    ]
-                                ]
-                                
-                                if line == "" {
-                                    raw(" ", lang: item.lang)
-                                } else {
-                                    raw(line, lang: item.lang)
-                                }
-                            })
-                            
-                            content.push(line)
-                        } else {
-                            if line == "" {
-                                content.push(raw(" ", lang: item.lang))
-                            } else {
-                                content.push(raw(line, lang: item.lang))
-                            }
-                        }
-                        i += 1
-                    }
-                }
+            let content = if i == 0 {
+                layout(size => {
+                    let lang_box_size = measure(lang_box, styles)
+                    let dx = size.width - lang_box_size.width
+                    let dy = (12pt - lang_box_size.height)
+
+                    raw(line, lang: it.lang)
+                    place(lang_box, dx: dx, dy: dy - 0.96em + if lines.len() == 1 { 0.32em } else { 0pt })
+                })
+            } else {
+                raw(line, lang: it.lang)
             }
+
+            contents.push((
+                index: str(i + 1),
+                content: content,
+            ))
         }
 
-        let supplement = [
-            #set text(fill: rgb(30,100,200))
-            #smallcaps[*#it.supplement #it.counter.display(it.numbering)*]
-        ];
-        let gap = 0.64em
-        let width = measure(supplement, styles).width;
-        let cell = rect.with(
-            inset: (top: 0.32em, bottom: 0.32em, rest: gap),
-            width: width + 2 * gap,
-            stroke: (
-                left: (
-                    paint: rgb(30,100,200), 
-                    thickness: 0.8pt,
-                ),
-                rest: none,
-            )
-        )
+        // Compute the width of the largest number, add the gap
+        let width_numbers = contents
+            .map((it) => measure(str(it.index), styles).width)
+            .fold(0pt, (a, b) => calc.max(a, b)) + 0.64em
 
-        block(
-            breakable: true,
-        )[
-            #let width_numbers = content
-                .enumerate()
-                .map((it) => measure(str(it.at(0)), styles).width)
-                .fold(0pt, (a, b) => calc.max(a, b)) + 0.64em
-            #align(center)[
-                #set align(left)
-                #let border_color = luma(200) + 0.05em;
-                #let cell(i, len, body, ..args) = rect(
-                    inset: (left: width_numbers + 0.48em, rest: 0.48em),
-                    fill: if calc.rem(i, 2) == 0 {
-                        luma(240)
-                    } else {
-                        white
-                    },
-                    radius: if i == 0 {
-                        (top-left: 0.32em, top-right: 0.32em)
-                    } else if i == len - 1 {
-                        (bottom-left: 0.32em, bottom-right: 0.32em)
-                    } else {
-                        0pt
-                    },
-                    stroke: if i == 0 {
-                        (top: border_color, left: border_color, right: border_color)
-                    } else if i == len - 1 {
-                        (bottom: border_color, left: border_color, right: border_color)
-                    } else {
-                        (left: border_color, right: border_color)
-                    },
-                    width: 100%,
-                    ..args
-                )[#body]
-                #stack(
-                    dir: ttb,
-                    ..content.enumerate().map(x => {
-                        let (i, it) = x
-                        cell(i, content.len())[
-                            #place(dx: -width_numbers)[ #str(i + 1) ]
-                            #it
-                        ]
-                    })
-                )
-            ]
-            
-            #v(-0.64em)
-            #grid(
-                columns: (width, 1fr),
-                rows: (auto),
-                gutter: 2 * gap,
-                cell(height: auto, stroke: none)[ #supplement ],
-                cell(height: auto, width: 100%,)[ #it.caption ],
+        let border_color = luma(200) + 0.05em;
+        let cell(i, len, body, ..args) = {
+            let radius = (:)
+            let stroke = (left: border_color, right: border_color)
+
+            if i == 0 {
+                radius.insert("top-left", 0.32em)
+                radius.insert("top-right", 0.32em)
+                stroke.insert("top", border_color)
+            }
+
+            if i == len - 1 {
+                radius.insert("bottom-left", 0.32em)
+                radius.insert("bottom-right", 0.32em)
+                stroke.insert("bottom", border_color)
+            }
+
+            radius.insert("rest", 0pt)
+
+            rect(
+                inset: (left: width_numbers + 0.48em, rest: 0.64em),
+                fill: if calc.rem(i, 2) == 0 {
+                    luma(240)
+                } else {
+                    white
+                },
+                radius: radius,
+                stroke: stroke,
+                width: 100%,
+                ..args
+            )[ #body ]
+        }
+
+        align(left)[
+            #stack(
+                dir: ttb,
+                ..contents.enumerate().map(i => {
+                    let (i, x) = i
+                    cell(i, contents.len())[
+                        #place(x.index, dx: -width_numbers)
+                        #x.content
+                    ]
+                })
             )
         ]
     })
+
     set page(numbering: "1 of 1")
     counter(page).update(1)
 

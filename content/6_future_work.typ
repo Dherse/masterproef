@@ -34,4 +34,8 @@
 
 === Traits and type classes
 
+=== Dependent types and refinement types
+
+=== Algebraic effects
+
 == PHÔS for generic circuit design <sec_phos_generic>
