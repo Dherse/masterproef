@@ -83,6 +83,7 @@ presentation of the master's dissertation are not included in this text.
     (key: "si", short: "SI", long: [Système international -- the international system of units]),
     (key: "ast", short: "AST", long: [Abstract Syntax Tree]),
     (key: "vm", short: "VM", long: [Virtual Machine]),
+    (key: "cst", short: "CST", long: [Concrete Syntax Tree]),
 ))
 
 
@@ -123,4 +124,5 @@ presentation of the master's dissertation are not included in this text.
 }
 #bibliography("references.bib", style: "ieee")
 
+#show: annex
 #include "./content/a_annexes.typ"

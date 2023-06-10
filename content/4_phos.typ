@@ -214,12 +214,12 @@ In this initial design of @phos, constraints are seen as metadata on values and 
 } Optical signals follow a _drive-once_, _read-once_ semantics, meaning that they must be produced by a source element and must be consumed by a sink element, signals cannot be empty or be discarded without being used. The goal of this semantic is to make signals less error prone by avoiding the possibility of signals being left unconnected. Additionally, the _drive-once_ semantics ensure that signals are split explicitly by the user and not implicitly with difficult to predict results. Consider the example in @lst_ex_opt_splitting, depending on the compiler's implementation, it may lead to two splitting schemes, both shown in @fig_ex_opt_splitting, it shows that with an automatic scheme, based on the compiler architecture, it may lead to two different results. However, with an explicit scheme, the user is able to clearly define the splitting scheme, and the compiler no longer has to make any assumptions about the splitting scheme. Additionally, optical signals only support being passed into, used, or sourced inside of synthesizable blocks. This restriction aims at making the work of the compiler easier and creating a stronger distinction for users.
 
 #figurex(caption: [ Optical signal splitting example ])[
-    ```ts
+    ```phos
 let a = source(1550 nm, -10 dBm)
  
 let b = a |> gain(5 dB)
 let c = a |> filter(center: 1550nm, bandwidth: 10 GHz)
-let d = a |> modulate(external_signal, type: Modulate::Amplitude)
+let d = a |> modulate(external_signal, type_: Modulation::Amplitude)
     ```
 ] <lst_ex_opt_splitting>
 
@@ -297,7 +297,7 @@ let d = a |> modulate(external_signal, type: Modulate::Amplitude)
 
 #block(breakable: false)[
     #figurex(caption: [ Example in @phos of an @adt type, showing all three variant kinds: `A` a unit variant, `B` a tuple variant, and `C` a struct variant.  ])[
-        ```ts
+        ```phos
 enum EnumName {
     A,
     B(int, string),
@@ -322,7 +322,7 @@ Additionally, @phos also supports product types and more generally composite typ
             Example in @phos of composite types, showing all five kinds: `A` a unit structure, `B` a tuple structure, `C` a record structure, `D` a tuple, and arrays.
         ]
     )[
-        ```ts
+        ```phos
 /// A unit struct
 struct A;
  
@@ -352,7 +352,7 @@ struct B {
             Example in @phos of type aliases, showing the creation of a `Voltage` type alias for `int`.
         ]
     )[
-        ```ts
+        ```phos
 type Voltage = int;
         ```
     ] <lst_ex_alias>
@@ -373,12 +373,12 @@ type Voltage = int;
             columns: (1fr, 1fr),
             stroke: none,
             align: center + horizon,
-            ```ts
+            ```phos
 fn add(a: int, b: int) -> int {
     a + b
 }
             ```,
-            ```ts
+            ```phos
 fn add(a: int, b: int) -> int {
     return a + b;
 }
@@ -399,7 +399,7 @@ One of the unique features of @phos is the built-in @si unit system. It is compr
             Example in @phos of @si units.
         ]
     )[
-        ```ts
+        ```phos
 /// 1 milliwatt
 a = 1 mW;
 b = 0 dBm;
@@ -433,7 +433,7 @@ Tuples are a kind of product type that links one or more values together within 
             Example in @phos of tuples as containers.
         ]
     )[
-        ```ts
+        ```phos
 /// A tuple container
 a = (a, b, c)
 
@@ -455,7 +455,7 @@ Unsized tuples are a special kind of tuple which allows the last element to be r
             Example in @phos of unsized tuples as containers.
         ]
     )[
-        ```ts
+        ```phos
 /// A simple unsized tuple
 type E = (B...)
 
@@ -477,7 +477,7 @@ Unsized tuples lead well into the idea of tuples as iterable values. Iterable va
             Example in @phos of iterable tuples.
         ]
     )[
-        ```ts
+        ```phos
 // Iterating over a list of elements
 for a in (1, 2, 3) {
     print(a)
@@ -496,7 +496,7 @@ Patters are used for pattern matching and destructuring, and are a core part of 
         Example in @phos of patterns.
     ]
 )[
-    ```ts
+    ```phos
 // Destructuring of tuples: (a = 1, b = 2, c = 3)
 let (a, b, c) = (1, 2, 3)
 // Destructuring of tuples with trailing: (a = 1, b = (2, 3))
@@ -536,7 +536,7 @@ As previously mentioned, exhaustiveness helps ensure that reconfigurability is r
             Example in @phos of branching.
         ]
     )[
-        ```ts
+        ```phos
 // Simple branching
 if a == 1 {
     print("a is 1")
@@ -574,7 +574,7 @@ Variables in @phos are declared with the `let` keyword, followed by a pattern fo
             Example in @phos of variable declaration, assignment, and update.
         ]
     )[
-        ```ts
+        ```phos
 // Simple declaration
 let a = 5
 
@@ -606,7 +606,7 @@ Tunability is handled by passing a tunable value as an argument to the top-level
             Example in @phos of tunability.
         ]
     )[
-        ```ts
+        ```phos
 // Tunable function
 fn add(a: uint, b: uint) -> uint {
     return a + b
@@ -631,7 +631,7 @@ One of the key features of the @phos programming language that makes it easier t
             Example in @phos of the piping operator.
         ]
     )[
-        ```ts
+        ```phos
 // Function that performs the addition of two numbers using piping
 fn add_with_pipe(a: uint, b: uint) -> uint {
     return (a, b) |> add
@@ -661,7 +661,7 @@ In addition to operating on values, the standard library will contain many commo
             Example in @phos of the piping operator on iterable values.
         ]
     )[
-        ```ts
+        ```phos
 // Function that performs the addition of two numbers using piping
 // Folding is a common operation on iterators, and is used to reduce
 // the values of an iterator into a single value, with a starting value
@@ -691,7 +691,7 @@ Function represent code that cannot consume nor produce signals, whether electri
             Example in @phos of a function.
         ]
     )[
-        ```ts
+        ```phos
 // Function that performs the sum of $n$ numbers
 fn sum(a: (uint...)) -> uint {
     a |> fold(0, |acc, x| acc + x)
@@ -712,7 +712,7 @@ Synthesizable functions have the added semantic of being able to source and sink
             Example in @phos of a synthesizable block.
         ]
     )[
-        ```ts
+        ```phos
 // Synthesizable block that performs the filtering of an input signal using an MZI
 syn filter(in: optical) -> optical {
     a |> split((0.5, 0.5))
@@ -736,7 +736,7 @@ Modules are then imported using the `import` keyword, importing allows the user 
             Example in @phos of an import.
         ]
     )[
-        ```ts
+        ```phos
 // Importing the module `std::intrinsic` and renaming it to `intrinsic`
 import std::intrinsic as intrinsic;
 
@@ -769,7 +769,7 @@ Closures are anonymous functions that are defined inline with the rest of the co
             Example in @phos of a closure.
         ]
     )[
-        ```ts
+        ```phos
 // Closure that performs the sum of $n$ numbers
 let sum = |a: (uint...)| -> uint {
     a |> fold(0, |acc, x| acc + x)
@@ -790,7 +790,7 @@ Due to their _drive-once_, _read-once_ semantics, signals are an especially diff
         Example in @phos of a `Fn` closure (a), a `Syn` closure (b), and a `SynOnce` closure (c).
     ],
 )[
-    ```ts
+    ```phos
 // (a) `Fn` closure
 let c = 1;
 let fn_closure = |a: uint| -> uint {
@@ -825,7 +825,7 @@ In @phos, partial functions are created with the keyword `set`, it produces a cl
         Example in @phos of partial function in @phos.
     ],
 )[
-    ```ts
+    ```phos
 fn add(a: uint, b: uint) -> uint {
     a + b
 }
@@ -854,7 +854,7 @@ For the aforementioned reason, @phos does not have infinite loops but only itera
         Example in @phos of a loop.
     ],
 )[
-    ```ts
+    ```phos
 for i in 0..5 {
     print(i);
 }
@@ -876,7 +876,7 @@ for i in 0..5 {
         Example in @phos of a constrained synthesizable block.
     ],
 )[
-    ```ts
+    ```phos
 // Performs an optical gain on an input signal,
 // the maximum input power is `10dBm - gain`,
 // the gain is constrained to be between 0 and 10dB.
@@ -904,7 +904,7 @@ Additionally, unconstrained block allow the user to create their own signal, wit
         Example in @phos of a constrained synthesizable block.
     ],
 )[
-    ```ts
+    ```phos
 // A ring resonator implemented using an unconstrained block
 unconstrained syn ring_resonator(
     input: optical,
@@ -977,7 +977,7 @@ Language items and statements, are the hierarchy of language elements that can b
         align(center)[#required],
         align(center)[#required],
         align(left)[ Imports a module into the current module. ],
-        ```ts
+        ```phos
 import std::intrinsic as intrinsic;
         ```,
 
@@ -985,7 +985,7 @@ import std::intrinsic as intrinsic;
         align(center)[#required],
         align(center)[#required],
         align(left)[ Declares a function. ],
-        ```ts
+        ```phos
 fn sum(a: (uint...)) -> uint {
     a |> fold(0, |acc, x| acc + x)
 }
@@ -995,7 +995,7 @@ fn sum(a: (uint...)) -> uint {
         align(center)[#required],
         align(center)[#not_needed],
         align(left)[ Declares a synthesizable function. ],
-        ```ts
+        ```phos
 syn gain(in: optical) -> optical {
     a |> std::intrinsic::gain(10 dB)
 }
@@ -1005,7 +1005,7 @@ syn gain(in: optical) -> optical {
         align(center)[#required],
         align(center)[#not_needed],
         align(left)[ Declares a type alias. ],
-        ```ts
+        ```phos
 type Voltage = float;
         ```,
 
@@ -1013,7 +1013,7 @@ type Voltage = float;
         align(center)[#required],
         align(center)[#required],
         align(left)[ Declares a constant. ],
-        ```ts
+        ```phos
 const PI = 3.141592;
         ```,
 
@@ -1021,7 +1021,7 @@ const PI = 3.141592;
         align(center)[#required],
         align(center)[#not_needed],
         align(left)[ Declares a new data structure. ],
-        ```ts
+        ```phos
 struct Point {
     x: float,
     y: float
@@ -1032,7 +1032,7 @@ struct Point {
         align(center)[#required],
         align(center)[#not_needed],
         align(left)[ Declares a new @adt. ],
-        ```ts
+        ```phos
 enum Color {
     Red,
     Green,
@@ -1044,7 +1044,7 @@ enum Color {
         align(center)[#not_needed],
         align(center)[#required],
         align(left)[ Declares a new local variable ],
-        ```ts
+        ```phos
 let (a, b...) = (1, 2, 3);
         ```,
 
@@ -1052,7 +1052,7 @@ let (a, b...) = (1, 2, 3);
         align(center)[#not_needed],
         align(center)[#required],
         align(left)[ Declares a new expression. ],
-        ```ts
+        ```phos
 1 + 2
         ```,
     )
@@ -1087,7 +1087,7 @@ Expressions are a subset of statements, that operate on one or more values and m
 
         align(center)[#smallcaps[*Block*]],
         align(left)[ Declares a new block of code. ],
-        ```ts
+        ```phos
 {
     let a = 10;
     a + 20
@@ -1096,13 +1096,13 @@ Expressions are a subset of statements, that operate on one or more values and m
 
         align(center)[#smallcaps[*If/Else/Elif*]],
         align(left)[ A conditional statement for branching. ],
-        ```ts
+        ```phos
 if a > b { a } else { b }   
         ```,
 
         align(center)[#smallcaps[*Match*]],
         align(left)[ A conditional statement for branching. ],
-        ```ts
+        ```phos
 match a {
     1 => "one",
     _ => "other"
@@ -1111,7 +1111,7 @@ match a {
 
         align(center)[#smallcaps[*Loop*]],
         align(left)[ A loop statement. ],
-        ```ts
+        ```phos
 for i in 0..5 {
     print(i)
 }
@@ -1119,13 +1119,13 @@ for i in 0..5 {
 
         align(center)[#smallcaps[*Return*]],
         align(left)[ Returns a value from a function. ],
-        ```ts
+        ```phos
 return 1
         ```,
 
         align(center)[#smallcaps[*Break*]],
         align(left)[ Breaks out of a loop. ],
-        ```ts
+        ```phos
 for i in 0..5 {
     break;
 }
@@ -1133,7 +1133,7 @@ for i in 0..5 {
 
         align(center)[#smallcaps[*Continue*]],
         align(left)[ Continues a loop, terminating the current iteration and moving on the the next one. ],
-        ```ts
+        ```phos
 for i in 0..5 {
     continue;
 }
@@ -1141,7 +1141,7 @@ for i in 0..5 {
 
         align(center)[#smallcaps[*Yield*]],
         align(left)[ Yields a value from an iterator. ],
-        ```ts
+        ```phos
 for i in 0..5 {
     yield i;
 }
@@ -1154,14 +1154,14 @@ for i in 0..5 {
 
         align(center)[#smallcaps[*Path*]],
         align(left)[ A path to a value, constant, or other item. ],
-        ```ts
+        ```phos
 std::intrinsic::gain
 float::PI
         ```,
 
         align(center)[#smallcaps[*Identifier*]],
         align(left)[ A name that refers to a value, constant, or other item. ],
-        ```ts
+        ```phos
 gain
 PI
         ```,
@@ -1169,7 +1169,7 @@ PI
 
         align(center)[#smallcaps[*Literal*]],
         align(left)[ A literal value. ],
-        ```ts
+        ```phos
 1 dBc
 true
 0.5 MHz
@@ -1177,7 +1177,7 @@ true
 
         align(center)[#smallcaps[*None*]],
         align(left)[ The none value. ],
-        ```ts
+        ```phos
 none
         ```,
 
@@ -1187,19 +1187,19 @@ none
 
         align(center)[#smallcaps[*Negation*]],
         align(left)[ Negates a value. ],
-        ```ts
+        ```phos
 -1
         ```,
 
         align(center)[#smallcaps[*Not*]],
         align(left)[ Negates a boolean value. ],
-        ```ts
+        ```phos
 !true
         ```,
 
         align(center)[#smallcaps[*Binary not*]],
         align(left)[ Negate a binary value. ],
-        ```ts
+        ```phos
 !0xFF
         ```,
 
@@ -1209,115 +1209,115 @@ none
 
         align(center)[#smallcaps[*Addition*]],
         align(left)[ Adds two values. ],
-        ```ts
+        ```phos
 1 + 2
         ```,
 
         align(center)[#smallcaps[*Subtraction*]],
         align(left)[ Subtracts two values. ],
-        ```ts
+        ```phos
 1 - 2
         ```,
 
         align(center)[#smallcaps[*Multiplication*]],
         align(left)[ Multiplies two values. ],
-        ```ts
+        ```phos
 1 * 2
         ```,
 
         align(center)[#smallcaps[*Division*]],
         align(left)[ Divides two values. ],
-        ```ts
+        ```phos
 1 / 2
         ```,
 
         align(center)[#smallcaps[*Modulo*]],
         align(left)[ Calculates the remainder of a division. ],
-        ```ts
+        ```phos
 1 % 2
         ```,
 
         align(center)[#smallcaps[*Exponentiation*]],
         align(left)[ Raises a value to a power. ],
-        ```ts
+        ```phos
 1 ** 2
         ```,
 
         align(center)[#smallcaps[*Bitwise and*]],
         align(left)[ Performs a bitwise and operation. ],
-        ```ts
+        ```phos
 1 & 2
         ```,
 
         align(center)[#smallcaps[*Bitwise or*]],
         align(left)[ Performs a bitwise or operation. ],
-        ```ts
+        ```phos
 1 | 2
         ```,
 
         align(center)[#smallcaps[*Bitwise xor*]],
         align(left)[ Performs a bitwise xor operation. ],
-        ```ts
+        ```phos
 1 ^ 2
         ```,
 
         align(center)[#smallcaps[*Bitwise shift left*]],
         align(left)[ Performs a bitwise shift left operation. ],
-        ```ts
+        ```phos
 1 << 2
         ```,
 
         align(center)[#smallcaps[*Bitwise shift right*]],
         align(left)[ Performs a bitwise shift right operation. ],
-        ```ts
+        ```phos
 1 >> 2
         ```,
 
         align(center)[#smallcaps[*Less than*]],
         align(left)[ Checks if a value is less than another. ],
-        ```ts
+        ```phos
 1 < 2
         ```,
 
         align(center)[#smallcaps[*Less than or equal*]],
         align(left)[ Checks if a value is less than or equal to another. ],
-        ```ts
+        ```phos
 1 <= 2
         ```,
 
         align(center)[#smallcaps[*Greater than*]],
         align(left)[ Checks if a value is greater than another. ],
-        ```ts
+        ```phos
 1 > 2
         ```,
 
         align(center)[#smallcaps[*Greater than or equal*]],
         align(left)[ Checks if a value is greater than or equal to another. ],
-        ```ts
+        ```phos
 1 >= 2
         ```,
 
         align(center)[#smallcaps[*Equal*]],
         align(left)[ Checks if a value is equal to another. ],
-        ```ts
+        ```phos
 1 == 2
         ```,
 
         align(center)[#smallcaps[*Not equal*]],
         align(left)[ Checks if a value is not equal to another. ],
-        ```ts
+        ```phos
 1 != 2
         ```,
 
         align(center)[#smallcaps[*Logical and*]],
         align(left)[ Checks if two boolean values are both true. ],
-        ```ts
+        ```phos
 true && false
         ```,
 
         align(center)[#smallcaps[*Logical or*]],
         align(left)[ Checks if either of two boolean values are true. ],
-        ```ts
+        ```phos
 true || false
         ```,
 
@@ -1327,79 +1327,79 @@ true || false
 
         align(center)[#smallcaps[*Pipe*]],
         align(left)[ Pipes a value into a function. ],
-        ```ts
+        ```phos
 1 |> f
         ```,
 
         align(center)[#smallcaps[*Parenthesized*]],
         align(left)[ Groups an expression. ],
-        ```ts
+        ```phos
 (1 + 2) * 3
         ```,
 
         align(center)[#smallcaps[*Tuple*]],
         align(left)[ Creates a tuple. ],
-        ```ts
+        ```phos
 (1, 2)
         ```,
 
         align(center)[#smallcaps[*Cast*]],
         align(left)[ Casts a value to a different type. ],
-        ```ts
+        ```phos
 1 as uint
         ```,
 
         align(center)[#smallcaps[*Index*]],
         align(left)[ Indexes into a value. ],
-        ```ts
+        ```phos
 a[1]
         ```,
 
         align(center)[#smallcaps[*Member access*]],
         align(left)[ Accesses a member of a value. ],
-        ```ts
+        ```phos
 a.b
         ```,
 
         align(center)[#smallcaps[*Function call*]],
         align(left)[ Calls a function. ],
-        ```ts
+        ```phos
 f(1, 2)
         ```,
 
         align(center)[#smallcaps[*Method call*]],
         align(left)[ Calls a method. ],
-        ```ts
+        ```phos
 a.f(1, 2)
         ```,
 
         align(center)[#smallcaps[*Partial*]],
         align(left)[ Partially applies a function. ],
-        ```ts
+        ```phos
 set f(1)
         ```,
 
         align(center)[#smallcaps[*Closure*]],
         align(left)[ Creates a closure. ],
-        ```ts
+        ```phos
 |x| x + 1
         ```,
 
         align(center)[#smallcaps[*Range*]],
         align(left)[ Creates a range. ],
-        ```ts
+        ```phos
 1..2 1..=2 ..3 4..
         ```,
 
         align(center)[#smallcaps[*Array*]],
         align(left)[ Creates an array. ],
-        ```ts
+        ```phos
 [1, 2]
         ```,
 
         align(center)[#smallcaps[*Object instance*]],
         align(left)[ Creates an object instance. ],
-        ```ts
+        ```phos
 A {a: 1, b: 2} B(1, 2) MyEnum::A C
         ```,
     )
@@ -1420,16 +1420,119 @@ Finally, the standard library can serve as a series of examples for new users. A
 
 The design of the @phos compiler is inspired in parts by @llvm, _Rust_'s compiler, and _Java_'s compiler. As previously mentioned, the compilation of a @phos program into a circuit design that can be programmed onto a photonic processor is a three step process: compilation, evaluation, and synthesis. The compiler as it is referred in this section performs the compilation step. Therefore, as previously mentioned in @sec_exec_model, it has the task for taking the user's code as an input and producing bytecode for the #gloss("vm", long: true). The compiler is written in _Rust_, and is split into several components, each with a specific purpose. As will be discussed in subsequent sections, the @phos compiler is composed of a _lexer_, a _parser_, an _#gloss("ast", long: true)_, a _desugaring_ step, a _high-level intermediary representation_, a _medium-level intermediary representation_, and a _bytecode_ generator.
 
-#{
-    set text(size: 12pt, fill: rgb(30, 100, 200))
-    smallcaps[*Optical*]
-} Modularity is a key aspect of the compiler, as it allows for the compiler to be easily extended in the future. As @phos is a new language, it is expected that the compile will change significantly before the language is ready to be used in production environments. Additionally, this modularity makes the compiler easier to understand and maintain, as each component has a specific purpose, and can be understood in isolation.
+The compiler is architected in a multi-stage process, where each stage is responsible for a specific set of tasks, this is similar to the design of other compilers, such as the _Rust_ compiler @rust_compiler. Furthermore, each stage corresponds almost perfectly with each of the components of the compiler, as will be discussed in the following sections. This multi-stage process is illustrated in @fig_compiler_arch.
+
+#figurex(
+    title: [ Compiler architecture of the @phos programming language ],
+    caption: [
+        Compiler architecture of the @phos programming language, showing that the user code flows into the different stages of the compiler: lexing, parsing, desugaring, AST-to-HIR, HIR-to-MIR, and bytecode generation. All of these stages producing the bytecode that can be executed by the @vm.
+
+        This figure uses the same color scheme as @fig_responsibilities, showing the ecosystem components in orange, the user's code in green, and the platform specific code in blue.
+    ]
+)[
+    #image(
+        "../figures/drawio/compiler_arch.png",
+        width: 80%,
+        alt: "Shows the compiler architecture of the PHÔS programming language: going from user code into lexing, into parsing, into desugaring, into AST-to-HIR, into HIR-to-MIR, into bytecode generation. To produce the bytecode that can be executed by the VM."
+    )
+]<fig_compiler_arch>
 
 === Lexing <sec_lexing>
 
+#info-box(kind: "definition", footer: [ Adapted from @nystrom_crafting_2021. ])[
+    *Lexing* is the process of taking a stream of characters and converting it into a stream of tokens. A token is a sequence of characters that represent a unit of meaning in the language.
+]
+
+As this definition implies, this lexer turns a series of character from the human-readable @phos code, into a series of tokens, which can be seen as words of the language. Some of those words have special significance, such as `+`, which represent an addition, others such as an open parenthesis (`(`) simply represents an open parenthesis. At this stage of the compilation process, there is no meaning associated with each tokens, meaning that they are separate entities that the compiler is yet to associate into bigger, more meaningful units. The @phos lexer is implemented using the _Logos_ library in _Rust_ @logos. _Logos_ is a lexer generator, meaning that it allows the creation of extremely fast lexers very easily, and is used by other open source projects @logos_dependents.
+
+In @lst_lexing_ex, one can see the process that turns a simple piece of code into a series of tokens that can be used by the parser. The code is first split into a series of characters, which are then fed into the lexer. The lexer then produces a series of tokens, which are then printed to the console. One can also see that the comment in line one, has been removed. Indeed, the lexer discards all unnecessary tokens, such as linebreak, whitespace, and comments. This is done to simplify the parsing process, as the parser does not need to deal with those tokens, and can focus on the tokens that are meaningful to the language.
+
+Additionally, and not shown in @lst_lexing_ex, the @phos lexer preserves the span where the token is found in the source code. This is used to generate more meaningful error by indicating the location of the error in the source code. This is done by associating the said span with each token produced by the lexer.
+
+#figurex(
+    kind: raw,
+    title: [ Example of lexing in @phos ],
+    caption: [
+        Example of lexing in @phos, showing a code sample (a) and the output of the lexer (b). Note that the indentation in (b) is solely for readability purposes, and is not part of the output of the lexer.
+    ],
+)[
+    #table(
+        columns: (0.8fr, 1fr),
+        stroke: none,
+        ```phos
+// Adds two numbers together.
+fn add(a: int, b: int) -> int {
+    a + b
+}
+        ```,
+        ```js
+Keyword("fn") Identifier("add")
+    OpenParen 
+        Identifier("a") Colon Identifier("int") Comma
+        Identifier("b") Colon Identifier("int") 
+    CloseParen Arrow Identifier("int") OpenBrace 
+        Identifier("a") Plus Identifier("b") 
+    CloseBrace
+        ```,
+        align(center)[(a)],
+        align(center)[(b)]
+    )
+] <lst_lexing_ex>
+
 === Parsing <sec_parsing>
 
+#info-box(kind: "definition", footer: [ Adapted from @nystrom_crafting_2021. ])[
+    *Parsing* is the action of taking a stream of tokens, and turning it into a tree of nested elements that represent the grammatical structure of the program.
+]
+
+Before parsing the language, one must first describe the grammar of the language. There exists many families of grammars as seen in @fig_parser_hierarchy. The more complex the grammar is, the more complex of a parser it will require. It is important to note that @fig_parser_hierarchy describes grammars not languages, languages can be expressed using multiple grammars, and some grammars for a given language can be simpler @cs143. Every grammar can be expressed with a grammar of a higher level, but the reverse is not true.
+
+@phos has an LL(K) grammar, meaning that it can be read from #strong[L]eft-to-right with #strong[L]eftmost derivation, with $k$ token lookahead, meaning that the parser can simply move left to right, only ever applying rules to elements on the left, and needs to look up to $k$ tokens ahead of the current position to know which rule to apply. This is a fairly complex grammar to express and to parse. The parser for @phos is implemented using the _Chumsky_ library (named after _Noam Chomsky_) in _Rust_ @chumsky. _Chumsky_ is a parser combinator generator, meaning that it allows the creation of complex parsers with relatively little code. Because of the properties of _Chunmsky_, the parser for the @phos language is fairly simple 1600 lines of code, and is relatively easy to understand. It is the task of the parser to use the @phos grammar to produce an #gloss("ast", long: true), this tree represents the syntax and groups tokens into meaningful elements.
+
+Additionally, the grammar of @phos contains the priority of operations, meaning that the resulting @ast is already correct with regards to the order of operations, something that otherwise would need to be done using @ast transformations in the next step of the compilation process. This further increases the complexity of the grammar, and the complexity of the parser, but simplifies the next steps of the compilation process.
+
+#figurex(
+    title: [ Hierarchy of grammars that can be used to describe a language. ],
+    caption: [
+        Hierarchy of grammars that can be used to describe a language. The grammars are ordered from the most powerful to the least powerful. The most powerful grammars are able to describe any language, whereas the least powerful grammars are only able to describe a subset of the languages @cs143. As @phos does not use an ambiguous grammar and they are very difficult to describe and parse, they are not discussed further.
+
+        - #smallcaps[*LL*]: #strong[L]eft-to-right, #strong[L]eftmost derivation.
+        - #smallcaps[*LR*]: #strong[L]eft-to-right, #strong[R]ightmost derivation.
+        - #smallcaps[*SLR*]: #strong[S]imple #strong[L]eft-to-right, #strong[L]eftmost derivation.
+        - #smallcaps[*LALR*]: #strong[L]ook#strong[a]head #strong[L]eft-to-right, #strong[L]eftmost derivation.
+    ],
+)[
+    #image(
+        "../figures/drawio/parser-hierarchy.png",
+        width: 90%,
+        alt: "Shows the hierarchy of parser, showing that for unambiguous grammars, the subsets are LR(K), LR(1), LALR(1), SLR(1), LR(0), LL(K), LL(1), LL(0). Ambiguous grammars also exists but they are not discussed further."
+    )
+] <fig_parser_hierarchy>
+
 === The abstract syntax tree <sec_ast>
+
+The #gloss("ast", long: true) is the result of the previous compilation step -- parsing -- and it is a tree-like data structure that represents the syntax of the user's code in a meaningful way. It shows the elements as bigger groups than tokens, such as expressions, synthesizable blocks, etc. The @ast is the base data structure on which all subsequent compilation steps are based. The @ast would also used by the @ide to provide code completion, syntax highlighting, and code formatting.
+
+Just as is the case for parsing, syntax trees have a hierarchy, it generally consists of two categories: the #gloss("cst", long: true) and the #gloss("ast", long: true). The @cst aims at being a concrete representation of the grammar, being as faithful as possible, keeping as much information as possible. On the other hand, an @ast only keep the information necessary to perform the compilation, therefore, it is generally simpler and smaller than an equivalent @cst. However, while this can be seen as a hierarchy, it is more of a spectrum, as the @ast can be made more concrete and closer to a @cst depending on the needs. In fact, the @ast of @phos keeps track of all tokens, and their position in the source code, making it possible to reconstruct the original source code from the @ast. The only thing it discards are whitespaces, linebreaks, and comments. Additionally, the @ast of @phos also keeps track of spans where the code comes from, just like in the lexer, it is used to provide better error messages.
+
+Building on top of the example shown in @lst_lexing_ex, the @ast for the function `add` would look like @lst_ast_ex. Additionally, an overview of the data structure required to understand this part of the @ast is shown in @anx_ast_overview.
+
+#figurex(
+    title: [
+        Partial result of parsing @lst_lexing_ex.
+    ],
+    caption: [
+        Partial result of parsing @lst_lexing_ex, showing the tree-like structure of nested data structures. The @ast is a tree-like data structure that represent the syntax of the user's code. In this case, it shows a function which name is an identifier `add`, and that has two arguments: `a` and `b`, both of type `it`, it has a return type of type `int`, and a body that is a block containing a single expressions, which is a call to the `+` operator, with the arguments `a` and `b`.
+
+        This figure makes abstractions of the aforementioned spans, and only shows the relevant information. It also does some simplification over the actual data structure as these are not relevant to understand the @ast, and are rather lengthy.
+    ]
+)[
+    #image(
+        "../figures/drawio/ex_ast_out.png",
+        width: 100%,
+        alt: "Partial result of parsing @lst_lexing_ex, showing the tree-like structure of nested data structures. The AST is a tree-like data structure that represent the syntax of the user's code. In this case, it shows a function which name is an identifier add, and that has two arguments: a and b, both of type it, it has a return type of type int, and a body that is a block containing a single expressions, which is a call to the + operator, with the arguments a and b."
+    )
+] <lst_ast_ex>
 
 === Desugaring
 

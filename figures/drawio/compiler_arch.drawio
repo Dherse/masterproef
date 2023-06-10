@@ -1,0 +1,74 @@
+<mxfile host="Electron" modified="2023-06-10T12:40:50.475Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.3.7 Chrome/112.0.5615.204 Electron/24.5.0 Safari/537.36" etag="ag3QIp3frXuEgnMH0wrG" version="21.3.7" type="device">
+  <diagram name="Page-1" id="MnXrkyMOAREwOhGkVzBp">
+    <mxGraphModel dx="1185" dy="688" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="VVA-_fiROFhuPTPGW2lq-1" value="Lexing" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontFamily=UGent Panno Text;fontSize=22;fontStyle=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="320" y="240" width="190" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="VVA-_fiROFhuPTPGW2lq-2" value="Parsing" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontFamily=UGent Panno Text;fontSize=22;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="320" y="290" width="190" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="VVA-_fiROFhuPTPGW2lq-3" value="Desuraring" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontFamily=UGent Panno Text;fontSize=22;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="320" y="340" width="190" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="VVA-_fiROFhuPTPGW2lq-4" value="AST-to-HIR" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontFamily=UGent Panno Text;fontSize=22;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="320" y="390" width="190" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="VVA-_fiROFhuPTPGW2lq-5" value="HIR-to-MIR" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontFamily=UGent Panno Text;fontSize=22;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="320" y="440" width="190" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="VVA-_fiROFhuPTPGW2lq-6" value="MIR-to-bytecode" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontFamily=UGent Panno Text;fontSize=22;fontStyle=1;fillColor=#ffe6cc;strokeColor=#d79b00;gradientColor=#DAE8FC;gradientDirection=east;" vertex="1" parent="1">
+          <mxGeometry x="320" y="490" width="190" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="VVA-_fiROFhuPTPGW2lq-7" value="Compilation flow" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;width=19.047619047619047;endSize=11.952380952380953;endWidth=25.215419501133784;fontFamily=UGent Panno Text;fontSize=20;horizontal=0;labelBackgroundColor=none;fillColor=#ffe6cc;strokeColor=#d79b00;" edge="1" parent="1">
+          <mxGeometry x="0.0016" width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="290" y="240" as="sourcePoint" />
+            <mxPoint x="290" y="530" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VVA-_fiROFhuPTPGW2lq-10" value="User&#39;s code" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontFamily=UGent Panno Text;fontSize=28;" vertex="1" parent="1">
+          <mxGeometry x="260" y="170" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="VVA-_fiROFhuPTPGW2lq-9" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-128.png" vertex="1" parent="1">
+          <mxGeometry x="270" y="175" width="50" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="VVA-_fiROFhuPTPGW2lq-11" value="Parsing" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontFamily=UGent Panno Text;fontSize=22;fontStyle=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="320" y="290" width="190" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="VVA-_fiROFhuPTPGW2lq-12" value="Desugaring" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontFamily=UGent Panno Text;fontSize=22;fontStyle=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="320" y="340" width="190" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="VVA-_fiROFhuPTPGW2lq-13" value="AST-to-HIR" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontFamily=UGent Panno Text;fontSize=22;fontStyle=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="320" y="390" width="190" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="VVA-_fiROFhuPTPGW2lq-14" value="HIR-to-MIR" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontFamily=UGent Panno Text;fontSize=22;fontStyle=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="320" y="440" width="190" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="VVA-_fiROFhuPTPGW2lq-19" value="&lt;font face=&quot;UGent Panno Text&quot;&gt;&lt;span style=&quot;font-size: 28px;&quot;&gt;Bytecode&lt;/span&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillStyle=auto;fillColor=#ffe6cc;strokeColor=#d79b00;gradientDirection=east;gradientColor=#DAE8FC;" vertex="1" parent="1">
+          <mxGeometry x="260" y="540" width="260" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="VVA-_fiROFhuPTPGW2lq-22" value="Turns the user&#39;s code into tokens" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=UGent Panno Text;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="520" y="240" width="300" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="VVA-_fiROFhuPTPGW2lq-23" value="Turns the tokens into an AST" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=UGent Panno Text;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="520" y="290" width="300" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="VVA-_fiROFhuPTPGW2lq-24" value="Expands the AST and substitutes syntactic sugar" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=UGent Panno Text;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="520" y="340" width="300" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="VVA-_fiROFhuPTPGW2lq-25" value="Performs type checking, constant inlining, etc." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=UGent Panno Text;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="520" y="390" width="300" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="VVA-_fiROFhuPTPGW2lq-26" value="Performs transformations, optimization, etc." style="rounded=0;whiteSpace=wrap;html=1;fontFamily=UGent Panno Text;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="520" y="440" width="300" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="VVA-_fiROFhuPTPGW2lq-27" value="Simplifies MIR into stack-based bytecode, applies platform support constraints" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=UGent Panno Text;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="520" y="490" width="300" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

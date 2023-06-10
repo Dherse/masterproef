@@ -188,7 +188,8 @@
         "verilog-ams": ("Verilog-AMS", none, rgb(30,100,200)),
         "vhdl": ("VHDL", [</>], gray),
         "spice": ("SPICE", none, rgb("#283593")),
-        "ts": (ref(label("phos")), none, rgb("#de8f6e")),
+        "phos": (ref(label("phos")), "\u{ed8a}", rgb("#de8f6e")),
+        "js": ("Tokens", "\u{ecd7}", rgb("#656255")),
     )
 
     show raw.where(block: true): it => style(styles => {
@@ -262,7 +263,7 @@
             radius.insert("rest", 0pt)
 
             rect(
-                inset: (left: width_numbers + 0.48em, rest: 0.64em),
+                inset: (left: if contents.len() == 1 { 0pt } else { width_numbers } + 0.48em, rest: 0.64em),
                 fill: if calc.rem(i, 2) == 0 {
                     luma(240)
                 } else {
@@ -281,7 +282,11 @@
                 ..contents.enumerate().map(i => {
                     let (i, x) = i
                     cell(i, contents.len())[
-                        #place(x.index, dx: -width_numbers)
+                        #if contents.len() == 1 {
+                            none
+                        } else {
+                            place(x.index, dx: -width_numbers)
+                        }
                         #x.content
                     ]
                 })
@@ -348,4 +353,32 @@
     for _i_ in range(5 - score) {
         text_emoji(empty, font: "tabler-icons")
     }
+}
+
+
+#let annex(body) = {
+    counter(page).update(0)
+    counter(heading).update(0)
+    set heading(numbering: "A", outlined: false)
+    set page(numbering: "I")
+
+    show heading: it => {
+        if it.level == 1 {
+            pagebreak(weak: true)
+            block[
+                #set text(size: 30pt, weight: "extrabold", font: "UGent Panno Text", fill: rgb(30,100,200))
+                #set par(leading: 0.4em, justify: false)
+                #underline(smallcaps[Annex #counter(heading).display(it.numbering): #it.body], evade: true, offset: 4pt)
+                #v(0.2em)
+            ]
+        } else if it.level == 2 {
+            block[
+                #set text(size: 22pt, weight: "extrabold", font: "UGent Panno Text", fill: rgb(30,100,200))
+                #underline(smallcaps(it.body), evade: true, offset: 3pt)
+
+                #v(10pt)
+            ]
+        }
+    }
+    body
 }
