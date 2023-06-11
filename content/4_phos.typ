@@ -289,14 +289,19 @@ let d = a |> modulate(external_signal, type_: Modulation::Amplitude)
 
 === Composite types, algebraic types, and aliases
 
-#info-box(kind: "definition", footer : [ Adapter from @algebraic_data_type ])[
+#info-box(kind: "definition", footer : [ Adapted from @algebraic_data_type ])[
     *#gloss("adt", long: true)* is a type composed of other types, there exists two categories of @adt: *sum types* and *product types*. Product types are commonly tuples and structures. Sum types are usually enums, also referred to as *tagged unions*.
 ]
 
 @phos has the ability of expressing @adt in the forms of enums, enums are enumeration of $n$ variants, each variant can be one of three types: a unit variant, that does not contain any other data, a tuple variant, that contains $m$ values of different types, or a struct variant that also contains $m$ values of different types, but supports named fields. Enums are defined using the `enum` keyword followed by an identifier and the list of variants. In @lst_ex_enum, one can see an example of an enum definition, showing the syntax for the creation of such an enum. Enums are a sum type, as they are a collection of variants, each variant being a product type. Enums are a very powerful tool for expressing @adt, and are used extensively in @phos and languages that support sum types.
 
 #block(breakable: false)[
-    #figurex(caption: [ Example in @phos of an @adt type, showing all three variant kinds: `A` a unit variant, `B` a tuple variant, and `C` a struct variant.  ])[
+    #figurex(
+        title: [ Example in @phos of an @adt type. ],
+        caption: [
+            Example in @phos of an @adt type, showing all three variant kinds: `A` a unit variant, `B` a tuple variant, and `C` a struct variant.
+        ]
+    )[
         ```phos
 enum EnumName {
     A,
@@ -310,7 +315,7 @@ enum EnumName {
     ] <lst_ex_enum>
 ]
 
-#info-box(kind: "definition", footer: [ Adapter from @aggregate_type ])[
+#info-box(kind: "definition", footer: [ Adapted from @aggregate_type ])[
     *Composite types* are types that are composed of other types, whether they be primitive types or other composite types. They are also called *aggregate types* or *structured types*. They are a subset of @adt.
 ]
 
@@ -318,6 +323,7 @@ Additionally, @phos also supports product types and more generally composite typ
 
 #block(breakable: false)[
     #figurex(
+        title: [ Example in @phos of composite types. ],
         caption: [ 
             Example in @phos of composite types, showing all five kinds: `A` a unit structure, `B` a tuple structure, `C` a record structure, `D` a tuple, and arrays.
         ]
@@ -365,6 +371,7 @@ type Voltage = int;
 #block(breakable: false)[
     #figurex(
         kind: raw,
+        title: [ Example in @phos of automatic and explicit return values. ],
         caption: [ 
             Example in @phos of automatic return values, showing the difference between automatic return (a) and explicit return (b).
         ]
@@ -865,7 +872,7 @@ for i in 0..5 {
 === Constraints <sec_phos_constraints>
 
 #info-box(kind: "info")[
-    It has been discussed that the syntax of constraints should be changed to be declutter function/synthesizable block signatures. This would allow constraints to be cleaner, and would ideally be expressed as its own part of the signature, rather than being defined with the arguments. However, this has not yet been designed, and is therefore not discussed further in this document.
+    It has been discussed that the syntax of constraints should be changed to declutter function/synthesizable block signatures. This would allow constraints to be cleaner, and would ideally be expressed as its own part of the signature, rather than being defined with the arguments. However, this has not yet been designed, and is therefore not discussed further in this document.
 ]
 
 @phos models constraints as additional data carried by values and signals, it applies the semantics discussed in @sec_constraints. In the current iteration of the design, constraints are therefore a evaluation-time concept that cannot be checked by the compiler. This is a limitation of the current design, and will be addressed in future iterations. An example of a constraint can be seen in @lst_ex_constraint.
@@ -1421,7 +1428,7 @@ Finally, the standard library can serve as a series of examples for new users. A
 #pagebreak(weak: true)
 == Compiler architecture <sec_arch>
 
-The design of the @phos compiler is inspired in parts by @llvm, _Rust_'s compiler, and _Java_'s compiler. As previously mentioned, the compilation of a @phos program into a circuit design that can be programmed onto a photonic processor is a three step process: compilation, evaluation, and synthesis. The compiler as it is referred in this section performs the compilation step. Therefore, as previously mentioned in @sec_exec_model, it has the task for taking the user's code as an input and producing bytecode for the #gloss("vm", long: true). The compiler is written in _Rust_, and is split into several components, each with a specific purpose. As will be discussed in subsequent sections, the @phos compiler is composed of a _lexer_, a _parser_, an _#gloss("ast", long: true)_, a _desugaring_ step, a _high-level intermediary representation_, a _medium-level intermediary representation_, and a _bytecode_ generator.
+The design of the @phos compiler is inspired in parts by _Clang_'s, _Rust_'s, and _Java_'s compilers #cite("clang_internals", "rust_compiler", "openjdk_hotspot"). As previously mentioned, the compilation of a @phos program into a circuit design that can be programmed onto a photonic processor is a three step process: compilation, evaluation, and synthesis. The compiler as it is referred in this section performs the compilation step. Therefore, as previously mentioned in @sec_exec_model, it has the task for taking the user's code as an input and producing bytecode for the #gloss("vm", long: true). The compiler is written in _Rust_, and is split into several components, each with a specific purpose. As will be discussed in subsequent sections, the @phos compiler is composed of a _lexer_, a _parser_, an _#gloss("ast", long: true)_, a _desugaring_ step, a _high-level intermediary representation_, a _medium-level intermediary representation_, and a _bytecode_ generator.
 
 The compiler is architected in a multi-stage process, where each stage is responsible for a specific set of tasks, this is similar to the design of other compilers, such as the _Rust_ compiler @rust_compiler. Furthermore, each stage corresponds almost perfectly with each of the components of the compiler, as will be discussed in the following sections. This multi-stage process is illustrated in @fig_compiler_arch.
 
@@ -1497,7 +1504,7 @@ Additionally, the grammar of @phos contains the priority of operations, meaning 
 #figurex(
     title: [ Hierarchy of grammars that can be used to describe a language. ],
     caption: [
-        Hierarchy of grammars that can be used to describe a language. The grammars are ordered from the most powerful to the least powerful. The most powerful grammars are able to describe any language, whereas the least powerful grammars are only able to describe a subset of the languages @cs143. As @phos does not use an ambiguous grammar and they are very difficult to describe and parse, they are not discussed further.
+        Hierarchy of grammars that can be used to describe a language. The grammars are ordered from the most powerful to the least powerful. The most powerful grammars are able to describe any unambiguous language, whereas the least powerful grammars are only able to describe a subset of the languages @cs143. As @phos does not use an ambiguous grammar and they are very difficult to describe and parse, they are not discussed further.
 
         - #smallcaps[*LL*]: #strong[L]eft-to-right, #strong[L]eftmost derivation.
         - #smallcaps[*LR*]: #strong[L]eft-to-right, #strong[R]ightmost derivation.
@@ -1518,7 +1525,7 @@ The #gloss("ast", long: true) is the result of the previous compilation step -- 
 
 Just as is the case for parsing, syntax trees have a hierarchy, it generally consists of two categories: the #gloss("cst", long: true) and the #gloss("ast", long: true). The @cst aims at being a concrete representation of the grammar, being as faithful as possible, keeping as much information as possible. On the other hand, an @ast only keep the information necessary to perform the compilation, therefore, it is generally simpler and smaller than an equivalent @cst. However, while this can be seen as a hierarchy, it is more of a spectrum, as the @ast can be made more concrete and closer to a @cst depending on the needs. In fact, the @ast of @phos keeps track of all tokens, and their position in the source code, making it possible to reconstruct the original source code from the @ast. The only thing it discards are whitespaces, linebreaks, and comments. Additionally, the @ast of @phos also keeps track of spans where the code comes from, just like in the lexer, it is used to provide better error messages.
 
-Building on top of the example shown in @lst_lexing_ex, the @ast for the function `add` would look like @lst_ast_ex. Additionally, an overview of the data structure required to understand this part of the @ast is shown in @anx_ast_overview.
+Building on top of the example shown in @lst_lexing_ex, the @ast for the function `add` would look like @lst_ast_ex. Additionally, an overview of the data structure required to understand this part of the @ast is shown in @anx_ast_overview. Some details have been omitted for brevity, and to focus on the relevant parts of the @ast. However, one can still see the tree-like structure of the @ast, and the many different kinds of data structures that it requires. In fact, the current @ast for @phos is composed of 250 different data structures. This shows how complex the @ast can be, and how much work is required to build it. However, having a good @ast as the basis of the compilation process is crucial as it can be easily modified, expanded, and transformed to perform the compilation. Additionally, the breadth of data that it contains can be used to implement other elements of the ecosystem, such as code formatters, code highlighters, and linters, all tools that have been discussed at length and that are essential to provide a good developer experience.
 
 #figurex(
     title: [
@@ -1526,8 +1533,6 @@ Building on top of the example shown in @lst_lexing_ex, the @ast for the functio
     ],
     caption: [
         Partial result of parsing @lst_lexing_ex, showing the tree-like structure of nested data structures. The @ast is a tree-like data structure that represent the syntax of the user's code. In this case, it shows a function which name is an identifier `add`, and that has two arguments: `a` and `b`, both of type `it`, it has a return type of type `int`, and a body that is a block containing a single expressions, which is a call to the `+` operator, with the arguments `a` and `b`.
-
-        This figure makes abstractions of the aforementioned spans, and only shows the relevant information. It also does some simplification over the actual data structure as these are not relevant to understand the @ast, and are rather lengthy.
     ]
 )[
     #image(
@@ -1537,13 +1542,211 @@ Building on top of the example shown in @lst_lexing_ex, the @ast for the functio
     )
 ] <lst_ast_ex>
 
-=== Desugaring
+=== Abstract syntax tree: desugaring, expansion, and validation
 
-=== AST to high-level intermediary representation <sec_ast_to_hir>
+#info-box(kind: "info")[
+    As will be explained in @sec_state, from this point on, the language is not yet implemented and therefore does not exist. These following steps are therefore not implemented, and are only description of what will be done when the language is fully implemented.
+]
 
-=== HIR to medium-level intermediary representation <sec_mir_to_mir>
+#info-box(kind: "definition", footer: [ Adapted from @nystrom_crafting_2021. ])[
+    *Syntactic sugar* is syntax that is intended to make things easier to read, express, or understand.
+]
 
-=== MIR to bytecode <sec_mir_to_bytecode>
+The first step in the compilation process is to remove syntactic sugar, as it is not useful for the compiler and is only intended to make the code easier to read and write. Therefore, this syntactic sugar can be simplified into simpler syntactic blocks. Additionally, in the same stage, the @ast is expanded to include more information. In the case of the @phos programming language, this will involve the following:
+- Feature gate checking;
+- Transforming all automatic return statements into explicit return statements;
+- Name resolution;
+- Macro expansion;
+- and @ast validation.
+
+For this section, the example shown in @lst_desug_ex will be used, it shows a simple circuit involving a filter, a gain section that is gated behind a feature flag, implicit returns and imports. Since macros don't yet have a fixed syntax for a language, and are left as future work, see @sec_macros, there will not be an example involving macros.
+
+#figurex(
+    kind: raw,
+    caption: [
+        Example used to show the desugaring, @ast expansion, and @ast validation in @phos.
+    ],
+)[
+    ```phos
+import std::{filter, gain};
+/// Processes a signal using one of two filters based on feature flags
+fn process_signal(signal: optical) -> optical {
+    signal |> internal_process()
+}
+/// If the library supports gain, add some gain after the filter
+#[feature(gain)]
+fn internal_process(signal: optical) -> optical {
+    signal |> filter(1550 nm, 10 GHz) |> gain(10 dB)
+}
+/// If the library does not support gain, just filter the signal
+#[feature(not(gain))]
+fn internal_process(signal: optical) -> optical {
+    signal |> filter(1550 nm, 10 GHz)
+}
+    ```
+] <lst_desug_ex>
+
+#info-box(kind: "note")[
+    The processes being described in this section are done at the @ast level. However here, for the sake of clarity, source code is shown instead of the @ast for each step in this compilation stage.
+]
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Feature gate checking*]
+}
+In this step, the syntax is checked for feature gates, and only the parts of the @ast not gated by feature gates are kept. Meaning that feature flags are evaluated and the part of the @ast that cannot be compiled with the current set of feature flags are removed. For code involving feature flags, this reduces the complexity of the @ast, and the amount of work the compiler must do. This step is done as early as possible to further reduce the amount of work the compiler must do. Continuing on from @lst_desug_ex, in @lst_feature_flag_ex, it can be observed that the `gain` section has been removed, assuming that the `gain` feature flag is not enabled. The comments are also removed as the parser does not include comments in the @ast.
+
+#figurex(
+    kind: raw,
+    caption: [
+        Demonstration of feature gate checking in @phos, using the example from @lst_desug_ex.
+    ],
+)[
+    ```phos
+import std::{filter, gain};
+fn process_signal(signal: optical) -> optical {
+    signal |> internal_process()
+}
+fn internal_process(signal: optical) -> optical {
+    signal |> filter(1550 nm, 10 GHz)
+}
+    ```
+] <lst_feature_flag_ex>
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Automatic return statement*]
+}
+In this process, all automatic return statement that are present at the end of a block are transformed into explicit return statement, such that the rest of the compiler need only look for explicit return statements. This is done to simplify subsequent compilation steps. Building on from @lst_desug_ex, one can see in @lst_return_ex that the automatic return statements have been transformed into an explicit return statements.
+
+#figurex(
+    kind: raw,
+    caption: [
+        Example used to show the desugaring of return statements, @ast expansion, and @ast validation in @phos.
+    ],
+)[
+    ```phos
+import std::{filter, gain};
+fn process_signal(signal: optical) -> optical {
+    return signal |> internal_process();
+}
+fn internal_process(signal: optical) -> optical {
+    return signal |> filter(1550 nm, 10 GHz);
+}
+    ```
+] <lst_return_ex>
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Name resolution*]
+}
+At this stage, the compiler has not yet resolved all of the path to the different items that are being used. Therefore, in this steps, all import statements and path expressions are inlined and resolved. This means that after this process, import statements will no longer be needed nor used, and all relative path to items will be replaced by their absolute path. Additionally, it is at this stage that the compiler checks for the existence of the items being used. If they do not exist, the compiler will return an error. Continuing on from @lst_desug_ex, in @lst_name_res_ex, one can see that the import statements have been removed, and the path to the items have been resolved, further simplifying the @ast (shown here as code for clarity). As the type `optical` is a built-in type in @phos, it does not get resolved, it is always valid.
+
+#figurex(
+    kind: raw,
+    caption: [
+        Example of name resolution in @phos, showing the process of name resolution, using the example from @lst_desug_ex.
+    ],
+)[
+    ```phos
+fn process_signal(signal: optical) -> optical {
+    return signal |> self::internal_process();
+}
+fn internal_process(signal: optical) -> optical {
+    return signal |> std::filter(1550 nm, 10 GHz);
+}
+    ```
+] <lst_name_res_ex>
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Macro expansion*]
+}
+Depending on the type of macros being implemented in @phos, they may be operating at the @ast level. If that were to be the case, macros would be expanded in this stage. Macro expansion refers to the compiler replacing the macro calls within the code, with the output produced by the macro. This is done at this stage, because the @ast has not yet been checked. Meaning that the code produced by the macro, if it were to be erroneous, would still be verified and not assumed correct. As the example in @lst_desug_ex does not contain any macros, the @ast remains unchanged.
+
+It is also important to note, that @phos may benefit more from reflection level macros, rather than @ast level macros. This is because @phos is at its core, a high-level language, and therefore, macro creators may be interested in also operating at a higher level of symbolic representation than the @ast. However, this is neither a requirement, nor has either solution been implemented yet. Additionally, both solutions are suitable and can be implemented at the same time.
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*@ast validation*]
+}
+@ast validation involves the process of verifying that the @ast is correct. This means that the more complex syntactic rules, that were not expressed in the grammar, are checked. They are checked on the @ast because it makes the grammar of the language simpler, simplifying the parser too. Additionally, it can perform basic checks based on rules. While these rules are not yet clear for @phos, they will need to be defined in the future. It is important to note that @ast validation should not involve any complex analysis, such as type checking, as these are easier to implement on the @hir.
+
+=== AST lowering, type inference, and exhaustiveness checking <sec_ast_to_hir>
+
+As this point in the compilation pipeline, much of the initial complexity of the user's code has been removed, however many critical aspects of compiling the language have not been performed yet. Most notably with regards to type inference, type checking and exhaustiveness checking. These functions are all performed on the @hir, but at this point, the compiler still only has the @ast. Therefore, the first process in this step is to lower the @ast. Essentially, the compiler must transform the @ast into a lower level, simpler form of the code, called the @hir.
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*@ast lowering*]
+}
+Lowering from the @ast to the @hir requires removing all of the elements of the language that are not needed for type analysis which is the focus of this compiler step. Due to the previous step having decreased language complexity using desugaring, the @ast is already less complex. However, it still contains elements that are not needed for type analysis, such as names. Indeed, variable names, type names, etc. are only useful for humans, it is easier for a computer to understand these as numerical identifiers (IDs). Therefore, in this process, the name of all values are replaced with generated IDs. Additionally, the tree-like data structure can be flattened by using node IDs instead of pointers to nodes. This decreases the complexity of the data structure and makes traversal, and most importantly queries easier to perform. Indeed, queries need to be performed on the @hir to find elements and apply rules for @hir to @mir lowering.
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Type inference*]
+}
+After lowering the @ast into the @hir, the compiler will now try and infer the types of all values, based on existing annotation and some rules. When the compiler has inferred the type of a value, it will explicitly annotate that value with its type, that way, each value has its type known at each point in the code, such that further checks can be performed. Continuing with @lst_desug_ex, one can see what the resulting, fully annotated code would look like in @lst_type_inf_ex. It shows what the code would look like, if this were valid syntax, after @ast lowering and explicit type annotation.
+
+#figurex(
+    kind: raw,
+    caption: [
+        Example of name stripping and type inference in @phos, showing the process of name stripping and type inference, using the example from @lst_desug_ex. All nodes are annotated with their type, all variables, arguments, function names, etc. have been renamed with an ID shown here as `$n`, where `n` is a number.
+
+        Note that this is not valid @phos syntax and is only used to illustrate the process of name stripping and type inference. In practice, the @hir would be a flattened tree-like data structure, similar to the @ast, not a textual representation.
+    ],
+)[
+    ```phos
+fn $0($1: optical) -> optical {
+    return (($1: optical) |> ($2(): optical)): optical;
+}
+fn $2($1: optical) -> optical {
+    return (($1: optical) |> ($3((1550 nm: Wavelength), (10 GHz: Frequency)); optical)): optical;
+}
+    ```
+] <lst_type_inf_ex>
+
+As with most modern programming languages with type inference, @phos will use the _Hindley-Milner_ algorithm #cite("milner_theory_1978", "hindley_principal_1969"). It is an algorithm that is capable of inferring the type of a value, with little to no type annotations. This makes development easier, as less manual work of annotating types is required. Additionally, it is a convenient algorithm to use as there are many resources available about it, and many libraries implementing it already, meaning that the development burden caused by type inference is significantly lower.
+
+Additionally, the _Hindley-Milner_ algorithm supports polymorphism, while this feature is not yet integrated into the syntax and feature set of the @phos language, it may be of interest as it can allow more advanced types to be expressed. However, this is not a priority for the language, and therefore, it is not yet designed into the language nor is it designed into the compiler architecture.
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Exhaustiveness checking*]
+} Exhaustiveness checking is the process of verifying that the user has covered all possible cases in a pattern matching statement. This can be done with the algorithm presented by _Karachalias et al._ #cite("karachalias_gadts_2015", "kalvoda_structural_2019"), it is an algorithm that is capable of checking for pattern exhaustiveness even in very complex cases, such as when using @gadt[s], a generalized form of previously mentioned @adt[s]. However, in the case @phos, this task is made more complex by constraints. Indeed, the compiler tries to verify that all cases are covered, but constraints may reduce the amount of cases that are valid. Take the example shown in @lst_exhaustiveness_ex: gain as a numerical value can take any value in the range $[0, infinity[$, however in this example, it can take a value only in the range $[0 "dB", 10 "dB"]$. When looking at this code, the compiler, if it does not exploit constraints, will declare that the `match` statement on line $9$ is not exhaustive, despite it being exhaustive in the context created by the constraints.
+
+As a means of alleviating this issue, the compiler can either force the user to always be exhaustive even when it is not necessary, or can exploit constraints and utilize them as a means of improving exhaustiveness checking. This can be done in multiple ways, including using the prover to verify that all cases are covered, however this approach is likely to be slow and difficult to implement. Others revolve around the use of refinement types and guarded recursive data type constructors #cite("xi_guarded_2003"). However, these techniques are not yet fully explored and are not yet integrated into the compiler architecture, and further research and experimentation is needed to determine which technique is the most appropriate for the @phos language. This topic is further discussed in @sec_refinement_types.
+
+#figurex(
+    kind: raw,
+    title: [
+        Example of exhaustiveness checking in @phos when using constraints.
+    ],
+    caption: [
+        Example of exhaustiveness checking in @phos when using constraints. In this example, the compiler should be able to detect that the `match` statement on line $9$ is exhaustive given the constraints on line $6$, but it is a difficult problem to solve and requires further research.
+    ],
+)[
+    ```phos
+// Performs gain on an optical signal, depending on the gain, it will
+// either use a short gain section or a long gain section.
+fn example(
+    signal: optical,
+
+    @range(1dB, 10dB)
+    gain: Gain,
+) -> optical {
+    match gain {
+        1dB..5dB => signal |> short_gain(gain),
+        5dB..=10dB => signal |> long_gain(gain),
+    }
+}
+    ```
+] <lst_exhaustiveness_ex>
+
+
+=== Medium-level intermediary representation: constant evaluation, control flow, and liveness <sec_mir_to_mir>
+
+=== Bytecode: structure and semantics <sec_mir_to_bytecode>
 
 == Virtual machine <sec_vm>
 

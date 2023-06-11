@@ -13,9 +13,9 @@
             let is_first_in_preface = entry.locations.find((x) => in_preface(x)) == none;
             let is_first = entry.locations.find((x) => not in_preface(x)) == none;
 
-            let long = if (not disabled) and ((in_preface(loc) and is_first_in_preface) or long == true) {
+            let long = if ((not disabled) and (in_preface(loc) and is_first_in_preface)) or long == true {
                 [ (#emph(entry.long))]
-            } else if (not disabled) and (not in_preface(loc) and (is_first and short != true) or long == true) {
+            } else if ((not disabled) and not in_preface(loc) and (is_first and short != true)) or long == true {
                 [ (#emph(entry.long))]
             } else {
                 none

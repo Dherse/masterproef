@@ -30,11 +30,11 @@
 
 === Triggers and clocks
 
-=== Macros, reflection and meta programming
+=== Macros, reflection and meta programming <sec_macros>
 
 === Traits and type classes
 
-=== Dependent types and refinement types
+=== Dependent types and refinement types <sec_refinement_types>
 
 === Algebraic effects
 

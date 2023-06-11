@@ -108,7 +108,7 @@
                 pagebreak(weak: true)
             }
             block(breakable: false)[
-                #set text(size: 48pt, font: "Bookman Old Style", weight: "thin", fill: rgb(50%, 50%, 50%))
+                #set text(size: 80pt, font: "Bookman Old Style", weight: "thin", fill: rgb(50%, 50%, 50%))
                 #numbering("1.", ..levels)
                 
                 #set text(size: 28pt, weight: "extrabold", font: "UGent Panno Text", fill: rgb(30,100,200))
@@ -177,6 +177,13 @@
         "js": ("Tokens", "\u{ecd7}", rgb("#656255")),
     )
 
+    show raw.where(block: false): box.with(
+        fill: luma(240),
+        inset: (x: 3pt, y: 0pt),
+        outset: (y: 3pt),
+        radius: 2pt,
+    )
+
     show raw.where(block: true): it => {
         // Get the info of the language
         let lang = languages.at(it.lang, default: (it.lang, none, black))
@@ -195,6 +202,7 @@
             fill: lang.at(2).lighten(60%), 
             inset: 0.32em,
             height: auto,
+            stroke: 0.25pt + lang.at(2),
         )[#lang_icon#lang.at(0)]
 
         // Build the content
@@ -336,10 +344,8 @@
 
 
 #let annex(body) = {
-    counter(page).update(0)
     counter(heading).update(0)
     set heading(numbering: "A", outlined: false)
-    set page(numbering: "I")
 
     show heading: it => {
         if it.level == 1 {

@@ -56,16 +56,13 @@
 }
 
 #let info-box(body, kind: "info", radius: 5pt, footer: none, icon: true) = {
+    show par: set block(spacing: 0pt)
     let settings = info-settings.at(kind);
     let extra = if footer == none {
         none
     } else {
-        align(right)[
-            #set par(leading: 0pt)
-            #set text(size: 10pt)
-            #v(-8pt)
-            #underline[#footer]
-        ]
+        h(1fr)
+        underline[#footer]
     }
 
     box(
@@ -81,6 +78,7 @@
                 {
                     settings.prefix
                     body
+                    linebreak()
                     extra
                 }
             )
@@ -89,13 +87,14 @@
                 {
                     settings.prefix
                     body
+                    linebreak()
                     extra
                 },
             )
         }
         #table(
             columns: if icon { (38pt, 1fr) } else { 1 },
-            inset: 8pt,
+            inset: 9.6pt,
             stroke: none,
             align: horizon,
             ..contents,

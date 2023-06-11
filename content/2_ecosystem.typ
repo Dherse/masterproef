@@ -35,6 +35,10 @@ All languages have a type system, it provides the basis for the language to reas
 
 Therefore, static typing is generally preferred for applications where speed is a concern, as is the case in _C_ and _Rust_. However, dynamic typing is preferred for applications where iteration speed is more important, such as in _Python_. However, some languages exist at the intersection of these two paradigms, such as _Rust_ which can infer parts of the type system at compile time, allowing the user to write their code with fewer type annotations, while still providing the benefits of static typing. This is achieved through a process called type inference, where the compiler generally uses the de facto standard algorithm called _Hindley-Milner_ algorithm #cite("milner_theory_1978", "rust_compiler"), which will be discussed further in @sec_phos.
 
+#info-box(kind: "definition", footer: [ Adapted from @cardelli_understanding_1985 ])[
+    *Polymorphism* #todo("polymorphism")
+]
+
 == Explicitness in programming languages <sec_explicitness>
 
 In language design, one of the most important aspect to consider is the explicitness of the language, that is, how much details must the user manually specify and how much can be inferred. This is a trade-off between the expressiveness of the language and the complexity of the language. A language that is too explicit is both difficult to write and to read, while a language that is too implicit is difficult to understand and reason about, while also generally being more complex to implement. Therefore, it is important to find a balance between these two extremes. Another factor to take into account is that too much "magic", that is operations being done implicitly, can lead to difficult to understand code, unexpected results and bugs that are difficult to track down.
@@ -90,7 +94,7 @@ Furthermore, the language specification is only an important part of the ecosyst
 
 === Compiler
 
-#info-box(kind: "definition", footer: [ Adapter from @aho2006compilers ])[
+#info-box(kind: "definition", footer: [ Adapted from @aho2006compilers ])[
     A *compiler* is a program that translates code written in a higher level programming language into a lower level programming language or format, so that it can be executed by a computer or programmed onto a device.
 ]
 
@@ -574,7 +578,7 @@ This low level of abstraction can be better understood by understanding three fa
 
 ==== High-level synthesis
 
-#info-box(kind: "definition", footer: [ Adapter from #cite("schafer_high_level_2020", "meeus_overview_2012")])[
+#info-box(kind: "definition", footer: [ Adapted from #cite("schafer_high_level_2020", "meeus_overview_2012")])[
     *High-level Synthesis (HLS)* is the process of translating high-level abstractions in a programming language into #gloss("rtl", long: true) level descriptions. This process is generally done by a compiler that takes as an input the high-level language and translates the code into a lower-level form. 
 ]
 

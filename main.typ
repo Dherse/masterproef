@@ -84,6 +84,9 @@ presentation of the master's dissertation are not included in this text.
     (key: "ast", short: "AST", long: [Abstract Syntax Tree]),
     (key: "vm", short: "VM", long: [Virtual Machine]),
     (key: "cst", short: "CST", long: [Concrete Syntax Tree]),
+    (key: "hir", short: "HIR", long: [High-level Intermediate Representation]),
+    (key: "mir", short: "MIR", long: [Mid-level Intermediate Representation]),
+    (key: "gadt", short: "GADT", long: [Generalized Algebraic Data Type]),
 ))
 
 
