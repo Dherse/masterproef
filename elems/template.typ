@@ -23,18 +23,6 @@
     set page(
         number-align: right,
         margin: 2.5cm,
-        /*header: [
-            #set text(14pt)
-            #align(right)[
-                #locate(loc => {
-                    if section.at(loc) != "preface" {
-                        let title = query(heading.where(level: 1).before(loc), loc).last();
-                        let levels = counter(heading).at(title.location());
-                        smallcaps[#numbering("1.", ..levels) #title.body]
-                    }
-                })
-            ]
-        ],*/
     )
 
     // Main body.
@@ -148,16 +136,14 @@
         }
     }
 
-    show figure: it => style(styles => {
+    show figure: it =>  {
         let supplement = [
             #set text(fill: rgb(30,100,200))
             #smallcaps[*#it.supplement #it.counter.display(it.numbering)*]
         ];
         let gap = 0.64em
-        let width = measure(supplement, styles).width;
         let cell = block.with(
             inset: (top: 0.32em, bottom: 0.32em, rest: gap),
-            width: width + 2 * gap,
             breakable: true,
             stroke: (
                 left: (
@@ -173,26 +159,25 @@
         ]
         v(-0.64em)
         grid(
-            columns: (width, 1fr),
+            columns: (48pt, 1fr),
             rows: (auto),
-            gutter: 2 * gap,
-            cell(height: auto, stroke: none)[ #supplement ],
-            cell(height: auto, width: 100%,)[ #it.caption ],
+            cell(height: auto, stroke: none)[#align(right)[#supplement]],
+            cell(height: auto)[#align(left)[#it.caption]],
         )
-    })
+    }
 
     let languages = (
         "rust": ("Rust", "\u{fa53}", rgb("#CE412B")),
         "c": ("C", none, rgb("#283593")),
         "python": ("Python", "\u{ed01}", rgb("#FFD43B")),
         "verilog-ams": ("Verilog-AMS", none, rgb(30,100,200)),
-        "vhdl": ("VHDL", [</>], gray),
+        "vhdl": ("VHDL", text(font: "UGent Panno Text")[</>], gray),
         "spice": ("SPICE", none, rgb("#283593")),
         "phos": (ref(label("phos")), "\u{ed8a}", rgb("#de8f6e")),
         "js": ("Tokens", "\u{ecd7}", rgb("#656255")),
     )
 
-    show raw.where(block: true): it => style(styles => {
+    show raw.where(block: true): it => {
         // Get the info of the language
         let lang = languages.at(it.lang, default: (it.lang, none, black))
         let lang_icon = if lang.at(1) == none {
@@ -205,12 +190,11 @@
                 size: 8pt,
             )[#lang.at(1)]
         }
-        let lang_icon_size = measure([#lang_icon#lang.at(0)], styles)
         let lang_box = box(
             radius: 2pt, 
             fill: lang.at(2).lighten(60%), 
             inset: 0.32em,
-            height: lang_icon_size.height + 2 * 0.32em,
+            height: auto,
         )[#lang_icon#lang.at(0)]
 
         // Build the content
@@ -220,14 +204,7 @@
             let line = if line == "" { " " } else { line }
 
             let content = if i == 0 {
-                layout(size => {
-                    let lang_box_size = measure(lang_box, styles)
-                    let dx = size.width - lang_box_size.width
-                    let dy = (12pt - lang_box_size.height)
-
-                    raw(line, lang: it.lang)
-                    place(lang_box, dx: dx, dy: dy - 0.96em + if lines.len() == 1 { 0.32em } else { 0pt })
-                })
+                raw(line, lang: it.lang)
             } else {
                 raw(line, lang: it.lang)
             }
@@ -239,9 +216,7 @@
         }
 
         // Compute the width of the largest number, add the gap
-        let width_numbers = contents
-            .map((it) => measure(str(it.index), styles).width)
-            .fold(0pt, (a, b) => calc.max(a, b)) + 0.64em
+        let width_numbers = 10pt + 0.64em
 
         let border_color = luma(200) + 0.05em;
         let cell(i, len, body, ..args) = {
@@ -263,7 +238,7 @@
             radius.insert("rest", 0pt)
 
             rect(
-                inset: (left: if contents.len() == 1 { 0pt } else { width_numbers } + 0.48em, rest: 0.64em),
+                inset: (left: width_numbers + 0.48em, rest: 0.64em),
                 fill: if calc.rem(i, 2) == 0 {
                     luma(240)
                 } else {
@@ -277,22 +252,26 @@
         }
 
         align(left)[
-            #stack(
-                dir: ttb,
-                ..contents.enumerate().map(i => {
-                    let (i, x) = i
-                    cell(i, contents.len())[
-                        #if contents.len() == 1 {
-                            none
-                        } else {
-                            place(x.index, dx: -width_numbers)
-                        }
-                        #x.content
-                    ]
-                })
-            )
+            #box(height: auto)[
+                #stack(
+                    dir: ttb,
+                    ..contents.enumerate().map(i => {
+                        let (i, x) = i
+                        cell(i, contents.len())[
+                            #place(x.index, dx: -width_numbers)
+                            #x.content
+                        ]
+                    })
+                )
+                #place(
+                    top + right,
+                    lang_box,
+                    dy: 0.24em,
+                    dx: -0.24em
+                )
+            ]
         ]
-    })
+    }
 
     set page(numbering: "1 of 1")
     counter(page).update(1)

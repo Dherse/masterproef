@@ -1400,7 +1400,10 @@ set f(1)
         align(center)[#smallcaps[*Object instance*]],
         align(left)[ Creates an object instance. ],
         ```phos
-A {a: 1, b: 2} B(1, 2) MyEnum::A C
+A {a: 1, b: 2}
+B(1, 2)
+MyEnum::A
+C
         ```,
     )
 ] <tab_exprs>

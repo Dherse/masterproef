@@ -1,5 +1,7 @@
 #import "./template.typ": todo, section
 
+#let disabled = true
+
 #let glossary_entries = state("glossary_entries", (:))
 
 #let gloss(key, suffix: none, short: auto, long: auto) = {
@@ -11,9 +13,9 @@
             let is_first_in_preface = entry.locations.find((x) => in_preface(x)) == none;
             let is_first = entry.locations.find((x) => not in_preface(x)) == none;
 
-            let long = if (in_preface(loc) and is_first_in_preface) or long == true {
+            let long = if (not disabled) and ((in_preface(loc) and is_first_in_preface) or long == true) {
                 [ (#emph(entry.long))]
-            } else if not in_preface(loc) and (is_first and short != true) or long == true {
+            } else if (not disabled) and (not in_preface(loc) and (is_first and short != true) or long == true) {
                 [ (#emph(entry.long))]
             } else {
                 none
@@ -21,13 +23,15 @@
 
             link(label(entry.key))[#smallcaps[#entry.short#suffix]#long]
 
-            glossary_entries.update((x) => {
-                if x.keys().contains(key) and not x.at(key).pages.contains(numbering(loc.page-numbering(), ..counter(page).at(loc))) {
-                    x.at(key).pages.push(numbering(loc.page-numbering(), ..counter(page).at(loc)))
-                    x.at(key).locations.push(loc)
-                }
-                x
-            })
+            if not disabled {
+                glossary_entries.update((x) => {
+                    if x.keys().contains(key) and not x.at(key).pages.contains(numbering(loc.page-numbering(), ..counter(page).at(loc))) {
+                        x.at(key).pages.push(numbering(loc.page-numbering(), ..counter(page).at(loc)))
+                        x.at(key).locations.push(loc)
+                    }
+                    x
+                })
+            }
         } else {
             todo("Glossary entry not found: " + key)
         }
@@ -38,6 +42,11 @@
     [
         #heading(title) <glossary>
     ]
+
+    if disabled {
+        set text(size: 32pt)
+        todo("YOU FORGOT THE GLOSSARY")
+    }
 
     glossary_entries.update((x) => {
         for entry in entries {
@@ -56,15 +65,17 @@
         elems.push[
             #emph(entry.long)
             #box(width: 1fr, repeat[.])
-            #locate(loc => {
-                glossary_entries
-                    .final(loc)
-                    .at(entry.key)
-                    .locations
-                    .sorted(key: (x) => x.page())
-                    .map((x) => link(x)[#numbering(x.page-numbering(), ..counter(page).at(x))])
-                    .join(", ")
-            })
+            #if not disabled {
+                locate(loc => {
+                    glossary_entries
+                        .final(loc)
+                        .at(entry.key)
+                        .locations
+                        .sorted(key: (x) => x.page())
+                        .map((x) => link(x)[#numbering(x.page-numbering(), ..counter(page).at(x))])
+                        .join(", ")
+                })
+            }
         ]
     }
 
@@ -84,17 +95,11 @@
     )
 
     show ref: r => {
-        locate(loc => {
-            let term = str(r.target)
-            let res = query(r.target, loc)
-
-            // If the source exists and is the glossary (heading level 99)
-            if res.len() > 0 and res.first().func() == heading and res.first().level == 99 {
-                gloss(term, suffix: r.citation.supplement)
-            } else {
-                r
-            }
-        })
+        if r.element != none and r.element.func() == heading and r.element.level == 99 {
+            gloss(str(r.target), suffix: r.citation.supplement)
+        } else {
+            r
+        }
     }
 
     body

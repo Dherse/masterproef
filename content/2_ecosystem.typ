@@ -609,13 +609,13 @@ In the first example, in @lst_adder_vhdl, it can be seen that the @vhdl implemen
 #figurex(
     caption: [ Example of a $n$-bit adder in _MyHDL_, based on @vhdl-adder. ],
 )[
-    #raw(lang: "python", read("../code/adder/myhdl.py"))
+    #raw(lang: "python", read("../code/adder/myhdl.py"), block: true)
 ] <lst_adder_my_hdl>
 
 #figurex(
     caption: [ Example of a $n$-bit adder in _SystemC_, based on @vhdl-adder. ],
 )[
-    #raw(lang: "c", read("../code/adder/systemc.c"))
+    #raw(lang: "c", read("../code/adder/systemc.c"), block: true)
 ] <lst_adder_systemc>
 
 === Analog simulation languages

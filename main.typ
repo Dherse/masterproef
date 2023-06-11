@@ -93,12 +93,6 @@ presentation of the master's dissertation are not included in this text.
 
 #include "./content/this_document.typ"
 
-#locate(loc => {
-    if calc.rem(counter(page).at(loc).at(0), 2) == 0 {
-        blank-page()
-    }
-})
-
 #show: content
 
 #include "./content/0_introduction.typ"
