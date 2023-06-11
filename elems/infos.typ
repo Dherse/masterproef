@@ -61,6 +61,7 @@
     let extra = if footer == none {
         none
     } else {
+        linebreak()
         h(1fr)
         underline[#footer]
     }
@@ -78,7 +79,6 @@
                 {
                     settings.prefix
                     body
-                    linebreak()
                     extra
                 }
             )
@@ -87,7 +87,6 @@
                 {
                     settings.prefix
                     body
-                    linebreak()
                     extra
                 },
             )
