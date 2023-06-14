@@ -2,6 +2,7 @@
 #import "../elems/infos.typ": *
 #import "../elems/template.typ": *
 #import "../elems/tablex.typ": *
+#import "../elems/hexagonal.typ": hexagonal_interconnect, f
 
 = The PHÔS programming language <sec_phos>
 
@@ -204,7 +205,7 @@ In this initial design of @phos, constraints are seen as metadata on values and 
     smallcaps[*Limitations of immutability and purity*]
 } Immutability make global state management difficult, requiring the user of a state monad to manage state @haskell_state_monad. However, @phos does not need global mutable state, as it is not a general purpose programming language. Indeed, due to the hardware-software codesign nature of @phos, it is expected that the user will manage global state within their own software layer, leaving their @phos codebase free of global state. Additionally, purity disallows the user of side effects, which removes the ability of the user from performing @io operations, such as reading from a file, which makes the language inherently safer to use. However, this also means that @phos cannot be used for general purpose programming, and is limited to the domain of photonic circuit design.
 
-=== Signal types and semantics
+=== Signal types and semantics <sec_signal_types>
 
 @phos distinguishes between the `electrical` and `optical` types. They mostly share the same semantics, with the exception that electrical signals cannot be operated upon. In the following paragraphs, the semantics of each will be discussed with examples.
 
@@ -249,7 +250,7 @@ let d = a |> modulate(external_signal, type_: Modulation::Amplitude)
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Electrical*]
-} Electrical signals do not allow any operations on them apart from being used in `modulate` and `demodulate` intrinsic operators. The reasoning behind this limitation is that, as present, there are no plans for analog processing in the electrical domain. Therefore, electrical signals are only ever used to modulate optical signals, or are produced as the result of demodulating optical signals. It is possible that, in the future, some analog processing features may be added, such as gain, but as it is currently not planned, electrical signals are not allowed to be used in any other way. Electrical signals follow the same semantics as optical signals: _drive-once_, _read-one_.
+} Electrical signals do not allow any operations on them apart from being used in `modulate` and `demodulate` intrinsic operators. The reasoning behind this limitation is that, as present, there are no plans for analog processing in the electrical domain. Therefore, electrical signals are only ever used to modulate optical signals, or are produced as the result of demodulating optical signals. It is possible that, in the future, some analog processing features may be added, such as gain, but as it is currently not planned, electrical signals are not allowed to be used in any other way. Electrical signals follow the same semantics as optical signals: _drive-once_, _read-once_.
 
 
 === Primitive types and primitive values
@@ -895,7 +896,7 @@ syn gain(
 ) -> @gain(gain) optical {
     ...
 }
-    ```,
+    ```
 ] <lst_ex_constraint>
 
 
@@ -908,7 +909,7 @@ Additionally, unconstrained block allow the user to create their own signal, wit
 #figure(
     kind: raw,
     caption: [ 
-        Example in @phos of a constrained synthesizable block.
+        Example in @phos of an unconstrained synthesizable block.
     ],
 )[
     ```phos
@@ -941,7 +942,7 @@ unconstrained syn ring_resonator(
 fn response(coupling: float, length: Length) -> FrequencyResponse {
     ...
 }
-    ```,
+    ```
 ] <lst_ex_unconstrained>
 
 === Stack collection and synthesizable non-signal types <sec_stack_collection>
@@ -1428,14 +1429,16 @@ Finally, the standard library can serve as a series of examples for new users. A
 #pagebreak(weak: true)
 == Compiler architecture <sec_arch>
 
-The design of the @phos compiler is inspired in parts by _Clang_'s, _Rust_'s, and _Java_'s compilers #cite("clang_internals", "rust_compiler", "openjdk_hotspot"). As previously mentioned, the compilation of a @phos program into a circuit design that can be programmed onto a photonic processor is a three step process: compilation, evaluation, and synthesis. The compiler as it is referred in this section performs the compilation step. Therefore, as previously mentioned in @sec_exec_model, it has the task for taking the user's code as an input and producing bytecode for the #gloss("vm", long: true). The compiler is written in _Rust_, and is split into several components, each with a specific purpose. As will be discussed in subsequent sections, the @phos compiler is composed of a _lexer_, a _parser_, an _#gloss("ast", long: true)_, a _desugaring_ step, a _high-level intermediary representation_, a _medium-level intermediary representation_, and a _bytecode_ generator.
+The design of the @phos compiler is inspired in parts by _Clang_'s, _Rust_'s, and _Java_'s compilers #cite("clang_internals", "rust_compiler", "openjdk_hotspot"). As previously mentioned, the compilation of a @phos program into a circuit design that can be programmed onto a photonic processor is a three step process: compilation, evaluation, and synthesis. The compiler as it is referred in this section performs the compilation step. Therefore, as previously mentioned in @sec_exec_model, it has the task for taking the user's code as an input and producing bytecode for the #gloss("vm", long: true). The compiler is written in _Rust_, and is split into several components, each with a specific purpose. As will be discussed in subsequent sections, the @phos compiler is composed of a _lexer_, a _parser_, an _#gloss("ast", long: true)_, a _desugaring_ step, a _high-level intermediary representation_, a _medium-level intermediary representation_, and a _bytecode_ generator. The multiple stages of the compiler are illustrated in @fig_compiler_arch.
 
-The compiler is architected in a multi-stage process, where each stage is responsible for a specific set of tasks, this is similar to the design of other compilers, such as the _Rust_ compiler @rust_compiler. Furthermore, each stage corresponds almost perfectly with each of the components of the compiler, as will be discussed in the following sections. This multi-stage process is illustrated in @fig_compiler_arch.
+#info-box(kind: "important")[
+    The overall architecture and components of the @phos compiler are similar in design to _Rust_'s compiler @rust_compiler, this is done purposefully for two reasons. First, _Rust_ as a language is advanced, and has a well design compiler, and as such is a good source of reference materials. Second, the @phos compiler is written in _Rust_, and as such, it can reuse existing code and algorithms from both, the extended ecosystem of language development libraries in _Rust_, and from the _Rust_ compiler itself. As the _Rust_ compiler is released under an @mit license, it can legally be used as a source of inspiration and code for the @phos compiler.
+]
 
 #figurex(
     title: [ Compiler architecture of the @phos programming language ],
     caption: [
-        Compiler architecture of the @phos programming language, showing that the user code flows into the different stages of the compiler: lexing, parsing, desugaring, AST-to-HIR, HIR-to-MIR, and bytecode generation. All of these stages producing the bytecode that can be executed by the @vm.
+        Compiler architecture of the @phos programming language, showing that the user code flows into the different stages of the compiler. All of these stages producing the bytecode that can be evaluated.
 
         This figure uses the same color scheme as @fig_responsibilities, showing the ecosystem components in orange, the user's code in green, and the platform specific code in blue.
     ]
@@ -1505,11 +1508,6 @@ Additionally, the grammar of @phos contains the priority of operations, meaning 
     title: [ Hierarchy of grammars that can be used to describe a language. ],
     caption: [
         Hierarchy of grammars that can be used to describe a language. The grammars are ordered from the most powerful to the least powerful. The most powerful grammars are able to describe any unambiguous language, whereas the least powerful grammars are only able to describe a subset of the languages @cs143. As @phos does not use an ambiguous grammar and they are very difficult to describe and parse, they are not discussed further.
-
-        - #smallcaps[*LL*]: #strong[L]eft-to-right, #strong[L]eftmost derivation.
-        - #smallcaps[*LR*]: #strong[L]eft-to-right, #strong[R]ightmost derivation.
-        - #smallcaps[*SLR*]: #strong[S]imple #strong[L]eft-to-right, #strong[L]eftmost derivation.
-        - #smallcaps[*LALR*]: #strong[L]ook#strong[a]head #strong[L]eft-to-right, #strong[L]eftmost derivation.
     ],
 )[
     #image(
@@ -1519,6 +1517,7 @@ Additionally, the grammar of @phos contains the priority of operations, meaning 
     )
 ] <fig_parser_hierarchy>
 
+#pagebreak(weak: true)
 === The abstract syntax tree <sec_ast>
 
 The #gloss("ast", long: true) is the result of the previous compilation step -- parsing -- and it is a tree-like data structure that represents the syntax of the user's code in a meaningful way. It shows the elements as bigger groups than tokens, such as expressions, synthesizable blocks, etc. The @ast is the base data structure on which all subsequent compilation steps are based. The @ast would also used by the @ide to provide code completion, syntax highlighting, and code formatting.
@@ -1537,7 +1536,7 @@ Building on top of the example shown in @lst_lexing_ex, the @ast for the functio
 )[
     #image(
         "../figures/drawio/ex_ast_out.png",
-        width: 100%,
+        width: 90%,
         alt: "Partial result of parsing @lst_lexing_ex, showing the tree-like structure of nested data structures. The AST is a tree-like data structure that represent the syntax of the user's code. In this case, it shows a function which name is an identifier add, and that has two arguments: a and b, both of type it, it has a return type of type int, and a body that is a block containing a single expressions, which is a call to the + operator, with the arguments a and b."
     )
 ] <lst_ast_ex>
@@ -1545,7 +1544,7 @@ Building on top of the example shown in @lst_lexing_ex, the @ast for the functio
 === Abstract syntax tree: desugaring, expansion, and validation
 
 #info-box(kind: "info")[
-    As will be explained in @sec_state, from this point on, the language is not yet implemented and therefore does not exist. These following steps are therefore not implemented, and are only description of what will be done when the language is fully implemented.
+    From this point in the document, the language is not yet implemented and therefore does not exist. These following steps are therefore not implemented, and are only description of what will be done when the language is fully implemented.
 ]
 
 #info-box(kind: "definition", footer: [ Adapted from @nystrom_crafting_2021. ])[
@@ -1570,17 +1569,17 @@ For this section, the example shown in @lst_desug_ex will be used, it shows a si
     ```phos
 import std::{filter, gain};
 /// Processes a signal using one of two filters based on feature flags
-fn process_signal(signal: optical) -> optical {
+syn process_signal(signal: optical) -> optical {
     signal |> internal_process()
 }
 /// If the library supports gain, add some gain after the filter
 #[feature(gain)]
-fn internal_process(signal: optical) -> optical {
+syn internal_process(signal: optical) -> optical {
     signal |> filter(1550 nm, 10 GHz) |> gain(10 dB)
 }
 /// If the library does not support gain, just filter the signal
 #[feature(not(gain))]
-fn internal_process(signal: optical) -> optical {
+syn internal_process(signal: optical) -> optical {
     signal |> filter(1550 nm, 10 GHz)
 }
     ```
@@ -1604,10 +1603,10 @@ In this step, the syntax is checked for feature gates, and only the parts of the
 )[
     ```phos
 import std::{filter, gain};
-fn process_signal(signal: optical) -> optical {
+syn process_signal(signal: optical) -> optical {
     signal |> internal_process()
 }
-fn internal_process(signal: optical) -> optical {
+syn internal_process(signal: optical) -> optical {
     signal |> filter(1550 nm, 10 GHz)
 }
     ```
@@ -1627,10 +1626,10 @@ In this process, all automatic return statement that are present at the end of a
 )[
     ```phos
 import std::{filter, gain};
-fn process_signal(signal: optical) -> optical {
+syn process_signal(signal: optical) -> optical {
     return signal |> internal_process();
 }
-fn internal_process(signal: optical) -> optical {
+syn internal_process(signal: optical) -> optical {
     return signal |> filter(1550 nm, 10 GHz);
 }
     ```
@@ -1649,10 +1648,11 @@ At this stage, the compiler has not yet resolved all of the path to the differen
     ],
 )[
     ```phos
-fn process_signal(signal: optical) -> optical {
+syn process_signal(signal: optical) -> optical {
     return signal |> self::internal_process();
 }
-fn internal_process(signal: optical) -> optical {
+
+syn internal_process(signal: optical) -> optical {
     return signal |> std::filter(1550 nm, 10 GHz);
 }
     ```
@@ -1697,10 +1697,10 @@ After lowering the @ast into the @hir, the compiler will now try and infer the t
     ],
 )[
     ```phos
-fn $0($1: optical) -> optical {
+syn $0($1: optical) -> optical {
     return (($1: optical) |> ($2(): optical)): optical;
 }
-fn $2($1: optical) -> optical {
+syn $2($1: optical) -> optical {
     return (($1: optical) |> ($3((1550 nm: Wavelength), (10 GHz: Frequency)); optical)): optical;
 }
     ```
@@ -1729,7 +1729,7 @@ As a means of alleviating this issue, the compiler can either force the user to 
     ```phos
 // Performs gain on an optical signal, depending on the gain, it will
 // either use a short gain section or a long gain section.
-fn example(
+syn example(
     signal: optical,
 
     @range(1dB, 10dB)
@@ -1744,30 +1744,844 @@ fn example(
 ] <lst_exhaustiveness_ex>
 
 
-=== Medium-level intermediary representation: constant evaluation, control flow, and liveness <sec_mir_to_mir>
+=== Constant evaluation, control flow, liveness, and pipe desugaring <sec_mir_to_mir>
 
-=== Bytecode: structure and semantics <sec_mir_to_bytecode>
+After processing the @hir, it is reduced into an even simpler form based on a #gloss("cfg", long: true). During this stage, almost all of the elements of the language are removed, even conditional branching is now implemented using `goto` operations. All of this with the aim of making the code as easy to analyze as possible. From this stage, as everything as been reduced to the most basic elements, the compiler can now do some optimization, it can compute the values of all constants and inline them where they are used, it can also perform control flow optimizations, such as performing liveness analysis, which is the process of determining which code is used and which is not, and removing the parts that are not used. Finally, it can remove pipe operators replacing them instead of function calls, performing the pattern matching at compile time.
 
-== Virtual machine <sec_vm>
+Using the aforementioned analysis, the compiler can now also detect whether all signals are being used, and if not, it can create an error for the user, indicating which part of the code is problematic. This is a useful feature of the compiler, as it enforces that all signals are at least _read-once_, which is part of the signal semantics discussed in @sec_signal_types. The way in which liveness and dead code elimination can be done is through the use of the @cfg, as it allows the compiler to easily determine which code does not contribute to the final result, and therefore can be removed, it detects unused signal simply by checking whether any signals are used within dead code.
 
-== Execution artefacts <sec_artefacts>
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Control Flow Graph*]
+}
+A @cfg, as the name implies, is a graph data structure that represents each operation being done as a node of the graph, with the different branches of the code being represented as edges. This means that all orphan sections are not accessed through the main entry point and can therefore be easily discarded. In @lst_cfg_ex, one can see a simple example checking whether a number is prime (a) and its expanded version (b). The expanded version corresponds to an approximation of what code *equivalent* to the @mir would look like, with all types specified, the `for` loop replaced with a `goto` statement and labels. As was the case in previous examples of lower-level constructs, this code is not valid @phos, and is purely for demonstration purposes.
+#figurex(
+    caption: [
+        @cfg created from the code in @lst_cfg_ex. It shows the different branches of the code, with the first branch relating to the iteration from `2` to `number`, and the second branch relating to the `if` statement checking whether the number is divisible by `i`. It shows that each branch is made of individual statements, and that the `if` and `match` statements are represented as branches with two possible outcomes.
+    ],
+    title: [ @cfg created from the code in @lst_cfg_ex. ],
+    kind: image
+)[
+    #image(
+        "../figures/drawio/is_even_cfg.png",
+        width: 70%,
+        alt: "Shows a control flow graph, showing first a block of code `let i = 2`, followed by `let iterator = 0..number`, followed by `let tmp = iterator.next()`, and `match tmp`. An arrow annotated as `none` goes to the left to a single block `return true`. An arrow annotated as `i` goes to two blocks: `let tmp2 = number % i` and `tmp == 0`. From that last block, an arrow annotated `true` goes to `return false`, and an arrow annotated `false` goes back to `let tmp = iterator.next()`."
+    )
+] <fig_cfg_ex>
+
+#figurex(
+    caption: [
+        Code example in @phos and code-equivalent representation of its @mir expanded version. Shows a function computing whether a number is prime before (a) and after expansion (b). The code in (b) is not valid @phos, and is purely for demonstration purposes.
+    ],
+    title: [ Code example in @phos and code-equivalent representation of its @mir expanded version. ],
+    kind: raw
+)[
+    #table(
+        columns: 2,
+        stroke: none,
+        ```phos
+// Checks if the number is prime
+fn is_prime(number: int) -> bool {
+    let i = 2;
+    for i in 0..number {
+        if number % i == 0 {
+            return false;
+        }
+    }
+
+    true
+}
+        ```,
+        ```phos
+// Checks if the number is prime
+fn is_prime(number: int) -> bool {
+    let i: int = 2;
+    let iterator: Iterator = 0..number;
+
+    top:
+        let tmp = iterator.next();
+        match tmp {
+            i => {
+                let tmp2: int = number % i;
+                if tmp2 == 0 {
+                    return false;
+                }
+
+                goto top;
+            }
+            none => goto ret,
+        }
+
+    ret:
+        return true;
+}
+        ```,
+        [ (a) ],
+        [ (b) ],
+    )
+] <lst_cfg_ex>
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Constant inlining*]
+}
+It is at this stage of the compilation pipeline that all constants are evaluated and replaced. The reason why @phos does this step is not for performance, as in most other languages, but for simplicity. As the @vm will use a prover to verify aspects of the code in scenarios where reconfigurability is used, the code produced by the compiler must be as simple as possible to simplify this process as much as possible. For this reason, as constant evaluation is relatively easy to perform, it is done during compilation. In @lst_const_inlining, one can see a piece of code before constant inlining (a), after constant inlining (b), and after constant evaluation (c). It also shows that operations that produce constant values within the user's code are also computed, further reducing the complexity of the code.
+
+#figurex(
+    caption: [
+        Code example in @phos, showing the original code (a), the code after constant inlining (b), and the code after constant evaluation (c).
+        
+        These operations would normally be done in the @mir stage, and therefore would not be visible in code, but for demonstration purposes, they are shown here as valid @phos code.
+    ],
+    title: [ Code example in @phos, showing constant inlining and evaluation. ],
+    kind: raw
+)[
+    #block[
+    #table(
+        columns: 3,
+        stroke: none,
+        ```phos
+const MY_CONST: int
+    = 32;
+
+fn add_my_const(
+    a: int
+) -> int {
+    a + 2 * MY_CONST + 5
+}
+        ```,
+        ```phos
+fn add_my_const(
+    a: int
+) -> int {
+    a + 2 * 32 + 5
+}
+        ```,
+        ```phos
+fn add_my_const(
+    a: int
+) -> int {
+    a + 69
+}
+        ```,
+        [ (a) ],
+        [ (b) ],
+        [ (c) ],
+    )]
+] <lst_const_inlining>
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Pipe desugaring*]
+}
+The final syntactic sugar that has yet to be simplified, is the pipe operator (`|>`). This operator is used on iterable tuples to pass data from one function or synthesizable block to another easily while keeping the code readable. The pipe operator performs pattern matching on its input values, and into the function arguments it is piping into. Doing so is quite difficult, which is why it is performed close to the end of all transformations. As this stage, the types are all known, operations have been simplified to the maximum, and therefore, it is the easiest point in the compilation process for the compiler to perform this transformation. In @lst_pipe_desugaring, one can see a piece of code before pipe desugaring (a), and after pipe desugaring (b), while both of these expressions are equivalent, the former is easier to read and understand. In more complex cases, where the pipe operator is used to pattern match over multiple values, this simplification is more complex. 
+
+#figurex(
+    caption: [
+        Code example in @phos, showing the original code (a), and the code after pipe desugaring (b).
+        
+        These operations would normally be done in the @mir stage, and therefore would not be visible in code, but for demonstration purposes, they are shown here as valid @phos code.
+    ],
+    title: [ Code example in @phos, showing pipe desugaring. ],
+    kind: raw
+)[
+    #table(
+        columns: 2,
+        stroke: none,
+        ```phos
+// Returns the sum of all inputs,
+// also returns true if the sum is even
+fn sum(inputs: (int...)) -> (int, bool) {
+    inputs
+        |> fold(0, |acc, x| acc + x)
+        |> map(|x| (x, x % 2 == 0))
+}
+        ```,
+        ```phos
+// Returns the sum of all inputs,
+// also returns true if the sum is even
+fn sum(inputs: (int...)) -> (int, bool)  {
+     map(fold(inputs, 0, |acc, x| acc + x), |x| (x, x % 2 == 0))
+}
+        ```,
+        [ (a) ],
+        [ (b) ],
+    )
+] <lst_pipe_desugaring>
+
+#pagebreak(weak: true)
+=== PHÔS bytecode <sec_mir_to_bytecode>
+
+#info-box(kind: "definition", footer: [ Adapted from @java_se_specs. ])[
+    The *bytecode* is a binary representation of the original source code, that has been processed by the compiler to be verified for correctness, simplified, and optimised. It is an executable representation, made of instructions, that can be executed by the #gloss("vm", long: true).
+]
+
+From the @cfg built in the previous step, it is now relatively easy to move to a bytecode representation. This is done by replacing all simplified expression with bytecode instructions. The bytecode of the @phos language is greatly inspired by _Java_'s bytecode @java_se_specs. With the addition of a few key features, most notably special instructions representing the intrinsic signal operations, discussed in @sec_intrinsic_operations, and constraints which are added as special instructions on values. The @phos bytecode also removes some of the instructions that are not needed, since @phos does not distinguish between 32-bit and 64-bit values, @phos is not object oriented and does not need object-related information and instructions, finally, @phos does not have a concept of exceptions, and therefore does not need instructions related to exception handling.
+
+Because of these properties, the instruction set of the @phos language is fairly simple, additionally some instructions are more generic than in _Java_, for example @phos does not distinguish between integer and floating-point operations, and therefore has a single instruction for arithmetic operations, which can be used for both integer and floating-point values. The @phos bytecode is also stack-based, meaning that all operations are performed on a stack, and all values are pushed and popped from the stack, this will be discussed in more detail in @sec_stack_based. The full instruction set of the @phos #gloss("vm", long: true) can be found in @tbl_instruction_set.
+
+Finally, along with the bytecode, the previously built @cfg is also included, with its node now replaced with the position of the relevant instructions. The reasoning behind this inclusion is as follows: as the @vm will need to prove that some branches can be taken, while others cannot, it will need to build branching information either way. Instead of having to rebuild the @cfg in the @vm, it is instead packed along with the bytecode as a means of reducing computation time. This gives a dual purpose to the @cfg, as it is used both in the compiler, and in the @vm.
+
+#info-box(kind: "note")[
+    It is likely that as the development of the @phos language continues, the instruction set will be expanded and refined, and therefore the instruction set shown in @tbl_instruction_set may not be the final instruction set of the @phos #gloss("vm", long: true).
+]
+
+#figurex(
+    title: [ Instruction set of the @phos #gloss("vm", long: true). ],
+    caption: [ Instruction set of the @phos #gloss("vm", long: true). Showing the instruction and its static arguments (i.e arguments that are produced during compilation), and the operations that each instruction does on the stack. ],
+    kind: table,
+)[
+    #tablex(
+        columns: (0.7fr, 0.5fr, 0.8fr),
+        align: center + top,
+        auto-vlines: false,
+        repeat-header: true,
+
+        rowspanx(2)[#smallcaps[*Instruction*]],
+        smallcaps[*Stack operations*],
+        rowspanx(2)[#smallcaps[*Description*]],
+        (), [ \[before\] #sym.arrow \[after\]], (),
+
+        ```typc
+call_fn[
+    <function_id>
+]
+        ```,
+        ```
+[
+    arg0,
+    arg1,
+    ...
+] → result
+        ```,
+        align(horizon)[
+            Calls the function with the given ID, the arguments are obtained from the function definition, and then popped from the stack, the result of the function call is pushed onto the stack.
+        ],
+
+        ```typc
+call_method[
+    <type>, 
+    <function_id>
+]
+        ```,
+        ```
+[
+    arg0,
+    arg1,
+    ...
+] → result
+        ```,
+        align(horizon)[
+            Calls the method with the given ID on the given type, the arguments are obtained from the function definition, and then popped from the stack, the result of the function call is pushed onto the stack.
+        ],
+
+        ```typc
+goto[
+    <label>
+]
+        ```,
+        ```
+[] → []
+        ```,
+        align(horizon)[
+            Jumps to the given label. Used when branching.
+        ],
+
+        ```typc
+pop[
+    <n>
+]
+        ```,
+        ```
+[ a0,  a1, ... ] → []
+        ```,
+        align(horizon)[
+            Pops the given number of values `n` from the stack and discards them.
+        ],
+
+        ```typc
+repeat[
+    <n1>,
+    <n2>
+]
+        ```,
+        ```
+[ a0,  a1, ... ] → [
+    [a0,  a1, ... ],
+    [a0,  a1, ...] ,
+    ... 
+]
+        ```,
+        align(horizon)[
+            Repeats the `n2` top values of the stack `n1` times, and pushes the result onto the stack.
+        ],
+
+        ```typc
+const[ <value> ]
+        ```,
+        ```
+[] → [ <value> ]
+        ```,
+        align(horizon)[
+            Pushes the given constant value onto the stack, can be an `int/uint`, a `float`, a `bool`, a `string`, a `char`, a `complex`, or a function, which are used for passing closures to other functions.
+        ],
+
+        ```typc
+return[]
+        ```,
+        ```
+[ a0,  a1, ... ] → []
+        ```,
+        align(horizon)[
+            Returns from the current function, popping all of the remaining values from the stack and returning them as a tuple. If the stack is empty, returns an empty tuple, which is equivalent to the `none` value.
+        ],
+
+        ```typc
+none[]
+        ```,
+        ```
+[] → [ none ]
+        ```,
+        align(horizon)[
+            Pushes the `none` value onto the stack.
+        ],
+
+        ```typc
+load[ <id> ]
+        ```,
+        ```
+[] → [
+    a0,
+    a1,
+    ...,
+    len
+]
+        ```,
+        align(horizon)[
+            Loads the value with the given local variable ID onto the stack. If it is a tuple, expands the tuple into `len` values on the stack, also pushes the tuple length onto the stack. The first `n` local variables are reserved for the arguments of the function, where `n` is the number of arguments of the function.
+        ],
+
+        ```typc
+store[
+    <id>,
+]
+        ```,
+        ```
+[
+    a0,
+    a1,
+    ...,
+    len
+] → []
+        ```,
+        align(horizon)[
+            Stores the top `len` values of the stack into the local variable with the given ID, if `len` is more than one, then stores them as a tuple. The first `n` local variables are reserved for the arguments of the function, where `n` is the number of arguments of the function.
+        ],
+
+        ```typc
+get[
+    <type_id>,
+    <field_id>
+]
+        ```,
+        ```
+[ instance ] → [ 
+    a0,
+    a1,
+    ...,
+    len
+]
+        ```,
+        align(horizon)[
+            Gets the field with the given ID `field_id` from the given type `type_id`, and pushes it onto the stack. If it is a tuple, expands the tuple into `len` values on the stack, also pushes the `len` of the tuple onto the stack. Pops the instance of the type from the stack.
+        ],
+
+        ```typc
+push[
+    <type_id>,
+    <field_id>,
+],
+        ```,
+        ```
+[
+    instance,
+    a0,
+    a1,
+    ...,
+    len
+] → [ ]
+        ```,
+        align(horizon)[
+            Stores the top `len` elements from the stack into the field with the given ID `field_id` from the given type `type_id`. If it is a tuple, expands the tuple into `len` values on the stack. Pops the instance of the type from the stack.
+        ],
+
+        ```typc
+new[
+    <type_id>,
+    <variant_id>,
+],
+        ```,
+        ```
+[
+    a0,
+    a1,
+    ...
+] → [ instance ]
+        ```,
+        align(horizon)[
+            Creates a new instance of the variant `variant_id` of given type `type_id`, and pushes it onto the stack. The arguments are obtained from the type definition, and then popped from the stack. For structs, the `variant_id` are ignored.
+        ],
+
+        ```typc
+branch[
+    <false_offset>
+]
+        ```,
+        ```
+[
+    a0,
+] → []
+        ```,
+        align(horizon)[
+            Takes the top value from the stack, if it is `false`, then jumps to the given offset. Otherwise, continues execution at the next instruction.
+        ],
+
+        ```typc
+flag[ <flag> ],
+        ```,
+        ```
+        [] → []
+        ```,
+        align(horizon)[
+            Gets the given flag, and pushes it onto the stack as a boolean value. The flags are produced by the previous operation. The valid flags are `overflow`, `underflow`, `div_by_zero`, `invalid`, `inexact`, `unimplemented`, `unreachable`. Used for branching.
+        ],
+
+        ```typc
+unary[
+    <op>
+]
+        ```,
+        ```
+[ a0, ] → [ a1 ]
+        ```,
+        align(horizon)[
+            Takes the top value from the stack, applies the given unary operator `op` to it, and pushes the result onto the stack. The valid unary operations are numerical negation (`-`), logical negation (`!`), and bitwise negation (`~`).
+        ],
+
+        ```typc
+binary[
+    <op>
+]
+        ```,
+        ```
+[ a0, a1 ] → [ a2 ]
+        ```,
+        align(horizon)[
+            Takes the top two values from the stack, applies the given binary operator `op` to them, and pushes the result onto the stack. The valid binary operations are addition (`+`), subtraction (`-`), multiplication (`*`), division (`/`), modulo (`%`), exponentiation (`**`), bitwise and (`&`), bitwise or (`|`), bitwise xor (`^`), bitwise left shift (`<<`), bitwise right shift (`>>`), equality (`==`), inequality (`!=`), less than (`<`), less than or equal (`<=`), greater than (`>`), greater than or equal (`>=`), logical and (`&&`), and logical or (`||`).
+        ],
+
+        ```typc
+cast[
+    <type_id>
+]
+        ```,
+        ```
+[ a0, ] → [ a1 ]
+        ```,
+        align(horizon)[
+            Takes the top value from the stack, cast it to the given type `type_id`, and pushes the result onto the stack. The valid conversions are `int`, `uint`, `float`, `bool`, `string`, `char`, and `complex`. Only primitive values may be converted in this way.
+        ],
+
+        ```typc
+insert[]
+        ```,
+        ```
+[
+    value,
+    offset,
+    len
+] -> [ ... ]
+        ```,
+        align(horizon)[
+            Inserts the given `value` into the stack at the given `offset`, `len` times. This allows the insertion of values into the middle of the stack, as well as interspersing values into the stack. In the cast of the stack `[a0, a1, a2, "hello", 1, 3]`, calling `insert` will result in the stack `[a0, "hello", a1, "hello", a2, "hello"]`.
+        ],
+
+        ```typc
+intrinsic[
+    <intr>
+]     
+        ```,
+        ```
+[ a0, a1, ... ] → [ a2, a3, ... ]
+        ```,
+
+        align(horizon)[
+            Execute the given photonic intrinsic operation `intr`, see @sec_intrinsic_operations, based on the intrinsic value, pops the arguments from the stack, and pushes the result onto the stack.
+        ],
+
+        ```typc
+constraint[
+    <constr>
+]
+        ```,
+        ```
+[ 
+    signal,
+    a0,
+    a1,
+    ...
+] → [ ]
+        ```,
+        align(horizon)[
+            Applies the given photonic constraint `constr`, see @sec_constraints, based on the constraint value, pops the arguments from the stack, and pushes the result onto the `signal`.
+        ],
+    )
+] <tbl_instruction_set>
+
+
+=== Compiler complexity <sec_comp_complexity>
+
+As one can see from the previous sections, the @phos compiler is more complex than one might expect. However, there are good reasons why the compiler is so complex, a lot of the features that have been discussed in @sec_intent and in this chapter are rather difficult to implement. They require a lot of modern features and tight coupling with provers for constraints and intrinsics. These tasks are not easy in isolation, but when they are combined, they become even more difficult to implement. When taking this into account, the complexity of the compiler is not that surprising. Essentially, the compiler simplifies the code as much as reasonably possible, such that the resulting bytecode is easy to interpret and execute, easy to collect stacks for tunable values, and such that it is easy to process using a prover. Additionally, this complexity makes the compiler modular, which allows for easy extension and rework of the language, something that will need to be done as the language evolves.
+
+#info-box(kind: "conclusion")[
+    The @phos compiler translates source code into a bytecode format used by the @vm for evaluation. It first turns the code into a computer-understandable representation called the @ast. Then the @ast goes through three transformation stage. Called the @hir, the @mir, and finally the bytecode.
+]
+
+#pagebreak(weak: true)
+== The virtual machine <sec_vm>
+
+After investigating the components and stages of the compiler, the analysis of the #gloss("vm", long: true) can proceed. Recalling the execution model of @phos, discussed in @sec_exec_model, the role that the @vm fills is the evaluation of the bytecode. Therefore, the behaviour of the virtual machine is discussed, including how the @vm works, how it uses a stack for computation, and how it executes the bytecode. Additionally, the section discusses the result of the evaluation, namely, the tree of intrinsic operations, collected stacks, and constraints. However,  the suitability of existing virtual machines must also be discussed, as it is important to understand why an existing virtual machine was not used.
+
+=== Why not use an existing VM? <sec_existing_vm>
+
+One may wonder why @phos does not use an existing virtual machine and requires a custom built one. The reason for this is that existing @vm[s] are not suitable for the semantics and execution model of @phos. This can be explained by looking at the artefacts produced by the execution process, previously shown in @fig_exec_model, it must produce three components, all of which would be hard, if not impossible, to properly extract and process within an existing implementation.
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Stack collection*]
+}
+One of the key functions of the virtual machine is to detect which parts of the code cannot be evaluated based on tunable values, as was discussed in @sec_tunability_reconfigurability, and collect them to be included in the user @hal. This requires tight integration in the @vm, as it must support doing partial computation and collect all of the instructions it cannot execute. This is not a feature that is supported by any existing @vm that was investigated, and it would be difficult to implement in an existing @vm.
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Constraints and intrinsic*]
+}
+Another feature of the @phos @vm is the ability to collect constraints and intrinsic operations and to produce a tree of these values, representing the signal flow of the circuit. While this can be implemented in a traditional language, it would require an extensive library to be included along with the bytecode, which would make the bytecode harder to generate. Additionally, this means that these operations would no longer be expressed as dedicated bytecode instructions, but rather as regular function calls, tightly coupling the aforementioned library and the bytecode, greatly increasing the burden of maintenance and development of the language.
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Simplicity*]
+}
+Existing @vm[s] often support many features that are simply not needed for @phos, such as object oriented programming, or memory recollection schemes like garbage collection. @phos is not a general purpose language, and as such, can work with a limited set of features. This means that the complexity of the @vm can be significantly reduced to only contain the elements relevant to @phos. This can help improve performance, and reduce the size of the @vm, making it easier to distribute to users.
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Licensing*]
+}
+Finally, existing @vm[s] may be subject to licenses, while intellectual property has not been discussed in this document, it is important to be aware of issues that can arise when using other people's code, or more generally, intellectual property. Therefore, if the @vm is written from scratch, it can be licensed in a way that is compatible with the @phos license, whichever that may be.
+
+=== Stack-based architecture <sec_stack_based>
+
+#info-box(kind: "definition", footer: [ Adapted from @cormen_introduction_2009. ])[
+    A *stack* is a data structure that follows the last-in-first-out (LIFO) principle. This means that the last element that was added to the stack is the first one to be removed. Stacks usually only implement two operations: `pop` to remove the last element, and `push` to add an element to the top of the stack.
+]
+
+So far, the mention of the _stack_ has been made several times, however, no clear definition had been provided. This definition, along with the reasoning behind the choice of a stack-based architecture, is discussed in this section. The stack, is a data structure that holds the values required during the evaluation of a given block of code. The stack is used to store all intermediary values needed for computation, when a new value is needed, it is pushed onto the stack, and when a bytecode instruction is executed, full list in @sec_mir_to_bytecode, the instruction pops the elements that it needs from the stack, processes them, and once it is done, it pushes all of the output values to the stack again. Later on in this section, an example is provided showing the execution of a simple function.
+
+The stack is convenient, because it can be very effectively implemented, it is a common data structure that is easy to implement and very fast. Additionally, it means that all short-lived values are stored inline, and do not require any additional memory allocation. This is important, as it means that the @vm does not need to implement a garbage collector, which would be a significant burden on the development of the @vm. Furthermore, the stack also plays very nicely with the automatic memory management scheme used by _Rust_ -- the language in which @phos will be implemented -- as it allows values that are removed from the stack and no longer used to be automatically discarded, further simplifying the implementation of the @vm.
+
+One of the special aspects of the @phos @vm, that one may notice from the list of instructions in @sec_mir_to_bytecode, is that arrays of values in @phos are all pushed to the stack, and that @phos allows for quite complex operations on the stack. The reasoning behind this decision is to make the @vm very powerful and to be able to express complex operations in relatively few instructions. This allows the work of the user @hal generator, discussed in @sec_hal, to be even easier. It also means that fewer instructions must be provided to the prover for branch elimination and constraint checking, and therefore the interface between the prover and the @vm will be easier to create.
+
+=== Signals, constraints, and intrinsics
+
+As previously mentioned, one of the tasks of the @vm is to collect the different intrinsic operations and their constraints, in order to build a tree representing the signal processing. This is done through the `intrinsic` and `constraint` instructions. These special instructions take signals and arguments and instead of only pushing results to the stack, they also can internally add information to a global tree of signals. This is done transparently from the user, and is how the @vm can perform store these signals. In @lst_tree_ex, one can see a simple program splitting, filtering and then adding gain to a signal, then in @fig_tree_ex, one can see the signal processing tree with the added constraints. In cases where reconfigurability would also be present, collected stacks would also be appended to a special reconfigurability node, which would be used to differentiate the different configurations of the circuit.
+
+#block(breakable: false)[
+#table(
+    columns: 2,
+    stroke: none,
+    [
+        #figurex(
+            caption: [
+                Code example in @phos, showing a simple photonic circuit splitting a signal, then filtering both signals, and finally adding gain to one of the signals.
+            ],
+            title: [ Code example in @phos, showing the signal processing tree. ],
+            kind: raw
+        )[
+            ```phos
+// Returns the sum of all inputs,
+// also returns true if the sum is even
+syn process(
+    input: optional
+) -> (optical, optical) {
+    input |> split((0.5, 0.5))
+        |> map(filter(1550 nm, 10 GHz))
+        |> (_, gain(10 dB))
+}
+            ```
+        ] <lst_tree_ex>
+    ],
+    [
+        #figurex(
+            caption: [
+                Signal flow diagram of @lst_tree_ex, showing the splitting of the input signal, followed by the filtering of both signals, and finally the gain of one of the signals. The green boxes represent the intrinsic operations, the blue boxes represent the constraints, the arrows represents the flow of the signal.
+            ],
+            title: [ Signal flow diagram of @lst_tree_ex. ],
+            kind: image
+        )[
+            #image(
+                "../figures/drawio/signal_proc.png",
+                alt: "Shows a tree of signals, at the top is input, followed by splitter, the first branch shows a filter with a wavelength constraint, and the second branch shows a filter with a wavelength constraint followed by a gain"
+            )
+        ]<fig_tree_ex>
+    ],
+)
+]
+
+=== Example of bytecode execution <sec_ex_bytecode_exec>
+
+In this section, a simple example of code will be shown, along with its resulting bytecode. The code is shown in @lst_bytecode_example (a) and the resulting bytecode is shown in @lst_bytecode_example (b). The function being compiled is a simple accumulating sum that also computes whether the sum is even or not. In (b), one can see the bytecode is containing a total of $22$ instructions. The instructions would be purely binary values, however, they are shown as text for convenience and readability. One can see that the two closures at line $5$ and $6$ where respectively turned into two anonymous functions called `__anonym_0` and `__anonym_1`, normally these would have numeric IDs instead of names, but names are provided for clarity. This code uses the `load`, `pop`, `binary`, `return`, `repeat`, `const` and `call_fn` instructions, which can all be found in the previously shown @tbl_instruction_set.
+
+An example of execution and the state of the stack will now be shown, the function `sum` will be called with the iterable tuple `(1, 2, 3, 4, 5)`. The execution diagram of the `sum` function can be seen in @anx_bytecode_execution, in @fig_annex_execution. It shows the stack after each step of the execution of the function. It also gives symbolic meaning to the values, showing integers as `int(x)`, length as `len(x)`, and functions as `fn(x)`. From this figure, one can see that the `load` instruction pushes all of the values of argument `inputs` onto the stack, followed by the length of the argument $5$ in this case. Then, when constants are pushed, the whole stack moves up and the new value is added. When calling functions, the whole stack is consumed and the result is pushed onto the stack. The `pop` instruction is used to remove the top value from the stack, and the `return` instruction is used to return the top values from the stack. Additionally, one can see that the `const[ 1 ]` being performed is used to add the length of the argument before calling `map`, this is because map expects an iterable tuple as an input, and produces an iterable tuple. The result of this execution is then returned, with the tuple `(15, true)`.
+
+#block(breakable: false)[
+#figurex(
+    caption: [
+        Code example in @phos, showing the original code (a), and the bytecode after compilation (b).
+        
+        The bytecode would normally be, as the name implies, binary, however here it is shown in a textual format for clarity.
+    ],
+    title: [ Code example in @phos, showing original code and resulting bytecode. ],
+    kind: raw
+)[
+    #table(
+        columns: 2,
+        stroke: none,
+        ```phos
+// Returns the sum of all inputs,
+// also returns true if the sum is even
+fn sum(inputs: (int...)) -> (int, bool) {
+    inputs
+        |> fold(0, |acc, x| acc + x)
+        |> map(|x| (x, x % 2 == 0))
+}
+        ```,
+        ```typc
+fn @__anonym_0(@0: int, @1: int) -> int:
+  load[ @0 ]   pop[ 1 ]
+  load[ @1 ]   pop[ 1 ]
+  binary[ + ] return[] 
+
+fn @__anonym_1(@0: int) -> (int, bool):
+  load[ @0 ]    pop[ 1 ]
+  repeat[1, 1]  const[ 2 ]
+  binary[ % ]   const[ 0 ]
+  binary[ =​= ]  return[]
+
+fn @sum(@0: (int...)) -> (int, bool):
+  load[ @0 ]           const[ 0 ]
+  const[ @__anonym_0 ] call_fn[ @fold ]
+  const[ 1 ]           const[ @__anonym_1 ]
+  call_fn[ @map ]      pop[ 1 ]
+  return[]
+        ```,
+        [ (a) ],
+        [ (b) ],
+    )
+] <lst_bytecode_example>
+]
+
+=== Partial evaluation <sec_partial_eval>
+
+#info-box(kind: "definition", footer: [ Adapted from @jones_partial_1993 ])[
+    *Partial evaluation* is a technique for specializing a program with respect to some of its arguments. The result is a new program that only requires the remaining arguments to run. The new program is generally smaller.
+]
+
+It has been shown that the @vm executes bytecode, however, one may wonder how the @vm handles tunable values. The answer is that the @vm will use _partial evaluation_. Meaning that the @vm will collect the code impacted by the tunable values, and will try and evaluate as much of the code as possible, while leaving the code it cannot evaluate as is. This means that the @vm will produce a new program that performs the same functionality as the user's original program, but specialized based on the static inputs, needing only the tunable values as inputs for it to be complete.
+
+Additionally, it will still analyze the intrinsic operations -- impacted by tunability -- that are present within the user's design, and collect them separately such that they can still be synthesized. These operations, also depend on tunable values, but using the constraints on those tunable values, if any, the compiler will still be capable, in most cases, of synthesizing them into a photonic mesh. This will allow the @vm to produce a special subtree of the signal flow tree, that represents tunable sections, along with their intrinsic operations and constraints, but requiring tunable values for finalization.
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Tunability failures*]
+}
+In some cases, if tunable values are not sufficiently constrained, the synthesis of these components may fail. In such cases, the user will be invited to provide more constraints, such that the synthesizer can produce the photonic mesh for the given intrinsic operation. If however, the user were not to be able to provide these additional constraint, they would need to rework their design to either avoid the use of broad range tunable values, or to be able to provide the additional constraints. Therefore, one may understand tunable values as a tool to help the user tune their photonic circuit, but not as a tool for broad range reconfiguration.
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Broad-range reconfiguration*]
+}
+As previously mentioned, if tunability has failed, the user must be able to constrain their tunability values more, in some cases, this may prove difficult. However, @phos also provides the ability of creating reconfigurability regions, which are regions of the photonic circuit that can be reconfigured. The way in which the user may be able to constrain their tunable values, is by using reconfigurability regions. If they can partially constrain their tunable values, such that it can be used for reconfigurability, in addition to tunability, then the synthesizer will be able to produce a photonic mesh for their design.
+
+Looking at @lst_broad_ex, in (a), one can see a circuit that relies on broad-range reconfigurability if parameter `gain` is not constrained, and the platform only supports a short gain in the range $[0"dB"..5"dB"]$, or a long gain in the range $]5"dB", 10"dB"]$, the synthesizer will fail to make the circuit. However, if the user were to constrain the `gain` in the range supported by the platform then match on the gain to create either a `short_gain` section or a `long_gain` section, the code would be synthesizable, this second case is shown in (b).
+
+However, when looking at this code (b), one might think that it is much longer than the original code (a), however, most of this complexity would actually be contained within the standard library, and the user would only need to add the `range` constraint on their gain to match their platform's capabilities.
+
+#figurex(
+    caption: [
+        Code example in @phos, showing the original unsynthesizable code (a), and the fixed code (b)
+    ],
+    kind: raw
+)[
+    #table(
+        columns: 2,
+        stroke: none,
+        ```phos
+syn my_module(
+    input: signal,
+    the_gain: Gain
+) -> signal {
+    input |> gain(the_gain)
+}
+        ```,
+        ```phos 
+syn my_module(
+    input: signal,
+    @range(0 dB ..= 10 dB)
+    the_gain: Gain
+) -> signal {
+    match the_gain {
+        0 dB..=5 dB => input
+            |> short_gain(the_gain),
+        5 dB..=10 dB => input
+            |> long_gain(the_gain),
+    }
+}
+        ```,
+        [ (a) ],
+        [ (b) ],
+    )
+] <lst_broad_ex>
+
+== Synthesis <sec_synthesis>
+
+Now that the first two steps in the overall synthesis of a @phos design, namely compilation and evaluation, have been explained, the last step is to synthesize the design. This step is likely to be the most complex, and a lot of work is still needed both at the design stage, and at the algorithm stage. However, the goal of this section is to explain the general idea behind the synthesis of a @phos design. Therefore, this section can be assumed to be less precise and formal than previous ones, focusing more on overall ideas and concepts, rather than on specific details.
+
+The core goal of the synthesis stage, is to take the signal flow tree produced by the @vm and turn it into two things: the user @hal that the user can use to interact with their design, and the binary programming files used by the actual hardware. These two goals are very different, and by far the simplest is the generation of the user @hal. The generation of the binary programming files, require processing all of the constraints and all of the intrinsics into gate descriptions, followed by placing them on the chip and routing between them. This is a problem that is already incredibly difficult for traditional @fpga[s] to solve, but it exacerbated by, both the two modes that can be supported in waveguides, but also by the recirculating hexagonal nature of the mesh. Therefore, synthesis of a @phos design is incredibly difficult and computationally expensive, and is still an active area of research.
+
+Among the ongoing work that has been happening, including at the @prg, the modelling of the circuit meshes in a graph structure has been done @chen_graph_2020. In @fig_graph_representation, one can see the graph representation of a single photonic gate, as well as a junction in an hexagonal photonic mesh, and in @fig_graph_representation_mesh, one can see a set of gates in a mesh. In their work, Xiangfeng Chen, et al. show that by incorporating relevant metrics in the mesh edges, they can achieve efficient routing in a photonic mesh. This is a very promising result, and can be used as the basis for future research. Indeed, research is already ongoing at Ghent University to further this routing, however they are not yet at the point of incorporating more complex photonic components inside of the mesh @kerchove_adapting_2022. Other work has implemented automatic realization of circuits on photonic meshes, which is closer to what is needed for synthesis, but it is still incomplete @gao_automatic_2022.
+
+#figurex(
+    title: [
+        Graph representation of a single photonic elements.
+    ],
+    caption: [
+        Graph representation of a single photonic gate (a), and of a complete junction in a photonic mesh (b). Based on the work of Xiangfeng Chen, et al. @chen_graph_2020. (b) is composed of three unit cells shown in (a), showing the direction that light is travelling in, and all of the possible connections.
+    ],
+    kind: image,
+)[
+    #table(
+        columns: 2,
+        stroke: none,
+        image("../figures/drawio/graph_representation.png", height: 160pt),
+        f(160pt),
+        [ (a) ],
+        [ (b) ],
+    )
+] <fig_graph_representation>
+
+=== From intrinsic operations to gates
+
+The first step in synthesizing the circuit, is determining for each intrinsic operation being done in the circuit, what gates are required to implement it. Some intrinsics have one-to-one mapping with photonic gates, such as phase shifters, splitters, and couplers, for these this tasks should be relatively easy. However, other intrinsic operations, such as modulators, detectors, sources are not part of the mesh and are, in fact, components placed on the edges of the mesh. Finally, other intrinsic operations are actually compounded operations, that can result in more than one photonic gate. This means that each type of intrinsic operation, will need to be decomposed into their component photonic gates. Some of them, such as edge devices, do not need to become a specific gate, rather they need to be assigned a location, such that they can be routed to during place-and-route.
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Filter synthesis*]
+}
+Filters are purposefully made into their own intrinsic operation despite being compound components. As was explained in @sec_intrinsic_operations, filters may be optimized based on the platform, for example, some platforms may even have built-in tunable filters placed on the edge. Therefore, the platform is responsible for the synthesis of the filters. As the synthesizer is provided with the input wavelength constraint, and the expected wavelength response, wether it be a bandpass filter, or any other filter, it should be able to synthesize the filter into its component gates. In some cases, it is possible that filter synthesis might fail, in such cases, the synthesizer should produce an error for the user.
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Tunability*]
+}
+At this point, some components may depend on tunable values, nonetheless, the synthesis tool must be capable of handling tunable components. Meaning that it must understand that components are tunable within a certain range, indicated with constraints, and still produce the appropriate gates. This task should generally be relatively similar to regular intrinsic-to-gate translation, assuming that the parts of the standard library implemented for the platform were done correctly. Indeed, the task of separating widely tunable values into smaller tunable ranges, is in parts, the task of the designer, in other parts, the task of the standard library as it is implemented by the chip designer. This means that, at this point in the synthesis pipeline, all tunable intrinsic operations should be synthesizable. If they are not, then the platform support package would be to blame, since it would mean that its implementation of the standard library is invalid.
+
+=== Place-and-route <sec_place_and_route>
+
+As was previously discussed, there are currently no algorithms that can place and route all of the components that can be present in a mesh. Since @phos provides the constraints on each signals to the place-and-route engine, it is expected that it will utilize those constraints to improve its placement and routing. Furthermore, the place-and-route algorithm will be provided by optimization targets by the user, these targets should be an indication of what matters most for the user: the area that a given circuit occupies, the power consumed by the circuit, or the optical losses in the circuits. Additionally, in some cases, the user may want to create their own metric for further customization.
+ 
+=== Hardware abstraction library <sec_hal>
+
+Another task of the synthesizer is to generate the user @hal. To do this, it will use pre-made routine, that have yet to be designed, coupled with the platform support package, which will provide information with regards to interconnecting the generated, high-level user @hal and the low level core @hal provided my the chip designer. This task is expected to be relatively simple, as it is mostly a matter of connecting the dots between the two @hal. Additionally, the user @hal would be generated in _Rust_, in a way that is compatible with #gloss("ffi", long: true) for interoperability with _C_ and _C++_.
+
+#info-box(kind: "conclusion")[
+    At this point, little is known about the exact way that the synthesizer will work, however, this section has hopefully provided pointers that may be used in future research for the implementation of this stage.
+]
+
+== Constraint solver and provers <sec_constraint_solver>
+
+In the previous sections, the mention of the constraint-solver and of the user of prover has been discussed extensively. However, the exact way in which these tools will be used has not been discussed. This section will attempt to provide a brief overview of the way that these tools will be used. First, the constraint solver will be discussed, followed by the prover.
+
+=== Constraint solver
+
+The constraint solver is a software that can, given a set of intrinsic operations and constraints, solve the state of a signal at any point in the signal chain. It does this in one of two modes: in frequency domain analysis, it will only look at a subset of relevant intrinsic, and compute the spectrum at each step of the signal chain. In time domain analysis, it will process complex amplitude signals modulated onto carrier wavelength, and at each time $t$, it will process the effect that each constraint has on the signal.
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Limitations of frequency domain analysis*]
+}
+In frequency domain mode, the constraint solver must have the values of all tunable values set before it starts executing. This is because, for proper frequency domain analysis, the system must be time invariant, meaning that it must be in steady state. While it is possible, assuming slow varying tunable values, to perform frequency domain analysis, it is currently not planned, and the constraint solver is not yet designed with this in mind.
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Co-simulation*]
+}
+Through the marshalling layers, which will be discussed in @sec_marshalling, the constraint solver will be able to communicate with user code, in order to co-simulate both the user's software, and the user's photonic design. This will allow the user to test their design programmatically rather than manually. This will also allow the user to simulate tunability and reconfigurability.
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Simulating tunability*]
+}
+The constraint-solver is capable of simulating tunability in the time domain, by updating the signal flow graph based on the tunable values, it can easily reflect any changes in the tunable values. This can be leverage, in combination with co-simulation, to test whether the user's feedback loops work as intended. Allowing simulation and verification of the overall design, rather than just parts of it. All of the values that might still need to be computed, can be done using the @vm, since the @vm produces a partially evaluated bytecode, the constraint solver only needs to provide the @vm with the values of the tunable values to obtain the signal flow graph.
+
+=== Prover
+
+#info-box(kind: "definition", footer: [ Adapted from @z3prover. ])[
+    *#gloss("smt", short: true) problems* are decision problems of logical formulas with respect to combinations of background theories. This means that it verifies whether mathematical formulas are satisfiable.
+]
+
+Theorem provers like _Z3_ are called @smt provers, they can be provided with set of theories and rules and verify whether they are satisfied @z3prover. Provers like _Z3_ are especially well suited for program verification, which is the area of interest in this thesis. In the case of @phos, the prover is expected to be used for multiple areas: verifying constraint compatibility, verifying that tunable code respects constraints, verifying exhaustiveness of pattern matches, and determining which reconfigurability branches are reachable. In the following sections, each of these use cases will be discussed.
+
+#info-box(kind: "note")[
+    The features discussed in this section are all complex, and while they may appear simple on the surface, translating them into @smt[s] is a complex task, and will require further research.
+]
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Constraint compatibility*]
+}
+A prover can relatively express, the mathematic relations between constraints, this means that a prover like _Z3_ can be used to check whether two constraints are compatible with one another. This would be used as part of the compilation and evaluation processes.
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Tunable code*]
+}
+Tunable code is turned into a partially evaluated program, as discussed in @sec_partial_eval, these programs can be fed into a prover, which can verify whether the program, irrespective of its inputs, respects the constraints that were provided to it. This would be used as part of the evaluation process.
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Exhaustiveness*]
+}
+As was discussed, when presented with constraints, it is very difficult for the compiler to verify exhaustiveness, however, a prover can be used to verify whether a pattern matching expression is exhaustive given a set of constraints. This would be used as part of the compilation process.
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Reachability*]
+}
+The evaluation stage, when encountering tunability, may have more reconfigurability states that needed given the current constraints, just like with exhaustiveness checking, a prover can be used to verify whether branches are even reachable, if they are not, then they can safely be discarded, and the synthesizer will have less work to perform.
 
 == Marshalling library <sec_marshalling>
+
+Now that all of the synthesis steps of the @phos programming language have been discussed, one must now focus on interoperating all of these components. As well as how @phos can leverage existing software. This section will discuss the marshalling library, which is the component that will be used to interconnect all of the elements of the @phos ecosystem.
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*What's in a name?*]
+}
+Marshalling is a term used in Computer Science to describe the transforming of representation of objects into formats suitable for transmission @marshalling_cs. Indeed, in the case of @phos, the marshalling library will be used to move data around between the different step, but also be used to allow the user to configure each step in the synthesis chain to their requirements. In that way, it performs both the traditional marshalling role -- that of assembling and arranging @marshalling -- but also the Computer Science term of transforming and moving data.
+
 
 === Moving data around <sec_moving_data>
 
 === Modularity <sec_modularity>
-
-== Place-and-route <sec_place_and_route>
- 
-== Hardware abstraction library <sec_hal>
-
-== Constraint solver <sec_constraint_solver>
-
-== Adopting PHÔS <sec_adopting>
-
-== State of the project <sec_state>
-
-Due to the complexity of implementing a software ecosystem, PHÔS is still in its infancy. While some components were created and tested, such as the _parser_, the _abstract syntax tree_, and a _syntax highlighter_, the language is not currently usable. Therefore, the language is a work in progress and the syntax is subject to changes. Additionally, examples serve as a way to illustrate the language and are not necessarily valid.
-
-== Putting it all together

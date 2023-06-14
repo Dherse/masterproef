@@ -20,13 +20,25 @@ For improved readability and breaking up of the monotony of the text, this docum
     This is a *definition*, the word or phrase in bold is the term being defined. They are generally Adapted from the literature and are used for important elements that are not common knowledge for photonic engineers.
 ]
 
+#v(1em)
+
 #info-box(kind: "info")[
     This is an info box, it contains information that is tangential or useful for the understanding of the document, but not essential.
 ]
 
+#v(1em)
+
+#info-box(kind: "note")[
+    This is a note, additional information that is not essential for the understanding of the document, but is useful for the reader.
+]
+
+#v(1em)
+
 #info-box(kind: "question", footer: [ The footer contains a link to where the question is answered. ])[
     This is a question box, it contains an important research question or hypothesis that is being investigated in the document.
 ]
+
+#v(1em)
 
 #info-box(kind: "conclusion")[
     This is a conclusion or summary box, it contains a summary with key information that are needed for subsequent sections. Additionally, this is where answers to questions and hypothesis are given.

@@ -8,7 +8,7 @@
 
 == Dependent types & refinement types
 
-== Advanced constraint solving
+== Advanced constraint solving & constraint inference
 
 == Improve simulation using an ECS
 
@@ -19,6 +19,10 @@
 == Place-and-route
 
 == Programming of generic photonic circuits
+
+== Virtual machine improvements
+
+== WebAssembly and PHÔS: distribution and portability
 
 == Language improvements
 
@@ -37,5 +41,7 @@
 === Dependent types and refinement types <sec_refinement_types>
 
 === Algebraic effects
+
+=== Incremental compilation
 
 == PHÔS for generic circuit design <sec_phos_generic>

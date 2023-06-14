@@ -38,7 +38,7 @@
         stroke_color: rgb("#FFD700").darken(20%),
     ),
     note: (
-        prefix: [ *Remarks:* ],
+        prefix: [ *Note:* ],
         icon: "note-sticky",
         fill_color: rgb("#FFD700").lighten(90%),
         stroke_color: rgb("#FFD700").darken(20%),

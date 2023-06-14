@@ -116,7 +116,9 @@ From the physical properties and features of a photonic processor, as discussed 
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Filter*]
 }
-One of the core operations that almost all photonic circuit perform is filtering, it is a block that alters the amplitude of an input signal in a predictable manner based on its spectral content. Due to the prevalence of filters in photonic circuits, coupled with their special constraint -- see below -- they benefit from being an intrinsic operation for a photonic processor. During compilation and before place-and-route, the filter will be synthesized based on its arguments in order to produce a filter of the desired frequency response. There are many different types of filters, the most common ones, that can easily be implemented on a mesh -- are @mzi[s], ring resonators, and lattice filters. Additionally, compound filters that combine multiple types of filters, or more than one filter can be created, such filter can have improved response or behave like band pass filters. Therefore, it is the task of the compiler to chose the base filter based on the specification and performance criteria that the user has set. For example, the user might prioritize optimizing for mesh usage rather than finesse, or might optimize for flatness of the phase response rather than the mesh usage, etc.
+One of the core operations that almost all photonic circuit perform is filtering, it is a block that alters the amplitude of an input signal in a predictable manner based on its spectral content. Due to the prevalence of filters in photonic circuits, coupled with their special constraint -- see below -- they benefit from being an intrinsic operation for a photonic processor. During compilation and before place-and-route, the filter will be synthesized based on its arguments in order to produce a filter of the desired frequency response. This synthesized filter will therefore be optimized for the hardware platform.
+
+There are many different types of filters, the most common ones, that can easily be implemented on a mesh -- are @mzi[s], ring resonators, and lattice filters. Additionally, compound filters that combine multiple types of filters, or more than one filter can be created, such filter can have improved response or behave like band pass filters. Therefore, it is the task of the compiler to chose the base filter based on the specification and performance criteria that the user has set. For example, the user might prioritize optimizing for mesh usage rather than finesse, or might optimize for flatness of the phase response rather than the mesh usage, etc.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
@@ -171,6 +173,12 @@ Each waveguide being used on the chip adds latency to the signal. While this lat
     smallcaps[*Coupler*]
 }
 Couplers are part of each photonic gate present on the processor, they have the ability to couple two signals based on a coupling coefficient. This is a key intrinsic, at it allows the user to couple signals directly, something that would otherwise be difficult to implement. In terms of the underlying hardware, it should be a direct one-to-one relation with a coupler on the processor itself. However, the compiler should be able to optimize the coupling coefficient based on the frequency content of the signal and the calibration curves of the device.
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Sink & empty source*]
+}
+Additionally, in some cases, the user might want to produce a signal that is empty, or to consume a signal without doing anything with it. For this reason, the compiler should be able to produce a sink intrinsic operation that consumes a signal with little to no return losses, as well as producing an empty source that produces a signal with little to no power. This is especially useful in cases where the user might want to have a reference "empty" signal, or to have a signal consumed without any effect on the rest of the system. An example of such cases can be a spectrometer, that wants to switch in an empty signal to calibrate the dark current of the detectors.
 
 #figurex(
     title: [ Intrinsic operations in photonic processors. ],
@@ -307,6 +315,22 @@ Couplers are part of each photonic gate present on the processor, they have the 
             - #required_sml#lightbulb#h(0.1em) 1st output signal
             - #required_sml#lightbulb#h(0.1em) 2nd output signal
             - #required_sml#value#h(0.1em) Coupling factor
+        ],
+
+        smallcaps[*Sink*],
+        align(left)[
+            A perfect sink, that consumes an optical signal, with little to no return loss.
+        ],
+        align(left)[
+            - #required_sml#lightbulb#h(0.1em) input signal
+        ],
+
+        smallcaps[*Empty*],
+        align(left)[
+            A perfect empty signal source, that produces an optical signal, with little to no power.
+        ],
+        align(left)[
+            - #required_sml#lightbulb#h(0.1em) output signal
         ],
     )
 ] <tab_intrinsic_operations>

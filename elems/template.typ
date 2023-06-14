@@ -159,10 +159,10 @@
         ]
         v(-0.64em)
         grid(
-            columns: (48pt, 1fr),
+            columns: (58pt, 1fr),
             rows: (auto),
-            cell(height: auto, stroke: none)[#align(right)[#supplement]],
-            cell(height: auto)[#align(left)[#it.caption]],
+            cell(height: auto, stroke: none, width: 58pt)[#align(right)[#supplement]],
+            cell(height: auto, breakable: false)[#align(left)[#it.caption]],
         )
     }
 
@@ -175,6 +175,8 @@
         "spice": ("SPICE", none, rgb("#283593")),
         "phos": (ref(label("phos")), "\u{ed8a}", rgb("#de8f6e")),
         "js": ("Tokens", "\u{ecd7}", rgb("#656255")),
+        "typ": (ref(label("bc")), "\u{f7ff}", rgb("#6f006f")),
+        "typc": (ref(label("bc")), "\u{f7ff}", rgb("#6f006f")),
     )
 
     show raw.where(block: false): box.with(
@@ -186,8 +188,12 @@
 
     show raw.where(block: true): it => {
         // Get the info of the language
-        let lang = languages.at(it.lang, default: (it.lang, none, black))
-        let lang_icon = if lang.at(1) == none {
+        let lang = if it.lang == none {
+            (it.lang, none, black)
+        } else {
+            languages.at(it.lang, default: (it.lang, none, black))
+        }
+        let lang_icon = if lang == none or lang.at(1) == none {
             none
         } else {
             text(
@@ -197,13 +203,19 @@
                 size: 8pt,
             )[#lang.at(1)]
         }
-        let lang_box = box(
-            radius: 2pt, 
-            fill: lang.at(2).lighten(60%), 
-            inset: 0.32em,
-            height: auto,
-            stroke: 0.25pt + lang.at(2),
-        )[#lang_icon#lang.at(0)]
+        let lang_box = if lang_icon == none { none } else {
+            style(styles => {
+                let content = [#lang_icon#lang.at(0)]
+                let height = measure(content, styles).height
+                box(
+                    radius: 2pt, 
+                    fill: lang.at(2).lighten(60%), 
+                    inset: 0.32em,
+                    height: height + 0.32em * 2,
+                    stroke: 0.25pt + lang.at(2),
+                )[#content]
+            })
+        }
 
         // Build the content
         let contents = ()
@@ -260,22 +272,25 @@
         }
 
         align(left)[
-            #box(height: auto)[
+            #block(height: auto, breakable: true)[
                 #stack(
                     dir: ttb,
                     ..contents.enumerate().map(i => {
                         let (i, x) = i
                         cell(i, contents.len())[
+                            #if i == 0 {
+                                place(
+                                    top + right,
+                                    lang_box,
+                                    dy: -0.42em,
+                                    dx: 0.24em,
+                                )
+                            }
+                            #set par(justify: false)
                             #place(x.index, dx: -width_numbers)
                             #x.content
                         ]
                     })
-                )
-                #place(
-                    top + right,
-                    lang_box,
-                    dy: 0.24em,
-                    dx: -0.24em
                 )
             ]
         ]

@@ -1,0 +1,43 @@
+<mxfile host="Electron" modified="2023-06-13T15:08:38.958Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.3.7 Chrome/112.0.5615.204 Electron/24.5.0 Safari/537.36" etag="243c01PVzTBWT09O6TmO" version="21.3.7" type="device">
+  <diagram name="Page-1" id="BAFkuJvN7qEhGoRlOrsk">
+    <mxGraphModel dx="439" dy="475" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="QaMweqIweFgVx9TUJ9yv-1" value="input" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=UGent Panno Text;fontSize=22;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="160" y="40" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="QaMweqIweFgVx9TUJ9yv-2" value="splitter" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=UGent Panno Text;fontSize=22;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="160" y="80" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="QaMweqIweFgVx9TUJ9yv-3" value="filter" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=UGent Panno Text;fontSize=22;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="40" y="200" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="QaMweqIweFgVx9TUJ9yv-4" value="filter" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=UGent Panno Text;fontSize=22;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="280" y="200" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="QaMweqIweFgVx9TUJ9yv-5" value="" style="endArrow=classic;html=1;rounded=0;fontFamily=UGent Panno Text;fontSize=22;fontColor=default;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="QaMweqIweFgVx9TUJ9yv-2" target="QaMweqIweFgVx9TUJ9yv-3">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="240" y="190" as="sourcePoint" />
+            <mxPoint x="290" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QaMweqIweFgVx9TUJ9yv-6" value="" style="endArrow=classic;html=1;rounded=0;fontFamily=UGent Panno Text;fontSize=22;fontColor=default;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.488;entryY=-0.008;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="QaMweqIweFgVx9TUJ9yv-2" target="QaMweqIweFgVx9TUJ9yv-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="250" y="160" as="sourcePoint" />
+            <mxPoint x="300" y="110" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QaMweqIweFgVx9TUJ9yv-7" value="gain" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=UGent Panno Text;fontSize=22;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="280" y="280" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="QaMweqIweFgVx9TUJ9yv-8" value="wavelength" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;rounded=0;strokeColor=#6c8ebf;fontFamily=UGent Panno Text;fontSize=22;fillColor=#dae8fc;" vertex="1" parent="1">
+          <mxGeometry x="40" y="240" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="QaMweqIweFgVx9TUJ9yv-10" value="wavelength" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;rounded=0;strokeColor=#6c8ebf;fontFamily=UGent Panno Text;fontSize=22;fillColor=#dae8fc;" vertex="1" parent="1">
+          <mxGeometry x="280" y="240" width="160" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

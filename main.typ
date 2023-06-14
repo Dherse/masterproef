@@ -10,12 +10,12 @@
 
 #show: preface.with()
 
-= Acknowledgements
+= Acknowledgements <sec_ack>
 I would like to express my deepest gratitude to Prof. Wim Bogaerts and Prof. Dirk Stroobandt for their time, guidance, patience, and trust in applying for an #emph[FWO] proposal to extend this Master Thesis. Through their advice and guidance, I have gained a breadth of knowledge and understanding that I will carry with me for the rest of my career. It is with great pleasure that I write this document to share my findings with them and others within the community.
 
 I would also like to give my most heartfelt thanks to the best friend one could ever ask for: Thomas Heuschling, for his patience, friendship, guidance and all of the amazing moments we spent throughout our studies. I would also like to thank him for his help in proofreading this thesis and his advice on the PHÔS programming language. I also would like to thank Alexandre Bourbeillon for his help and advice for the creation of the formal grammar of the PHÔS programming language and being a great friend for over a decade.
 
-I must also thank the incredible people that helped me proofread and improve my thesis: Daniel Csillag and Mossa Merhi Reimert for their time, advice and support.
+I must also thank the incredible people that helped me proofread and improve my thesis: Daniel Csillag and Mossa Merhi Reimert for their time, advice and support. And Léo Masson for his help on programmatic visualization of hexagonal lattices and his advice regarding typesetting.
 
 Finally, my parents, Evelyne Dekens and Baudouin d'Herbais de Thun, were also there for me every step of the way and I deeply thank them for their support and listening to my endless rambling about photonics and programming. 
 
@@ -28,6 +28,12 @@ presentation of the master's dissertation are not included in this text.
 
 // Table of contents
 #outline(title: "Table of contents", indent: true, depth: 3)
+
+#let ffi_footnote = locate(loc => if section.at(loc) == "preface" {
+  [: a way to call functions from other languages, originating from _C_]
+} else {
+  footnote[Foreign Function Interface: a way to call functions from other languages, originating from _C_]
+})
 
 #show: glossary.with((
     (key: "prg", short: "PRG", long: "Photonics Research Group"),
@@ -87,6 +93,11 @@ presentation of the master's dissertation are not included in this text.
     (key: "hir", short: "HIR", long: [High-level Intermediate Representation]),
     (key: "mir", short: "MIR", long: [Mid-level Intermediate Representation]),
     (key: "gadt", short: "GADT", long: [Generalized Algebraic Data Type]),
+    (key: "cfg", short: "CFG", long: [Control Flow Graph]),
+    (key: "mit", short: "MIT", long: link("https://opensource.org/license/mit/")[The _MIT_ license]),
+    (key: "bc", short: "BC", long: [Bytecode]),
+    (key: "ffi", short: "FFI", long: [Foreign Function Interface #ffi_footnote]),
+    (key: "smt", short: "SMT", long: [Satisfiability Modulo Theories]),
 ))
 
 
