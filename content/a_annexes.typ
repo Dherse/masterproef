@@ -74,10 +74,7 @@ from prg_device import prg
 device = ph.Device(prg.DeviceDescription())
 
 # Try and load a module, this will compile the module
-try:
-    module = device.load_module("module.phos")
-expect:
-    print("Failed to load module")
+module = device.load_module("module.phos")
 
 # Create the I/O, each `io` calls returns an input and an output
 electrical   = device.electrical(0)
@@ -141,7 +138,6 @@ plt.show()
 ] <lst_marshalling_sim>
 
 #set page(flipped: true)
-
 
 #figurex(
     title: [ Simulation results of the marshalling layer example.],
