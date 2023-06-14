@@ -2615,7 +2615,7 @@ In @fig_marshalling, one can see the overview of the entire toolchain proposed i
 }
 During the discussion on ecosystems, in @sec_programming_photonic_processors, _Python_ was shown to be a good candidate as a language to create libraries in, and as such, _Python_ is a good candidate for writing the marshalling library in. As the marshalling library is not a performance critical section, nor expected to be particularly complex, it can be written in _Python_ such that the user can easily script the synthesis toolchain, using a common academic language.
 
-
+#pagebreak(weak: true)
 === Example <sec_modularity>
 
 #info-box(kind: "info")[

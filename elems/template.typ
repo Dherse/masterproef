@@ -163,7 +163,7 @@
             columns: (58pt, 1fr),
             rows: (auto),
             cell(height: auto, stroke: none, width: 58pt)[#align(right)[#supplement]],
-            cell(height: auto, breakable: false)[#align(left)[#it.caption]],
+            cell(height: auto)[#align(left)[#it.caption]],
         )
     }
 
