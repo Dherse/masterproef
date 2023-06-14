@@ -4,4 +4,14 @@
 
 = Examples of photonic circuit programming <sec_examples>
 
-== Using traditional programming languages <the_good_the_bad_and_the_ugly>
+== Beam forming
+
+== Lattice filter
+
+== Coherent transceiver
+
+== Switch matrix
+
+== Fiber sensing
+
+== Analog matrix multiplication
