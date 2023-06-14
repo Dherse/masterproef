@@ -141,6 +141,7 @@
             #set text(fill: rgb(30,100,200))
             #smallcaps[*#it.supplement #it.counter.display(it.numbering)*]
         ];
+
         let gap = 0.64em
         let cell = block.with(
             inset: (top: 0.32em, bottom: 0.32em, rest: gap),

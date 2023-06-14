@@ -30,9 +30,9 @@ presentation of the master's dissertation are not included in this text.
 #outline(title: "Table of contents", indent: true, depth: 3)
 
 #let ffi_footnote = locate(loc => if section.at(loc) == "preface" {
-  [: a way to call functions from other languages, originating from _C_]
+  [: a way to call functions from other languages ]
 } else {
-  footnote[Foreign Function Interface: a way to call functions from other languages, originating from _C_]
+  footnote[Foreign Function Interface: a way to call functions from other languages ]
 })
 
 #show: glossary.with((
@@ -73,7 +73,7 @@ presentation of the master's dissertation are not included in this text.
     (key: "vhdl", short: "VHDL", long: [ #gloss("vhsic", short: true) Hardware Description Language ]),
     (key: "gpl-3-0", short: "GPL-3.0", long: "GNU General Public License version 3.0"),
     (key: "ic", short: "IC", long: "Integrated Circuit"),
-    (key: "gpu", short: "GPU", long: [Graphics Processing Unit -- also commonly used for highly parallel computing and machine learning]),
+    (key: "gpu", short: "GPU", long: [Graphics Processing Unit -- also commonly used for highly parallel computing ]),
     (key: "cpu", short: "CPU", long: [Central Processing Unit]),
     (key: "llvm", short: "LLVM", long: [Low Level Virtual Machine]),
     (key: "hpc", short: "HPC", long: [High Performance Computing]),
@@ -98,6 +98,7 @@ presentation of the master's dissertation are not included in this text.
     (key: "bc", short: "BC", long: [Bytecode]),
     (key: "ffi", short: "FFI", long: [Foreign Function Interface #ffi_footnote]),
     (key: "smt", short: "SMT", long: [Satisfiability Modulo Theories]),
+    (key: "prbs", short: "PRBS", long: [Pseudo Random Binary Sequence]),
 ))
 
 

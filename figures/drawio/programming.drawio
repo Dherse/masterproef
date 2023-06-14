@@ -1,0 +1,118 @@
+<mxfile host="Electron" modified="2023-06-14T11:49:12.098Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.3.7 Chrome/112.0.5615.204 Electron/24.5.0 Safari/537.36" etag="tpdZWaet7PtGtTYzscCT" version="21.3.7" type="device">
+  <diagram name="Page-1" id="JwPXAsmScI5hQ_p8hZc2">
+    <mxGraphModel dx="1430" dy="830" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="NzzPVVmDmb9AEfdba_3c-1" value="Compilation" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontFamily=UGent Panno Text;fontSize=28;fontStyle=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="430" y="40" width="200" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="NzzPVVmDmb9AEfdba_3c-4" value="Evaluation" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontFamily=UGent Panno Text;fontSize=28;fontStyle=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="617" y="40" width="200" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="NzzPVVmDmb9AEfdba_3c-5" value="Synthesis" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontFamily=UGent Panno Text;fontSize=28;fontStyle=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="990" y="40" width="200" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="NzzPVVmDmb9AEfdba_3c-9" value="Simulation" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontFamily=UGent Panno Text;fontSize=28;fontStyle=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="804" y="40" width="200" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="NzzPVVmDmb9AEfdba_3c-12" value="Intent" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontFamily=UGent Panno Text;fontSize=28;fontStyle=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="240" y="40" width="200" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="NzzPVVmDmb9AEfdba_3c-16" value="Marshalling library" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#ffe6cc;strokeColor=#646464;gradientColor=#DAE8FC;gradientDirection=east;strokeWidth=1;fontFamily=UGent Panno Text;fontSize=32;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="240" y="300" width="950" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="NzzPVVmDmb9AEfdba_3c-11" value="Compiler" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=UGent Panno Text;fontSize=22;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="470" y="110" width="120" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="NzzPVVmDmb9AEfdba_3c-19" value="" style="shape=flexArrow;endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.305;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;fillColor=#f5f5f5;strokeColor=#666666;" edge="1" parent="1" source="NzzPVVmDmb9AEfdba_3c-16" target="NzzPVVmDmb9AEfdba_3c-11">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="530" y="290" as="sourcePoint" />
+            <mxPoint x="600" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NzzPVVmDmb9AEfdba_3c-20" value="" style="shape=flexArrow;endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.305;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;fillColor=#f5f5f5;strokeColor=#666666;" edge="1" parent="1">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="349.76" y="300" as="sourcePoint" />
+            <mxPoint x="349.76" y="220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NzzPVVmDmb9AEfdba_3c-21" value="Virtual machine" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=UGent Panno Text;fontSize=22;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="655" y="110" width="120" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="NzzPVVmDmb9AEfdba_3c-22" value="" style="shape=flexArrow;endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.305;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;fillColor=#f5f5f5;strokeColor=#666666;" edge="1" parent="1">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="714.8" y="300" as="sourcePoint" />
+            <mxPoint x="714.8" y="220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NzzPVVmDmb9AEfdba_3c-24" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="290" y="110" width="120" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="NzzPVVmDmb9AEfdba_3c-13" value="User&#39;s code" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;fontFamily=UGent Panno Text;fontSize=22;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="NzzPVVmDmb9AEfdba_3c-24">
+          <mxGeometry width="120" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="NzzPVVmDmb9AEfdba_3c-14" value="Standard&lt;br&gt;library" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;fontFamily=UGent Panno Text;fontSize=22;flipH=1;flipV=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="NzzPVVmDmb9AEfdba_3c-24">
+          <mxGeometry y="40" width="120" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="NzzPVVmDmb9AEfdba_3c-25" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="840" y="110" width="120" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="NzzPVVmDmb9AEfdba_3c-26" value="User&#39;s code" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;fontFamily=UGent Panno Text;fontSize=22;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="NzzPVVmDmb9AEfdba_3c-25">
+          <mxGeometry width="120" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="NzzPVVmDmb9AEfdba_3c-27" value="Simulator" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;fontFamily=UGent Panno Text;fontSize=22;flipH=1;flipV=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="NzzPVVmDmb9AEfdba_3c-25">
+          <mxGeometry y="40" width="120" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="NzzPVVmDmb9AEfdba_3c-28" value="" style="shape=flexArrow;endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.305;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;fillColor=#f5f5f5;strokeColor=#666666;" edge="1" parent="1">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="899.76" y="300" as="sourcePoint" />
+            <mxPoint x="899.76" y="220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NzzPVVmDmb9AEfdba_3c-29" value="Synthesizer" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=UGent Panno Text;fontSize=18;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="180" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="NzzPVVmDmb9AEfdba_3c-30" value="Place-and-route" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=UGent Panno Text;fontSize=18;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="135" width="120" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="NzzPVVmDmb9AEfdba_3c-31" value="HAL generator" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=UGent Panno Text;fontSize=18;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="100" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="NzzPVVmDmb9AEfdba_3c-32" value="" style="shape=flexArrow;endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.305;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;fillColor=#f5f5f5;strokeColor=#666666;" edge="1" parent="1">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="1079.86" y="300" as="sourcePoint" />
+            <mxPoint x="1079.86" y="220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NzzPVVmDmb9AEfdba_3c-33" value="" style="shape=flexArrow;endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.305;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;fillColor=#f5f5f5;strokeColor=#666666;" edge="1" parent="1">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="714.76" y="420" as="sourcePoint" />
+            <mxPoint x="714.76" y="340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NzzPVVmDmb9AEfdba_3c-34" value="Constraint solver" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=UGent Panno Text;fontSize=22;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="655" y="420" width="120" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="NzzPVVmDmb9AEfdba_3c-35" value="&lt;i&gt;Z3&lt;/i&gt; prover" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=UGent Panno Text;fontSize=22;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="840" y="420" width="120" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="NzzPVVmDmb9AEfdba_3c-36" value="" style="shape=flexArrow;endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.305;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;fillColor=#f5f5f5;strokeColor=#666666;" edge="1" parent="1">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="899.76" y="420" as="sourcePoint" />
+            <mxPoint x="899.76" y="340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NzzPVVmDmb9AEfdba_3c-37" value="Platform support" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=UGent Panno Text;fontSize=22;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="470" y="420" width="120" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="NzzPVVmDmb9AEfdba_3c-38" value="" style="shape=flexArrow;endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.305;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;fillColor=#f5f5f5;strokeColor=#666666;" edge="1" parent="1">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="529.66" y="420" as="sourcePoint" />
+            <mxPoint x="529.66" y="340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

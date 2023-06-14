@@ -16,7 +16,7 @@ All elements and references are clickable for ease of navigation in the document
 
 For improved readability and breaking up of the monotony of the text, this document uses info boxes. These boxes are used to highlight important information, such as definitions, remarks, conclusion and important hypotheses. Below you will find a full list of the different types of info boxes used in this document.
 
-#info-box(kind: "definition", footer: [ Definition usually have a source in the footer ])[
+#info-box(kind: "definition", footer: [ Definitions usually have a source in the footer ])[
     This is a *definition*, the word or phrase in bold is the term being defined. They are generally Adapted from the literature and are used for important elements that are not common knowledge for photonic engineers.
 ]
 

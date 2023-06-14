@@ -1426,6 +1426,13 @@ The standard library should also decouple synthesizable blocks from computationa
 
 Finally, the standard library can serve as a series of examples for new users. A photonic engineer, that is knowledgeable with photonic circuit design would benefit from the standard library as a source of high quality examples onto which they may base themselves. Similarly, a software engineer, that is knowledgeable with software development, but not photonic circuit design, would benefit from the standard library as a source of high quality examples of basic building blocks of photonic circuits. The standard library should be written in a way that is easy to understand, and that is well documented, such that it can serve as a learning resource for new users.
 
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Constrain*]
+}
+A unique feature of the standard library is the `constrain` method, it is used to impose differential constraints on signals. This means that constraints over delay or phase, which are always relative, can be expressed between signals. This tells the synthesizer to ensure that these constraints are respected between signals. Indeed, if it were not for this method, the user could not easily represent phase matched or delay matched signals. During the examples, in @sec_examples, the use of this method will become clear, and its implication and why it is so important will be discussed.
+
 #pagebreak(weak: true)
 == Compiler architecture <sec_arch>
 
@@ -1498,7 +1505,7 @@ Keyword("fn") Identifier("add")
     *Parsing* is the action of taking a stream of tokens, and turning it into a tree of nested elements that represent the grammatical structure of the program.
 ]
 
-Before parsing the language, one must first describe the grammar of the language. There exists many families of grammars as seen in @fig_parser_hierarchy. The more complex the grammar is, the more complex of a parser it will require. It is important to note that @fig_parser_hierarchy describes grammars not languages, languages can be expressed using multiple grammars, and some grammars for a given language can be simpler @cs143. Every grammar can be expressed with a grammar of a higher level, but the reverse is not true.
+Before parsing the language, one must first describe the grammar of the language. For the @phos programming language, the full grammar is present in @anx_phos_grammar. There exists many families of grammars as seen in @fig_parser_hierarchy. The more complex the grammar is, the more complex of a parser it will require. It is important to note that @fig_parser_hierarchy describes grammars not languages, languages can be expressed using multiple grammars, and some grammars for a given language can be simpler @cs143. Every grammar can be expressed with a grammar of a higher level, but the reverse is not true.
 
 @phos has an LL(K) grammar, meaning that it can be read from #strong[L]eft-to-right with #strong[L]eftmost derivation, with $k$ token lookahead, meaning that the parser can simply move left to right, only ever applying rules to elements on the left, and needs to look up to $k$ tokens ahead of the current position to know which rule to apply. This is a fairly complex grammar to express and to parse. The parser for @phos is implemented using the _Chumsky_ library (named after _Noam Chomsky_) in _Rust_ @chumsky. _Chumsky_ is a parser combinator generator, meaning that it allows the creation of complex parsers with relatively little code. Because of the properties of _Chunmsky_, the parser for the @phos language is fairly simple 1600 lines of code, and is relatively easy to understand. It is the task of the parser to use the @phos grammar to produce an #gloss("ast", long: true), this tree represents the syntax and groups tokens into meaningful elements.
 
@@ -2579,9 +2586,51 @@ Now that all of the synthesis steps of the @phos programming language have been 
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*What's in a name?*]
 }
-Marshalling is a term used in Computer Science to describe the transforming of representation of objects into formats suitable for transmission @marshalling_cs. Indeed, in the case of @phos, the marshalling library will be used to move data around between the different step, but also be used to allow the user to configure each step in the synthesis chain to their requirements. In that way, it performs both the traditional marshalling role -- that of assembling and arranging @marshalling -- but also the Computer Science term of transforming and moving data.
+Marshalling is a term used in Computer Science to describe the transforming of representation of objects into formats suitable for transmission @marshalling_cs. Indeed, in the case of @phos, the marshalling library will be used to move data around between the different step, but also be used to allow the user to configure each step in the synthesis chain to their requirements. In that way, it performs both the traditional marshalling role -- that of assembling and arranging @marshalling -- but also the Computer Science term of transforming and moving data. Therefore, the goal of the marshalling library is to facilitate moving the data around the different pieces of the @phos ecosystem in a programmatic way. Thinking back to the ecosystem analysis performed in @sec_programming_photonic_processors, this is a replacement to the build tools and the compiler. Offering ways for the user to programmatically and dynamically configure the different steps of the synthesis chain.
+
+#figurex(
+    title: [ Overview of the marshalling library. ],
+    caption: [
+        Overview of the marshalling library, it shows all of the different components of the synthesis toolchain of @phos, and how they are interconnected using the marshalling library. Additionally, it also shows the simulation stage, which would couple user simulation code with the simulator. Below the marshalling library are all of the common components that do no belong to one particular stage of the synthesis toolchain.
+
+        The color scheme used in the same as the one used in @fig_responsibilities: blue represents the responsibility of the chip designer, orange the responsibility of the ecosystem developer, green the responsibility of the user, and purple are external tools.
+    ]
+)[
+    #image(
+        "../figures/drawio/programming.png",
+        width: 100%,
+        alt: "Shows the different components of the ecosystem, including the simulation, all interconnected using the marshalling library."
+    )
+] <fig_marshalling>
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Overview*]
+}
+In @fig_marshalling, one can see the overview of the entire toolchain proposed in this thesis, it shows all of the different components that have been discussed so far, all interconnected using the marshalling library. It shows that all components are interconnected through this library, and that the marshalling library is the only component that is aware of all of the other components. Additionally, the marshalling library provides all of the data required by a given component to perform its task, this means that the user should easily be able to intercept the data, and modify it to their needs. This is the primary advantage of the marshalling library: providing an easy way of communicating, configuring, and tuning the synthesis process.
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Choice of language*]
+}
+During the discussion on ecosystems, in @sec_programming_photonic_processors, _Python_ was shown to be a good candidate as a language to create libraries in, and as such, _Python_ is a good candidate for writing the marshalling library in. As the marshalling library is not a performance critical section, nor expected to be particularly complex, it can be written in _Python_ such that the user can easily script the synthesis toolchain, using a common academic language.
 
 
-=== Moving data around <sec_moving_data>
+=== Example <sec_modularity>
 
-=== Modularity <sec_modularity>
+#info-box(kind: "info")[
+    The marshalling library does not exist yet, therefore this example is a mockup of what the final library may look like, and how it may be used.
+]
+
+Due to its length, the code of this example is shown in @anx_marshalling_library_example, where the @phos code being simulated is shown in @lst_marshalling_phos, the code to build the modulate into a programmable form is in @lst_marshalling_comp, and the code to simulate the modulator is in @lst_marshalling_sim. In this example, a simple @phos circuit is being built, it consists of a splitter of which one of its outputs is modulated by a @prbs 12-bit sequence. In @fig_marshalling_sim, one can see the result of the simulation code, showing the modulate output in blue, and the unmodulated output in orange. One can see that the noise source is applied to both signals, but that the modulated signal is modulated by the @prbs sequence. Additionally, the circuit can be seen in @fig_marshalling_circ, showing the generated mesh on a rather large chip, showing the ports, the modulator, and the splitter. On that figure, one can also see that the place-and-route engine may utilize the two modes of the waveguides to perform more efficient routing. In practice, when looking @fig_marshalling_circ, one may notice that the losses experienced by the modulated signals, which should be significantly higher, are not modeled in the simulation shown.
+
+#figurex(
+    title: [ Simulation results of the marshalling layer example.],
+    caption: [ Simulation results of the marshalling layer example, showing the output of the modulator, and the output directly from the splitter. The output of the modulator is the same as the output of the splitter, but with the PRBS sequence modulated onto it. ]
+)[
+    #image(
+        "../figures/simu_marshalling_ex.svg",
+        width: 100%,
+        alt: ""
+    )
+] <fig_marshalling_sim>

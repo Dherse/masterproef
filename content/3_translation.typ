@@ -581,7 +581,7 @@ As is the case of the simulation ecosystem, one can reuse existing tools and lib
     kind: image,
     title: [ Example visualization of a time-domain simulation result. ],
     caption: [
-        Example visualization of a time-domain simulation result, showing a $10 "Gb/s"$ modulated $"PRBS" 15$ sequence on top of a $1550 "nm"$ carrier. The simulation was performed using the constraint-solver. Shown is a $10 "ns"$ window of the simulation. The simulation was ran for a total of $1 "µs"$ with an average execution time of $9 "ms"$. The simulation simulates a laser source with noise and the rise and fall time of the modulated signal, the rise and fall time being $50 "ps"$.
+        Example visualization of a time-domain simulation result, showing a $10 "Gb/s"$ modulated @prbs $15$ sequence on top of a $1550 "nm"$ carrier. The simulation was performed using the constraint-solver. Shown is a $10 "ns"$ window of the simulation. The simulation was ran for a total of $1 "µs"$ with an average execution time of $9 "ms"$. The simulation simulates a laser source with noise and the rise and fall time of the modulated signal, the rise and fall time being $50 "ps"$.
     ],
 )[
     #image("../figures/simu_example.svg", alt: "Shows the startup of a 10Gb/s modulated optical signal with noise, rise and fall time.", width: 100%)
