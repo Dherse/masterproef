@@ -66,8 +66,13 @@
   
   let interconnect(in-index) = {
     for i in range(3) {
-      arrow(in-index, (i, 3), in-index, (calc.rem(i - 1, 3), 0))
-      arrow(in-index, (i, 1), in-index, (calc.rem(i + 1, 3), 2))
+      if calc.rem(in-index.at(1), 2) == 1 {
+        arrow(in-index, (calc.rem(i - 1, 3), 0), in-index, (i, 3))
+        arrow(in-index, (calc.rem(i + 1, 3), 2), in-index, (i, 1))
+      } else {
+        arrow(in-index, (i, 3), in-index, (calc.rem(i - 1, 3), 0))
+        arrow(in-index, (i, 1), in-index, (calc.rem(i + 1, 3), 2))
+      }
     }
   }
 
