@@ -36,8 +36,10 @@ All languages have a type system, it provides the basis for the language to reas
 Therefore, static typing is generally preferred for applications where speed is a concern, as is the case in _C_ and _Rust_. However, dynamic typing is preferred for applications where iteration speed is more important, such as in _Python_. However, some languages exist at the intersection of these two paradigms, such as _Rust_ which can infer parts of the type system at compile time, allowing the user to write their code with fewer type annotations, while still providing the benefits of static typing. This is achieved through a process called type inference, where the compiler generally uses the de facto standard algorithm called _Hindley-Milner_ algorithm #cite("milner_theory_1978", "rust_compiler"), which will be discussed further in @sec_phos.
 
 #info-box(kind: "definition", footer: [ Adapted from @cardelli_understanding_1985 ])[
-    *Polymorphism* #todo("polymorphism")
+    *Polymorphism* refers to the ability of a language to allow the same code to be used with different types.
 ]
+
+Polymorphism allows code to be re-used with different types, a typical example is a list. For a list to work, it does not matter what type of value is contained within the list, therefore one can make the list polymorphic over the item type such that the list is defined at the type `List<V>` where `V` is a type argument defining the contents of the list. Additionally, polymorphic languages often offer a way to define types that meet certain criteria, such as a type that is comparable, or a type that is copyable, etc. This is called _trait_ in _Rust_ and _interface_ in _Java_ and _C\#_. On the other hand _C_, does not have polymorphism nor interfaces or traits. Then, polymorphic types and functions can request that their type argument meet these requirements. This is called _bounded polymorphism_ and is a common feature in modern programming languages @cardelli_understanding_1985. 
 
 == Explicitness in programming languages <sec_explicitness>
 

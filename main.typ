@@ -17,11 +17,28 @@ I would also like to give my most heartfelt thanks to the best friend one could 
 
 I must also thank the incredible people that helped me proofread and improve my thesis: Daniel Csillag and Mossa Merhi Reimert for their time, advice and support. And Léo Masson for his help on programmatic visualization of hexagonal lattices and his advice regarding typesetting.
 
-Finally, my parents, Evelyne Dekens and Baudouin d'Herbais de Thun, were also there for me every step of the way and I deeply thank them for their support and listening to my endless rambling about photonics and programming. 
+Finally, my parents, Evelyne Dekens and Baudouin d'Herbais de Thun, were also there for me every step of the way and I deeply thank them for their support and listening to my endless rambling about photonics and programming.
+
+#align(right)[
+  -- Sébastien d'Herbais de Thun #linebreak()
+  Wavre, 16th of June 2023
+]
 
 = Remark on the master's dissertation and the oral presentation
 This master's dissertation is part of an exam. Any comments formulated by the assessment committee during the oral
 presentation of the master's dissertation are not included in this text.
+
+= Permission of use on loan
+
+The author gives permission to make this master dissertation available for consultation and to
+copy parts of this master dissertation for personal use. In the case of any other use, the copyright
+terms have to be respected, in particular with regard to the obligation to state expressly the
+source when quoting results from this master dissertation.
+
+#align(right)[
+  -- Sébastien d'Herbais de Thun #linebreak()
+  Wavre, 16th of June 2023
+]
 
 = Abstract
 #lorem(30)
