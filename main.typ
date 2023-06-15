@@ -21,7 +21,7 @@ Finally, my parents, Evelyne Dekens and Baudouin d'Herbais de Thun, were also th
 
 #align(right)[
   -- Sébastien d'Herbais de Thun #linebreak()
-  Wavre, 16th of June 2023
+  Wavre BE, 16th of June 2023
 ]
 
 = Remark on the master's dissertation and the oral presentation
@@ -37,7 +37,7 @@ source when quoting results from this master dissertation.
 
 #align(right)[
   -- Sébastien d'Herbais de Thun #linebreak()
-  Wavre, 16th of June 2023
+  Wavre BE, 16th of June 2023
 ]
 
 = Abstract

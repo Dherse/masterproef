@@ -262,7 +262,6 @@ In @tab_ecosystem_components, there is a distinction made on the type of design 
 #figurex(
     caption: [
         This table shows the different components that are needed (#required_sml), desired (#desired_sml) or not needed (#not_needed_sml) for an ecosystem. It compares their importance for different scenarios, namely whether developing an API that is used to program photonic processors or whether creating a new language for photonic processor development.
-    
         + Interpreted languages are languages that are not compiled to machine code, but rather interpreted at runtime. This means that they do not require a compiler per se, but rather an interpreter.
         + A code editor is provided as an external tool, however, support for the language must be provided by the ecosystem. That being said, it is not a requirement and is desired rather than required.
     ],
@@ -275,7 +274,7 @@ In @tab_ecosystem_components, there is a distinction made on the type of design 
         columns: (auto, 1fr, 0.25fr, 0.25fr),
         align: center + horizon,
         auto-vlines: false,
-        repeat-header: false,
+        repeat-header: true,
         rowspanx(2)[#smallcaps[ *Component* ]], rowspanx(2)[#smallcaps[ *Description* ]], colspanx(2)[#smallcaps[ *Importance* ]], (), (),
         (), (), smallcaps[ *@api design* ], smallcaps[ *language #linebreak() design* ],
 
@@ -356,8 +355,6 @@ One can also see from @tab_ecosystem_compare, that simulation and hardware descr
 #figurex(
     caption: [
         This table compares the ecosystems of different programming and hardware description languages. It shows whether the components are first party (#required_sml), third party but well supported (#desired_sml) or third party but not well supported or non existent (#not_needed_sml). For each component, is also lists the name of the tool that is most commonly used for that purpose.
-
-        Notes:
         + _C_ has multiple, very popular, compilers, such as _GCC_ and _Clang_. However, these are third party, and for embedded and @hls development, there is no de facto standard.
         + Traditional programming languages usually rely on programmers and runtime provided by the hardware vendor of the targetted embedded hardware.
         + #emph[@verilog-ams] is a language used for simulation, not hardware description.
@@ -375,7 +372,7 @@ One can also see from @tab_ecosystem_compare, that simulation and hardware descr
         columns: (auto, 0.1fr, 0.1fr, 0.1fr, 0.1fr, 0.1fr),
         align: center + horizon,
         auto-vlines: false,
-        repeat-header: false,
+        repeat-header: true,
 
         rowspanx(2)[#smallcaps[ *Components* ]],
         colspanx(3)[#smallcaps[ *Traditional languages* ]],
