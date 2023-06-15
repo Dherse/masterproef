@@ -44,7 +44,7 @@
         Graph representation of a mesh, showing the direction that light is travelling in, and all of the possible connections. Based on the work of Xiangfeng Chen, et al. @chen_graph_2020. This visualization was created with the collaboration of Léo Masson, as mentioned in #link(<sec_ack>)[the acknowledgements].
     ],
 )[
-    #hexagonal_interconnect(side: 14cm, hex-side: 1.5cm, 10, 14)
+    #hexagonal_interconnect(side: 13cm, hex-side: 1.5cm, 10, 14)
 ]<fig_graph_representation_mesh>
 
 #set page(flipped: false)
