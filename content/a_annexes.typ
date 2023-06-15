@@ -13,9 +13,12 @@
 
 #set page(flipped: true, columns: 1)
 = AST data structure: overview <anx_ast_overview>
-#figure(caption: [
+#figurex(
+    title: [ UML diagram of parts of the @ast relevant for @sec_ast. ],
+    caption: [
     UML diagram of parts of the @ast relevant for @sec_ast. It is incomplete since phos contains 120 data structures to fully represent the @ast.
-])[
+    ]
+)[
     #image("../figures/drawio/ex_ast.png", width: 88%)
 ]
 
@@ -140,13 +143,13 @@ plt.show()
 #set page(flipped: true)
 
 #figurex(
-    title: [ Simulation results of the marshalling layer example.],
-    caption: [ Simulation results of the marshalling layer example, showing the output of the modulator, and the output directly from the splitter. The output of the modulator is the same as the output of the splitter, but with the PRBS sequence modulated onto it. ]
+    title: [ Layout of the circuit in the marshalling library example.],
+    caption: [ Layout of the circuit in the marshalling library example, showing the path that the light takes inside of the photonic processor, as well as the state of each photonic gate. It also shows the path of the modulated light in red, and highlight the splitter. ]
 )[
     #image(
         "../figures/drawio/chip_marshalling_ex.png",
-        height: 95%,
-        alt: ""
+        height: 90%,
+        alt: "Shows a photonic chip made of a rather large hexagonal mesh, with modulators on the bottom, detectors on the top, and optical I/O on either remaining sides."
     )
 ] <fig_marshalling_circ>
 

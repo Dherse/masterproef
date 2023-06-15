@@ -99,6 +99,9 @@ presentation of the master's dissertation are not included in this text.
     (key: "ffi", short: "FFI", long: [Foreign Function Interface #ffi_footnote]),
     (key: "smt", short: "SMT", long: [Satisfiability Modulo Theories]),
     (key: "prbs", short: "PRBS", long: [Pseudo Random Binary Sequence]),
+    (key: "adc", short: "ADC", long: [Analog to Digital Converter]),
+    (key: "dac", short: "DAC", long: [Digital to Analog Converter]),
+    (key: "soa", short: "SOA", long: [ Semiconductor Optical Amplifier ]),
 ))
 
 

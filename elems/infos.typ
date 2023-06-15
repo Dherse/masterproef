@@ -8,7 +8,7 @@
         stroke_color: ugent-blue,
     ),
     definition: (
-        prefix: [ #underline(smallcaps[*Definition*])#smallcaps[:]],
+        prefix: [#underline(smallcaps[*Definition*])#smallcaps[:]],
         icon: "highlighter-solid",
         fill_color: caribbean-current.lighten(90%),
         stroke_color: caribbean-current,

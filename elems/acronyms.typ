@@ -21,7 +21,7 @@
                 none
             }
 
-            link(label(entry.key))[#smallcaps[#entry.short#suffix]#long]
+            link(label(entry.key))[#entry.short#suffix#long]
 
             if not disabled {
                 glossary_entries.update((x) => {

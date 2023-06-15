@@ -10,7 +10,7 @@ The primary objective of this chapter is to explore the different aspects of pro
 == Programming languages as a tool <sec_language_tool>
 
 #info-box(kind: "definition", footer: [ Adapted from @noauthor_imperative_2020 ])[
-    *Imperativeness* refers to whether the program specifies the expected results of the computation (declarative) or the steps needed to perform this computation (imperative). These differences may be understood as the difference between _what_ and _how_, or what the program should do and how it should do it.
+    *Imperativeness* refers to whether the program specifies the expected results of the computation (declarative) or the steps needed to perform this computation (imperative). These differences may be understood as the difference between _what_ the program should do and _how_ it should do it.
 ]
 
 Programming languages, in the most traditional sense, are tools used to express _what_ and, depending on its imperativeness and paradigm, _how_ a device should perform a task. A device in this context, means any device that is capable of performing sequential operations, such as a processor, a microcontroller or another device. However, programming languages are not limited to programming computers, but are increasingly used for other tasks. So-called #gloss("dsl", long: true, suffix: [s]) are languages designed for specific purposes that may intersect with traditional computing or describe traditional computing tasks, but can also extend beyond traditional computing. @dsl[s] can be used to program digital devices such as @fpga[s], but also to program and simulate analog systems such as @verilog-ams or @spice.
