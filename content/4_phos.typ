@@ -2624,6 +2624,18 @@ During the discussion on ecosystems, in @sec_programming_photonic_processors, _P
 
 Due to its length, the code of this example is shown in @anx_marshalling_library_example, where the @phos code being simulated is shown in @lst_marshalling_phos, the code to build the modulate into a programmable form is in @lst_marshalling_comp, and the code to simulate the modulator is in @lst_marshalling_sim. In this example, a simple @phos circuit is being built, it consists of a splitter of which one of its outputs is modulated by a @prbs 12-bit sequence. In @fig_marshalling_sim, one can see the result of the simulation code, showing the modulate output in blue, and the unmodulated output in orange. One can see that the noise source is applied to both signals, but that the modulated signal is modulated by the @prbs sequence. Additionally, the circuit can be seen in @fig_marshalling_circ, showing the generated mesh on a rather large chip, showing the ports, the modulator, and the splitter. On that figure, one can also see that the place-and-route engine may utilize the two modes of the waveguides to perform more efficient routing. In practice, when looking @fig_marshalling_circ, one may notice that the losses experienced by the modulated signals, which should be significantly higher, are not modeled in the simulation shown.
 
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Synthesis*]
+}
+One can see in @lst_marshalling_comp, that the user starts by importing the marshalling library `phos` (line $#2$), and their device support package `prg_device` (line $#5$) -- a fictitious device from the @prg. A device instant is then created from the `phos` library and the device support package (line $#8$). From this, the module can be loaded from its `phos` file. Moving on to the creation of the inputs and outputs (I/O) of the device (lines $#14-#17$), the electrical input is created, with its device-specific identifier being $0$. Then, each of the three optical ports are created, depending on whether they are used as inputs, outputs, their remaining port is discarded. Here as well, the device-specific ID is being used. The reason why device-specific IDs are being used is to assign the ports of the device to the logical ports of the module. Then, the module is instantiated, given a name, and all of its inputs and outputs are assigned. It can then finally be synthesized. In a real design, one would likely specify more parameters and more than one module, indeed, the marshalling library can be used to compose modules together, and to synthesize more than one module. In this example, the synthesis stage has only one parameter set, the optimization of the design set to area optimization. Finally, from the synthesized design, the user @hal and programming files cna be generated.
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Simulation*]
+}
+This example shows that a @prbs sequence is generated in a _Numpy_ array, it shows one of the core goals of the marshalling library: broad compatibility with the existing _Python_ ecosystem. A simulator is then created from the device, a noise source and a laser source are created, from which the design can be simulated using the previously instantiated module. This runs the simulation, and the result can be plotted using libraries such as _Matplotlib_, giving the result seen in @fig_marshalling_sim.
+
 #figurex(
     title: [ Simulation results of the marshalling layer example.],
     caption: [ Simulation results of the marshalling layer example, showing the output of the modulator, and the output directly from the splitter. The output of the modulator is the same as the output of the splitter, but with the PRBS sequence modulated onto it. ]
@@ -2634,3 +2646,7 @@ Due to its length, the code of this example is shown in @anx_marshalling_library
         alt: ""
     )
 ] <fig_marshalling_sim>
+
+#info-box(kind: "conclusion")[
+    The marshalling library aims at provide an easy to use, productive interface for configuring, synthesizing, and simulating @phos circuits. Through the use of a _Python_ @api, it makes it easy for people with relatively little programming knowledge to get started. Finally, its ability to reuse existing libraries from the _Python_ ecosystem makes it easy to integrate into *existing workflows*.
+]

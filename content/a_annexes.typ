@@ -65,10 +65,10 @@ syn main(input: optical, modulated: electrical) -> (optical, optical) {
 )[
 ```python
 # Import the marshalling library
-from phos import ph
+import phos as ph
 
 # Import the platform support package
-from prg_device import prg
+import prg_device as prg
 
 # Create the device with the specific support package
 device = ph.Device(prg.DeviceDescription())
@@ -77,7 +77,7 @@ device = ph.Device(prg.DeviceDescription())
 module = device.load_module("module.phos")
 
 # Create the I/O, each `io` calls returns an input and an output
-electrical   = device.electrical(0)
+electrical   = device.electrical_input(0)
 (input, _)   = device.io(0)
 (_, output0) = device.io(1)
 (_, output1) = device.io(2)

@@ -4,14 +4,16 @@
 
 = Examples of photonic circuit programming <sec_examples>
 
-== Beam forming
-
 == Lattice filter
+
+== Spectrometer
+
+== Beam forming
 
 == Coherent transceiver
 
-== Switch matrix
-
 == Fiber sensing
+
+== Switch matrix
 
 == Analog matrix multiplication
