@@ -412,17 +412,17 @@ One of the unique features of @phos is the built-in @si unit system. It is compr
     )[
         ```phos
 /// 1 milliwatt
-a = 1 mW;
-b = 0 dBm;
+1 mW
+dBm
 
 // 1 degree
-c = 1 deg;
-d = 0.01745 rad;
-e = 1°;
+1 deg
+0.01745 rad
+1°
 
 // 1 kilohertz
-f = 1 kHz
-g = 1e3 Hz
+1 kHz
+1e3 Hz
         ```
     ] <lst_ex_units>
 ]
@@ -445,10 +445,10 @@ Tuples are a kind of product type that links one or more values together within 
         ]
     )[
         ```phos
-/// A tuple container
-a = (a, b, c)
+/// A tuple container containing b, c, and d
+let a = (b, c, d)
 
-/// A tuple as a type
+/// A tuple as a type containing values of type B, C, and D
 type A = (B, C, D)
         ```
     ] <lst_ex_tuple_container>
@@ -724,16 +724,24 @@ Synthesizable functions have the added semantic of being able to source and sink
 
 #block(breakable: false)[
     #figurex(
-        caption: [ 
+        title: [ 
             Example in @phos of a synthesizable block.
+        ],
+        caption: [
+            Example in @phos of a synthesizable block, showing an @mzi built discretely using the `split`, `constrain` and `merge` functions.
         ]
     )[
         ```phos
 // Synthesizable block that performs the filtering of an input signal using an MZI
-syn filter(in: optical) -> optical {
-    a |> split((0.5, 0.5))
-      |> constrain(d_phase: 30 deg)
-      |> interfere()
+// The MZI is built using the following actions:
+//  1. The `input` signal is split into two signals using a 50/50 splitter
+//  2. The two signals are constrained to have a phase difference of 30 degrees
+//  3. The two signals are interfered using a 50/50 combiner
+// This forms the basic structure of a Mach-Zehnder interferometer
+syn filter(input: optical) -> optical {
+    input |> split((0.5, 0.5))
+          |> constrain(d_phase: 30 deg)
+          |> merge()
 }
         ```
     ] <lst_ex_synthesizable_block>
@@ -1012,8 +1020,8 @@ fn sum(a: (uint...)) -> uint {
         align(center)[#not_needed],
         align(left)[ Declares a synthesizable function. ],
         ```phos
-syn gain(in: optical) -> optical {
-    a |> std::intrinsic::gain(10 dB)
+syn gain(input: optical) -> optical {
+    input |> std::intrinsic::gain(10 dB)
 }
         ```,
 
