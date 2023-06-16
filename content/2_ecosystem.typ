@@ -558,7 +558,7 @@ The _Python_ implementation of _FizzBuzz_ can be found in @lst_python_fizz, it s
     #raw(read("../code/fizzbuzz/python.py"), lang: "python", block: true)
 ] <lst_python_fizz>
 
-These simple example show us some fundamental design decisions for _C_, _Rust_, and _Python_, most notably that _Python_ is whitespace and line-space sensitive, while _C_ and _Rust_ are not. This is a design feature of _Python_ that aids in making the code more readable and consistently formatted regardless of whether the user uses a formatter or not. Then, focusing on typing, _Python_ is dynamically typed which makes the work of any compiler more difficult. Dynamic typing is a feature that generally makes languages easier to use at the cost of runtime performance, as type checking has to be done as the code is running. Per contra, _Rust_ takes an intermediate approach between _Python_'s dynamic typing and _C_'s manual type annotation: _Rust_ uses type inference to infer the type of variables, that means that users still need to annotate some types, but overall most variables do not need type annotations. This makes _Rust_ easier to use than _C_, but also more difficult to use than _Python_ from a typing point of view.
+These simple example show some fundamental design decisions for _C_, _Rust_, and _Python_, most notably that _Python_ is whitespace and line-space sensitive, while _C_ and _Rust_ are not. This is a design feature of _Python_ that aids in making the code more readable and consistently formatted regardless of whether the user uses a formatter or not. Then, focusing on typing, _Python_ is dynamically typed which makes the work of any compiler more difficult. Dynamic typing is a feature that generally makes languages easier to use at the cost of runtime performance, as type checking has to be done as the code is running. Per contra, _Rust_ takes an intermediate approach between _Python_'s dynamic typing and _C_'s manual type annotation: _Rust_ uses type inference to infer the type of variables, that means that users still need to annotate some types, but overall most variables do not need type annotations. This makes _Rust_ easier to use than _C_, but also more difficult to use than _Python_ from a typing point of view.
 
 Additional features that the languages offer:
 - _Python_ and _Rust_ both offer iterators, which are a high level abstraction over loops;
@@ -598,10 +598,10 @@ These @hdl[s] are generally implemented as translators, where, instead of doing 
 For the comparison, three @hdl[s] of varying reach and abstraction levels will be used: #emph[@vhdl], #emph[MyHDL], and #emph[SystemC]. They each represent one of the aforementioned categories, being traditional @hdl[s], modern @rtl\-level languages, and @hls languages. For this comparison, a simple example of an $n$-bit adder will be used, where $n$ is a parameter of the design. This will allow the demonstration of procedural generation of hardware, as well as the use of modules and submodules to structure code.
 
 #info-box(kind: "info")[
-    Most @hdl languages come with pre-built implementations of adders. Usually, the best implementation of the adder is chosen by the compiler or synthesis tool based on constraints defined by the user. These constraints can relate to the area, power consumption or timing requirements. In this case, the adders implemented are simple combinatory ripple-carry adders, which are generally not the best implementation.
+    Most @hdl languages come with pre-built implementations of adders. Usually, the best implementation of the adder is chosen by the compiler or synthesis tool based on constraints defined by the user. These constraints can relate to the area, power consumption or timing requirements.
 ]
 
-In the first example, in @lst_adder_vhdl, it can be seen that the @vhdl implementation is verbose, giving details for all parameters and having to import all of the basic packages (line $2$). In @vhdl, the ports, as well as other properties are defined in the `entity` and the implementation of the logic is done in an `architecture` block. This leads to functionality being spread over multiple locations, generally reducing readability.
+In the first example, in @lst_adder_vhdl, it can be seen that the @vhdl implementation is verbose, giving details for all parameters and having to import all of the basic packages (line $#2-3$). In @vhdl, the ports, as well as other properties are defined in the `entity` and the implementation of the logic is done in an `architecture` block. This leads to functionality being spread over multiple locations, generally reducing readability. Assignments are done using the `<=` operator. The language, unlike most modern counterparts, does not use indentation or braces to denote code blocks, but rather the `begin` and `end` keywords, which is a dated practice. However, @vhdl does support parameterization of the design as can be seen on line $#6$ with the declaration of the generic `n`. This allows for the generation of hardware based on parameters, which is a useful feature for hardware design.
 
 #figurex(
     caption: [ Example of a $n$-bit adder in @vhdl, based on @vhdl-adder. ],
@@ -609,17 +609,25 @@ In the first example, in @lst_adder_vhdl, it can be seen that the @vhdl implemen
     #raw(lang: "vhdl", read("../code/adder/vhdl.vhdl"), block: true)
 ] <lst_adder_vhdl>
 
+The second example based on _MyHDL_, in @lst_adder_my_hdl, shows a combinatorial implementation of an adder, it shows that _MyHDL_ relies on decorators to perform code transformations, something that may be useful when designing custom languages based on _Python_ @ikarashi_exocompilation_2022. Despite using decorators, the code for the _Python_ example is very short, relying on the `@always_comb` annotation to denote the combinatorial logic. The `@block` annotation is used to denote a block of code that will be translated to a module. Overall, code in _MyHDL_ is generally easy to read, and has a low barrier to entry for _Python_ developers. 
+
+#pagebreak(weak: true)
+
 #figurex(
-    caption: [ Example of a $n$-bit adder in _MyHDL_, based on @vhdl-adder. ],
+    caption: [ Example of a $n$-bit adder in _MyHDL_. ],
 )[
     #raw(lang: "python", read("../code/adder/myhdl.py"), block: true)
 ] <lst_adder_my_hdl>
 
+The final and third sample is in _SytemC_, in @lst_adder_systemc, it is verbose, using lots of macros, it does not directly support generics due to its _C_ heritage, and requires the use of defined macros to configure the number of bits. Overall, even for a simple example, it does not provide a pleasant user experience. In spite of being a @hls language, it is seemingly less readable and user friendly than _MyHDL_.
+
 #figurex(
-    caption: [ Example of a $n$-bit adder in _SystemC_, based on @vhdl-adder. ],
+    caption: [ Example of a $n$-bit adder in _SystemC_. ],
 )[
     #raw(lang: "c", read("../code/adder/systemc.c"), block: true)
 ] <lst_adder_systemc>
+
+Three languages were shown, starting with @vhdl, a language that is widely used in the industry and has a long history of support and use in hardware synthesis toolchains. A newer, very modern @rtl language based on _Python_ with a compelling feature set, _MyHDL_, was also shown. Finally, a @hls language, _SystemC_, was shown. It was shown that _MyHDL_ is a very user friendly language, with a low barrier to entry, and a very modern feature set. It was also shown that _SystemC_ is a very verbose language, and does not provide a good user experience. It was also shown that _SystemC_ does not support generics, and requires the use of macros to achieve the same functionality. This is in contrast to _MyHDL_, which supports generics and parameterization of designs. It was also shown that _MyHDL_ is a very modern language, with a very modern feature set, and a very low barrier to entry. This is in contrast to _SystemC_, which is a very verbose language, and does not provide a good user experience. It was also shown that _SystemC_ does not support generics, and requires the use of macros to achieve the same functionality. This is in contrast to _MyHDL_, which supports generics and parameterization of designs.
 
 === Analog simulation languages
 
@@ -660,11 +668,12 @@ From @tbl_language_comparison, one can see that for the creation of a new langua
     kind: table,
 )[
     #tablex(
-        columns: (0.075fr, 0.1fr, 0.1fr, 0.1fr, 0.1fr),
+        columns: (0.0001fr, 0.075fr, 0.1fr, 0.1fr, 0.1fr, 0.1fr),
         align: center + horizon,
         auto-vlines: false,
         repeat-header: true,
 
+        rowspanx(2)[],
         rowspanx(2)[#smallcaps[ *Language* ]],
         colspanx(4)[#smallcaps[ *Applications* ]],
 
@@ -674,6 +683,7 @@ From @tbl_language_comparison, one can see that for the creation of a new langua
         smallcaps[ *Root language* ], 
         smallcaps[ *New language* ],
 
+        rowspanx(2)[],
         smallcaps[ *C* ],
         score(3),
         score(2),
@@ -685,6 +695,7 @@ From @tbl_language_comparison, one can see that for the creation of a new langua
             C is a fully featured low-level language, it is performant and has a simple syntax. However, it lacks some of the more modern ecosystem components, and is error prone. Because of this, it is unsuitable for @api design, since it would require the user to be familiar with memory management. It lacks a lot of the semantics of hardware description which makes it unsuitable as a root language. However, its large array of language-implementation libraries makes it a good candidate for the implementation of a new language.
         ]],
 
+        rowspanx(2)[],
         smallcaps[ *Rust* ],
         score(5),
         score(2),
@@ -696,6 +707,7 @@ From @tbl_language_comparison, one can see that for the creation of a new langua
             Rust is a modern low-level language, it is very performant, has excellent first-party tooling, quickly growing in popularity, and is memory safe. However, it has difficult syntax and semantics that is unwelcoming for non-developers, which makes it unsuitable for either @api design or as a root language. However, its large array of language-implementation libraries coupled with its memory and thread safety makes it an excellent candidate for the implementation of a new language.
         ]],
 
+        rowspanx(2)[],
         smallcaps[ *Python* ],
         score(4),
         score(5),
@@ -707,6 +719,7 @@ From @tbl_language_comparison, one can see that for the creation of a new langua
             Python is a mature high-level language that sees wide use within the academic community, it has great third-party tooling, and is easy to learn. These factors make it an excellent candidate for @api design and as a root language. However, its slowness and error-prone dynamic typing make it an unsuitable candidate for the implementation of a new language.
         ]],
 
+        rowspanx(2)[],
         smallcaps[ *Verilog-AMS* ],
         score(1),
         score(0),
@@ -718,6 +731,7 @@ From @tbl_language_comparison, one can see that for the creation of a new langua
             @verilog-ams is a mixed signal simulation software, its ecosystem is lackluster with many proprietary tools which incurs expensive licenses. It not a generic language and is therefore not design for an @api to be implemented in the language, nor is it suitable for the implementation of a new language. However, it is a mature language with a familiar syntax to electrical engineers which may make it suitable as the root language.
         ]],
 
+        rowspanx(2)[],
         smallcaps[ *VHDL* ],
         score(1),
         score(0),

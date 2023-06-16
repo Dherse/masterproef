@@ -8,6 +8,9 @@
 #let font_size = 11pt
 #let section = state("section", "preface")
 
+#let raw_offset(offset) = {
+    state("raw_offset", 0).update(offset)
+}
 // The project function defines how your document looks.
 // It takes your content and some metadata and formats it.
 #let project(title: "", authors: (), body) = {
@@ -187,7 +190,7 @@
         radius: 2pt,
     )
 
-    show raw.where(block: true): it => {
+    show raw.where(block: true): it => locate(loc => {
         // Get the info of the language
         let lang = if it.lang == none {
             (it.lang, none, black)
@@ -219,6 +222,7 @@
         }
 
         // Build the content
+        let offset = state("raw_offset", 0).at(loc)
         let contents = ()
         let lines = it.text.split("\n").enumerate()
         for (i, line) in lines {
@@ -231,7 +235,7 @@
             }
 
             contents.push((
-                index: str(i + 1),
+                index: str(i + 1 + offset),
                 content: content,
             ))
         }
@@ -295,10 +299,13 @@
                 )
             ]
         ]
-    }
+
+        raw_offset(0)
+    })
 
     set page(numbering: "1 of 1")
     counter(page).update(1)
+    
 
     body
 }
