@@ -281,3 +281,41 @@ syn low_loss_spectrometer(
         |> get(0)                                                // (electrical...)
 }
 ```
+
+= Example: coherent QAM-16 transceiver <anx_coherent_transceiver>
+
+```phos
+syn coherent_transmitter(
+    input: optical,
+    (i, ni, q, nq): (electrical, electrical, electrical, electrical),
+) -> optical {
+    input
+        |> split(splat(1.0, 4))
+        |> modulate(type = Modulation::Amplitude)
+        |> constrain(d_phase = 90 deg)
+        |> merge()
+}
+
+syn coherent_receive(
+    input: optical,
+    ref: optical,
+) -> (electrical, electrical) {
+    input
+        |> filter(1150 nm, 100 GHz)
+        |> split((1.0, 1.0))
+        |> zip(ref |> split((1.0, 1.0)))
+        |> map(merge)
+        |> map(demodulate)
+}
+
+syn main(
+    ref: optical,
+    input: optical,
+    (i, ni, q, nq): (electrical, electrical, electrical, electrical),
+) -> (optical, electrical, electrical) {
+    let (i_out, q_out) = coherent_receive(input, ref);
+    let output = coherent_transmitter(i, ni, q, nq);
+
+    (output, i_out, q_out)
+}
+```

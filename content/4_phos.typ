@@ -6,7 +6,7 @@
 
 = The PHÔS programming language <sec_phos>
 
-Based on all of the information that has been presented so far regarding translation of intent and requirements (@sec_intent), programming paradigms (@sec_paradigms), and with the inadequacies of existing languages (@sec_language_summary), it is now apparent that it may be interesting to create a new language which would benefit from dedicated semantics, syntax, and integrates elements from fitting programming paradigms for the programming of photonic processors. This language should be designed in such a way that it is able to easily and clearly express the intent of the circuit designer, while also being able to translate this code into a programmable format for the hardware. Additionally, this language should be similar enough to languages that are common within the scientific community such that it is easy to learn for engineers, and leverage existing tools. Finally, this language should be created in such a way that it provides both the level of control needed for circuit design, and the level of abstraction needed to clearly express complex ideas. Indeed, the language that is presented in this thesis, @phos, is designed to fulfill these goals.
+Based on all of the information that has been presented so far regarding translation of intent and requirements (@sec_intent), programming paradigms (@sec_paradigms), and with the inadequacies of existing languages (@sec_language_summary), it is now apparent that it may be interesting to create a new language which would benefit from dedicated semantics, syntax, and integrate elements from fitting programming paradigms for the programming of photonic processors. This language should be designed in such a way that it is able to easily and clearly express the intent of the circuit designer, while also being able to translate this code into a programmable format for the hardware. Additionally, this language should be similar enough to languages that are common within the scientific community such that it is easy to learn for engineers, and leverage existing tools. Finally, this language should be created in such a way that it provides both the level of control needed for circuit design, and the level of abstraction needed to clearly express complex ideas. Indeed, the language that is presented in this thesis, @phos, is designed to fulfill these goals.
 
 In the following sections, the initial specification, the syntax, constraint system, and other various elements of the language will be discussed. Then, in @sec_examples, examples will be shown how the language can be used to express various circuits. However, before discussing the language in itself, it is important to discuss the design of the languages, the existing languages it draws inspiration from, and the lessons it incorporates from them.
 
@@ -21,6 +21,7 @@ In the following sections, the initial specification, the syntax, constraint sys
     smallcaps[*Inspiration*]
 }
 @phos primarily takes inspiration from _Python_ and _Rust_ for its syntax, while incorporating elements from functional languages such as _Elixir_#footnote[_Elixir_ has not been discussed in this thesis, but it provides the piping operator which is incorporated into @phos.]. Its semantics, especially as they relate to signals, are inspired by traditional hardware description languages, most notably _SystemVerilog_ and #emph[@vhdl]. Other semantics, as they relate to values, are inspired by _Rust_. Other elements, such as comments are inspired by the _C_ family of languages, while documentation comments are inspired by _Rust_ as well.
+
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Synthesizable*]
@@ -32,11 +33,13 @@ In the following sections, the initial specification, the syntax, constraint sys
     smallcaps[*Paradigm*]
 }
 @phos is an imperative language with functional elements.
+#todo("finish this")
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Constraints*]
 }
+#todo("finish this")
 
 == PHÔS: an initial specification <sec_spec>
 
@@ -250,7 +253,7 @@ let d = a |> modulate(external_signal, type_: Modulation::Amplitude)
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Electrical*]
-} Electrical signals do not allow any operations on them apart from being used in `modulate` and `demodulate` intrinsic operators. The reasoning behind this limitation is that, as present, there are no plans for analog processing in the electrical domain. Therefore, electrical signals are only ever used to modulate optical signals, or are produced as the result of demodulating optical signals. It is possible that, in the future, some analog processing features may be added, such as gain, but as it is currently not planned, electrical signals are not allowed to be used in any other way. Electrical signals follow the same semantics as optical signals: _drive-once_, _read-once_.
+} Electrical signals do not allow any operations on them apart from being used in `modulate` and `demodulate` intrinsic operators. The reasoning behind this limitation is that, as present, there are no plans for analog processing in the electrical domain. And this feature is not yet implemented. Therefore, electrical signals are only ever used to modulate optical signals, or are produced as the result of demodulating optical signals. It is possible that, in the future, some analog processing features may be added, such as gain, splitting, etc., but as it is currently not planned, electrical signals are not allowed to be used in any other way. Electrical signals follow the same semantics as optical signals: _drive-once_, _read-once_.
 
 
 === Primitive types and primitive values
@@ -433,7 +436,7 @@ Instead of implementing a complete unit conversion system, at present, @phos is 
 
 === Tuples, iterable types, and iterator semantics
 
-Tuples are a kind of product type that links one or more values together within a nameless container. They are often used as output values for functions, as they allow for multiple values to be returned. In @phos, tuples have two different semantics: one the one hand they can be used as storages for values, as in most modern languages, but on the other hand, they can be used as iterable values, which is a feature that is not present in many languages. Rather than having the concept of a list or collection, typst supports unsized tuples. The general form of tuples as container can be seen in @lst_ex_tuple_container.
+Tuples are a kind of product type that links one or more values together within a nameless container. They are often used as output values for functions, as they allow for multiple values to be returned. In @phos, tuples have two different semantics: on one the one hand they can be used as storages for values, as in most modern languages, but on the other hand, they can be used as iterable values, which is a feature that is not present in many languages. Rather than having the concept of a list or collection, @phos supports unsized tuples. The general form of tuples as container can be seen in @lst_ex_tuple_container.
 
 #block(breakable: false)[
     #figurex(
@@ -464,10 +467,11 @@ Unsized tuples are a special kind of tuple which allows the last element to be r
         ]
     )[
         ```phos
-/// A simple unsized tuple
+/// A simple unsized tuple: (B, B, B, B, ...)
 type E = (B...)
 
-/// A more complex unsized tuple
+/// A more complex unsized tuple: (B, C, D, D, D, ...)
+/// On the the type `D` is repeating
 type A = (B, C, D...)
         ```
     ] <lst_ex_unsized_tuple>
@@ -487,6 +491,10 @@ Unsized tuples lead well into the idea of tuples as iterable values. Iterable va
     )[
         ```phos
 // Iterating over a list of elements
+// It would print:
+// 1
+// 2
+// 3
 for a in (1, 2, 3) {
     print(a)
 }
@@ -497,8 +505,8 @@ for a in (1, 2, 3) {
 
 === Patterns <sec_patterns>
 
-Patters are used for pattern matching and destructuring, and are a core part of the language. They are used for matching values, tuples, and other types. They are also used to destructure complex values into its constituents. Patterns are used in many statements, such as the `match` statement, the `let` variable assignment statement, the `for` loop statement, and function argument declarations. The general form of pattern can be see in @lst_ex_pattern
-.
+Patterns are used for pattern matching and destructuring, and are a core part of the language. They are used for matching values, tuples, and other types. They are also used to destructure complex values into their constituents. Patterns are used in many statements, such as the `match` statement, the `let` variable assignment statement, the `for` loop statement, and function argument declarations. The general form of pattern can be see in @lst_ex_pattern.
+
 #figurex(
     caption: [ 
         Example in @phos of patterns.
