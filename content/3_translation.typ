@@ -9,7 +9,7 @@ In @sec_programming_photonic_processors, the different programming ecosystem com
 
 Additionally to the aforementioned points, several key features were discussed in @initial_requirements, the features relate to realtime control, which works in pair with _reconfigurability_ and _tunability_, simulation, which will use _constraints_ and its solver. Platform independence, which will be achieved through the design of a unified vendor-agnostic ecosystem and, the visualization of the design, which has lead to the design of the _marshalling layers_ which will be discussed in @sec_marshalling.
 
-#info-box(kind: "definition", footer: [ Adapted from #todo("insert reference")])[
+#info-box(kind: "definition", footer: [ Adapted from @noauthor_logic_2023. ])[
     *Synthesis* is the process of transforming the description of a desired circuit into a physical circuit.
 ]
 
@@ -17,13 +17,11 @@ Synthesis is the process of transforming the user's code into a physical circuit
 
 == Functional requirements
 
-#info-box(kind: "definition", footer: [ Adapted from #todo("insert reference")])[
+#info-box(kind: "definition", footer: [ Adapted from @martin_what_2023.])[
     A *functional requirement* is a requirement that specifies a function that a system or component of a system must be able to perform.
 ]
 
-Before a user can design their circuit, they must list their functional requirement, these requirements are the functionality that they wish for their circuit to achieve. As previously discussed, in @sec_language_tool, one can see these requirement as the most declarative form of the user's intent. Therefore, one can see this step as the user's intent.
-
-However, there are elements that are generally going to be common to all of those functional requirements. And can be seen as the functional requirements for intent translation. These requirements can be seen in @tab_functional_requirements and are discussed in the following sections.
+Before a user can design their circuit, they must list their functional requirement, these requirements are the functionality that they wish for their circuit to achieve. As previously discussed, in @sec_language_tool, one can see these requirement as the most declarative form of the user's intent. However, there are elements that are generally going to be common to all of those functional requirements. And can be seen as the functional requirements for intent translation. These requirements can be seen in @tab_functional_requirements and are discussed in the following sections.
 
 #figurex(caption: [ Functional requirements for intent translation ], kind: table)[
     #tablex(

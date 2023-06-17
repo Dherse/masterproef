@@ -32,14 +32,13 @@ In the following sections, the initial specification, the syntax, constraint sys
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Paradigm*]
 }
-@phos is an imperative language with functional elements.
-#todo("finish this")
+@phos is an imperative language with many functional elements, it purposefully keeps the easier aspects of imperative programming, while incorporating functional elements to make it both easier to reason about and easier to synthesize into hardware. The language is purposefully kept simple, with only a few elements from each paradigm, to ensure that it is easy to learn and easy to use. Form follows function, and the language is designed to be used by engineers and researchers, not by computer scientists.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Constraints*]
 }
-#todo("finish this")
+@phos can express constraints directly in its syntax, this is opposed to other languages such as @vhdl and _SystemVerilog_ which require timing constraints to be specified externally. This is done to ensure that the constraints are always in sync with the code, and that the constraints are always available at a glance. Additionally, @phos uses a constraint system that is compatible with both signals and regular values, this is done for several purpose, chief among them is to ensure that reconfigurability regions can be minimized as discussed later on, in @sec_branching_reconfig.
 
 == PHÔS: an initial specification <sec_spec>
 
@@ -52,9 +51,7 @@ This section serves as an initial specification or reference to the @phos progra
 #figurex(
     title: [ Execution model of the @phos programming language ],
     caption: [
-        Execution model of the @phos programming language, showing the three distinct stages: compilation, evaluation and synthesis. The compilation stage takes the user's source code along with the source code of the standard library, the platform support package -- that contains device-specific constraints and component implementations -- and produces bytecode. The evaluation stage takes the bytecode and produces a tree of intrinsic operations, constraints on those operations, and collected stacks. The evaluation uses the constraints solver and the _Z3_ prover to check for constraint satisfiability @z3. Finally, the synthesis stage takes the output of the evaluation stage, along with the @hal generator for the platform and the place-and-route implementation to produce the user @hal and the programming file for the photonic processor.
-
-        This figure uses the same color scheme as @fig_responsibilities, showing the ecosystem components in orange, the user's code in green, the platform specific code in blue, and the third party code in purple.
+        Execution model of the @phos programming language, showing the three distinct stages. Responsibilities use the same color code as @fig_responsibilities, showing the ecosystem components in orange, the user's code in green, the platform specific code in blue, and the third party code in purple.
     ]
 )[
     #image(
@@ -261,6 +258,7 @@ let d = a |> modulate(external_signal, type_: Modulation::Amplitude)
 @phos aims at providing primitive types that are useful for the domain of optical signal processing. As such, it provides a limited set of primitive types, not all of which are synthesizable. To understand how primitive types are synthesizable, see @sec_stack_collection. In @tab_primitive_types, the primitive types are listed, along with a short description. Primitive types are all denoted by their lowercase identifiers, this is a convention to make a distinction between composite types and primitive types. These primitive types are very similar to those found in other high-level programming languages such as _Python_ @python_reference.
 
 #figurex(
+    title: [ Primitive types in @phos. ],
     caption: [
         Primitive types in @phos, showing the primitive types and their description. For numeric types, the minimum and maximum values are shown.
     ],
@@ -542,7 +540,7 @@ In order for match statements to be correct, the compiler must be able to prove,
 As previously mentioned, exhaustiveness helps ensure that reconfigurability is reliably achievable, as it allows the compiler to prove that all possible cases are covered. Additionally, the compiler can use constraints to remove branches that it can prove will never be taken. This is a very important and powerful feature as it decreases the configuration space of the user's design, and it allows the compiler to be faster and optimize the user's design further.
 
 
-=== Branching and reconfigurability
+=== Branching and reconfigurability <sec_branching_reconfig>
 
 @phos supports branching as many other languages do, however, due to its use as a photonics @hdl, @phos has the special ability to use branching as boundaries for reconfigurability regions in synthesizable contexts. This feature was previously discussed in @sec_tunability_reconfigurability. The general form of branching can be seen in @lst_ex_branching. Reconfigurability through branching is designed to be very simple to use, the user can simply branch in their code, if the compiler detects that signals are being used across the branches, it will automatically create a new reconfigurability region, meaning that the work is implicit and the user does not need to do anything special to enable reconfigurability.
 
@@ -1713,6 +1711,7 @@ After lowering the @ast into the @hir, the compiler will now try and infer the t
 
 #figurex(
     kind: raw,
+    title: [ Example of name stripping and type inference in @phos ],
     caption: [
         Example of name stripping and type inference in @phos, showing the process of name stripping and type inference, using the example from @lst_desug_ex. All nodes are annotated with their type, all variables, arguments, function names, etc. have been renamed with an ID shown here as `$n`, where `n` is a number.
 

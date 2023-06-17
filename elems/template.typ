@@ -192,7 +192,7 @@
         radius: 2pt,
     )
 
-    show raw.where(block: true): it => locate(loc => {
+    show raw.where(block: true): it => {
         // Get the info of the language
         let lang = if it.lang == none {
             (it.lang, none, black)
@@ -224,7 +224,6 @@
         }
 
         // Build the content
-        let offset = state("raw_offset", 0).at(loc)
         let contents = ()
         let lines = it.text.split("\n").enumerate()
         for (i, line) in lines {
@@ -237,7 +236,7 @@
             }
 
             contents.push((
-                index: str(i + 1 + offset),
+                index: str(i + 1),
                 content: content,
             ))
         }
@@ -303,7 +302,7 @@
         ]
 
         raw_offset(0)
-    })
+    }
 
     set page(numbering: "1 of 1")
     counter(page).update(1)
