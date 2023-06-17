@@ -64,7 +64,7 @@ In this work, the focus will be on the fourth kind of tunability, the most gener
 
 This question, which will be the driving factor behind this first section, will be answered in @feedforward_approx. However, before answering this question, it is necessary to first discuss the different types of photonic processors and how they differ from one another. Additionally, the answer to that question will show that the solution suggested in this thesis is also applicable for feedfoward systems. As this thesis is not focused on the creation of a photonic processor, but on the programming of said processor, building techniques will not be explored further.
 
-=== Components
+=== Components <sec_photonic_proc_comp>
 
 As previously mentioned, a photonic gate consists of several components. This section will therefore discuss the different components that can be found in a photonic processor and how they work, as well as some of the more advanced components that can also be included as part of a photonic processor.
 

@@ -300,7 +300,6 @@ syn coherent_transmitter(
 ] <lst_modulation>
 = Example: lattice filter <anx_lattice_filter>
 
-
 ```phos
 // The kinds of filter that can be used.
 // For this example, we only support Chebyshev and Butterworth.
@@ -339,5 +338,50 @@ syn lattice_filter(
                 |> coupler(coeff)                   // (optical, optical)
                 |> constrain(d_phase = phase)       // (optical, optical)
         })                                      // (optical, optical)
+}
+```
+
+= Example: MVM <anx_matrix_vector>
+
+```phos
+syn mzi(
+    a: optical,
+    b: optical,
+    (beta, theta): (Phase, Phase),
+) -> (optical, optical) {
+    (a, b)
+        |> coupler(0.5)
+        |> constrain(d_phase = beta)
+        |> coupler(0.5)
+        |> constrain(d_phase = theta)
+}
+
+syn matrix_vector_multiply(
+    source: optical,
+    (a, b, c, d): (electrical, electrical, electrical, electrical),
+    coefficients: (
+        (Phase, Phase),
+        (Phase, Phase),
+        (Phase, Phase),
+        (Phase, Phase),
+        (Phase, Phase),
+        (Phase, Phase)
+    )
+) -> (electrical, electrical, electrical, electrical) {
+    let (ref_a, ref_b, ref_c, ref_d, rest...) = source |> split(splat(1.0, 8));
+    let (a, b, c, d) = (a, b, c, d)
+        |> zip((ref_a, ref_b, ref_c, ref_d))
+        |> modulate(type_: Modulation::Amplitude)
+    
+    let (c1, d1) = mzi(c, d, coefficients.0);
+    let (b1, c2) = mzi(b, c1, coefficients.1);
+    let (y1, b2) = mzi(a, b1, coefficients.3);
+    let (c3, d2) = mzi(c2, d1, coefficients.2);
+    let (y2, c4) = mzi(b2, c3, coefficients.4);
+    let (y3, y4) = mzi(c4, d2, coefficients.5);
+
+    (y1, y2, y3, y4)
+        |> zip(rest)
+        |> demodulate(type_: Modulation::Coherent)
 }
 ```

@@ -124,6 +124,7 @@ source when quoting results from this master dissertation.
     (key: "snr", short: "SNR", long: [ Signal to Noise Ratio ]),
     (key: "ber", short: "BER", long: [ Bit Error Rate ]),
     (key: "evm", short: "EVM", long: [ Error Vector Magnitude ]),
+    (key: "mvm", short: "MVM", long: [ Matrix Vector Multiplication ]),
 ))
 
 

@@ -99,6 +99,7 @@ $<eq_phase_shift_2>
 #figurex(
     title: [ Simulation results of the beam forming system. ],
     caption: [ Simulation results of the beam forming system, showing the time-dependent phase shifts applied to the optical signals. ],
+    kind: image,
 )[
     #table(
         columns: (auto, 1fr),
@@ -238,7 +239,7 @@ $<eq_lattice_filter>
 #pagebreak(weak: true)
 === Building the filter
 
-@mzi based lattice filters are very simple to build in @phos, assuming that one has a function to compute the coefficients required, which would be part of a filter synthesis toolbox, here named `filter_kind_coefficients`, then one can build a filter with the code in @lst_lattice_filter. The code first computes the coefficients, then folds them, meaning that it iterates over them while accumulating a result, in this case the result is the final output signal. For each coefficient, the accumulator signal is split into two based on the calculated coefficient, one of which is delayed by the phase shift of the coefficient, then the two signals are merged back together. The result is a filter with the frequency response of the coefficients, which can be seen in @fig_lattice_filter, showing the theoretical results of a 4th and 8th order filter.
+@mzi based lattice filters are very simple to build in @phos, assuming that one has a function to compute the coefficients required, which would be part of a filter synthesis toolbox, here named `filter_kind_coefficients`, then one can build a filter with the code in @lst_lattice_filter. The code first computes the coefficients, then folds them, meaning that it iterates over them while accumulating a result, in this case the result are the final output signals. For each coefficient, the accumulator signals are coupled with the computed coefficient, and then constrained to the differential phase computed. Finally, the last two signals are coupled together with the final computed coefficient. The result is a filter with the frequency response of the coefficients, which can be seen in @fig_lattice_filter, showing the theoretical results of a 4th and 8th order filter.
 
 #figurex(
     title: [ @mzi based lattice filter in @phos. ],
@@ -246,11 +247,11 @@ $<eq_lattice_filter>
 )[
 ```phos
 syn lattice_filter(a: optical, b: optical, filter_kind: FilterKind) -> (optical, optical) {
-    filter_kind_coefficients(filter_kind)
-        |> fold((a, b), |acc, (coeff, phase)| {
-            acc |> coupler(coeff)
-                |> constrain(d_phase = phase)
-        })                                      
+    let (coeffs, final_coupler) = filter_kind_coefficients(filter_kind)
+    
+    coeffs |> fold((a, b), |acc, (coeff, phase)| {
+            acc |> coupler(coeff) |> constrain(d_phase = phase)
+    }) |> coupler(final_coupler)                                   
 }
 ```
 ]<lst_lattice_filter>
@@ -276,52 +277,40 @@ syn lattice_filter(a: optical, b: optical, filter_kind: FilterKind) -> (optical,
 ]<fig_lattice_filter>
 
 #pagebreak(weak: true)
-== Analog matrix multiplication
+== Analog matrix-vector multiplication
+
+As previously mentioned in @photonic_processor, there are two major kinds of programmable @pic[s], and while this work has mostly focused itself on recirculating mesh-based photonic processors, they are capable of building the same circuits as feedforward @pic[s]. A typical use case of feedfoward meshes, is #gloss("mvm", long: true), this is useful for very quickly and every efficiently perform @mvm, an operation that is very common in machine learning. This example will demonstration how such a @mvm photonic circuit is built in @phos, and how to use it to perform @mvm. The example shown in this example is based of off _Shokraneh et al._'s work @shokraneh_single_2019.
+
+=== Theoretical background
+
+This circuit is built from individual @mzi[s], with an added phase shifter, these groupings, which can be seen in @fig_mvm_mzi, are equivalent to the photonic gates from which a photonic processor is built, see @sec_photonic_proc_comp.  For this circuit, they are configured in a triangular shape, as can be seen in @fig_mvm_mzi_full. The circuit is built from 6 gates and is capable of multiplying a vector of size $4$ with a $4 times 4$ matrix.
 
 #figurex(
-    title: [ @mzi based 4x4 Matrix-Vector-Multiplication (MVM) in @phos. ],
-    caption: [ @mzi based 4x4 Matrix-Vector-Multiplication (MVM) in @phos. ],
+    title: [ Diagram of a single @mzi gate used when building an @mvm circuit. ],
+    caption: [
+        Diagram of a single @mzi gate used when building an @mvm circuit. The @mzi gate is built from two couplers, and two phase shifters, the first coupler is used to split the input signal into two, the second coupler is used to recombine the two signals, the first phase shifter is used to add a phase shift to the top signal, and the second phase shifter is used to add a phase shift to the bottom signal.
+    ]
 )[
-```phos
-syn mzi(
-    a: optical,
-    b: optical,
-    (beta, theta): (Phase, Phase),
-) -> (optical, optical) {
-    (a, b)
-        |> coupler(0.5)
-        |> constrain(d_phase = beta)
-        |> coupler(0.5)
-        |> constrain(d_phase = theta)
-}
-
-syn matrix_vector_multiply(
-    source: optical,
-    (a, b, c, d): (electrical, electrical, electrical, electrical),
-    coefficients: (
-        (Phase, Phase),
-        (Phase, Phase),
-        (Phase, Phase),
-        (Phase, Phase),
-        (Phase, Phase),
-        (Phase, Phase)
+    #image(
+        "../figures/drawio/fig_mvm_mzi.png",
+        alt: "Shows a single MZI with a tunable phase shifter on one of its arms, and a phase shifter on one of its ports",
+        width: 50%,
     )
-) -> (electrical, electrical, electrical, electrical) {
-    let (ref_a, ref_b, ref_c, ref_d, rest...) = source |> split(splat(1.0, 8));
-    let (a, b, c, d) = (a, b, c, d)
-        |> zip((ref_a, ref_b, ref_c, ref_d))
-        |> modulate(type_: Modulation::Amplitude)
-    
-    let (c1, d1) = mzi(c, d, coefficients.0);
-    let (b1, c2) = mzi(b, c1, coefficients.1);
-    let (y1, b2) = mzi(a, b1, coefficients.3);
-    let (c3, d2) = mzi(c2, d1, coefficients.2);
-    let (y2, c4) = mzi(b2, c3, coefficients.4);
-    let (y3, y4) = mzi(c4, d2, coefficients.5);
+]<fig_mvm_mzi>
 
-    (y1, y2, y3, y4)
-        |> zip(rest)
-        |> demodulate(type_: Modulation::Coherent)
-}
-```
-]<lst_mvm>
+#figurex(
+    title: [ Diagram of a the full @mzi @mvm circuit. ],
+    caption: [
+        Diagram of a the full @mzi @mvm circuit. With the inputs annotated $I_1$ through to $I_4$, and the output annotated $Y_0$ through to $Y_3$. The circuit is built from 6 @mzi gates, with 4 inputs, and 4 outputs.
+    ]
+)[
+    #image(
+        "../figures/drawio/fig_mvm_mzi_full.png",
+        width: 100%,
+        alt: "Shows a mesh of MZIs gates, assembles in a triangular shape, with 3 at the top, then 2 in the middle, and 1 at the top.",
+    )
+]<fig_mvm_mzi_full>
+
+=== Building the circuit
+
+=== Results
