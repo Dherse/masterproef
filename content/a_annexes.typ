@@ -4,15 +4,16 @@
 #import "../elems/hexagonal.typ": hexagonal_interconnect
 
 #set heading(numbering: "A", supplement: [Annex])
-#set figure(numbering: (x) => [A.#x])
 #counter(figure.where(kind: table)).update(0)
 #counter(figure.where(kind: image)).update(0)
 #counter(figure.where(kind: raw)).update(0)
 
 = PHÔS: a formal grammar <anx_phos_grammar>
+#set figure(numbering: (x) => [A.#x])
 
 #set page(flipped: true, columns: 1)
 = AST data structure: overview <anx_ast_overview>
+#set figure(numbering: (x) => [B.#x])
 #figurex(
     title: [ UML diagram of parts of the @ast relevant for @sec_ast. ],
     caption: [
@@ -24,6 +25,7 @@
 
 #set page(flipped: true)
 = Bytecode execution <anx_bytecode_execution>
+#set figure(numbering: (x) => [C.#x])
 #figurex(
     title: [
         Execution diagram of the stack of @sec_ex_bytecode_exec.
@@ -37,6 +39,7 @@
 
 #set page(flipped: true)
 = Graph representation of a mesh <anx_bytecode_instruction_set>
+#set figure(numbering: (x) => [D.#x])
 
 #figurex(
     title: [ Graph representation of a mesh. ],
@@ -49,6 +52,7 @@
 
 #set page(flipped: false)
 = Marshalling library example <anx_marshalling_library_example>
+#set figure(numbering: (x) => [E.#x])
 
 #figurex(
     title: [ @phos example used in @lst_marshalling_comp.  ],
@@ -156,6 +160,7 @@ plt.show()
 #set page(flipped: false)
 
 = Example: Beam forming system <anx_beam_forming>
+#set figure(numbering: (x) => [F.#x])
 
 ```phos
 syn beam_forming(
@@ -172,6 +177,7 @@ syn beam_forming(
 ```
 
 = Example: coherent 16-QAM transmitter <anx_coherent_transmitter>
+#set figure(numbering: (x) => [G.#x])
 
 #figurex(
     title: [ Example in @phos of a 16-#gloss("qam", short: true) modulator. ],
@@ -201,7 +207,12 @@ syn coherent_transmitter(
 ```
 ] <lst_modulation>
 = Example: lattice filter <anx_lattice_filter>
+#set figure(numbering: (x) => [H.#x])
 
+#figurex(
+    title: [ Example in @phos of a parametric lattice filter. ],
+    caption: [ Example in @phos of a parametric lattice filter. ],
+)[
 ```phos
 // The kinds of filter that can be used.
 // For this example, we only support Chebyshev and Butterworth.
@@ -242,9 +253,15 @@ syn lattice_filter(
         })                                      // (optical, optical)
 }
 ```
+]
 
 = Example: MVM <anx_matrix_vector>
+#set figure(numbering: (x) => [I.#x])
 
+#figurex(
+    title: [ Example in @phos of an analog matrix-vector multiplier. ],
+    caption: [ Example in @phos of an analog matrix-vector multiplier. ],
+)[
 ```phos
 syn mzi(
     a: optical,
@@ -262,12 +279,8 @@ syn matrix_vector_multiply(
     source: optical,
     (a, b, c, d): (electrical, electrical, electrical, electrical),
     coefficients: (
-        (Phase, Phase),
-        (Phase, Phase),
-        (Phase, Phase),
-        (Phase, Phase),
-        (Phase, Phase),
-        (Phase, Phase)
+        (Phase, Phase), (Phase, Phase), (Phase, Phase),
+        (Phase, Phase), (Phase, Phase), (Phase, Phase)
     )
 ) -> (electrical, electrical, electrical, electrical) {
     let (ref_a, ref_b, ref_c, ref_d, rest...) = source |> split(splat(1.0, 8));
@@ -287,3 +300,4 @@ syn matrix_vector_multiply(
         |> demodulate(type_: Modulation::Coherent)
 }
 ```
+]

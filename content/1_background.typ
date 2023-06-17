@@ -179,7 +179,7 @@ The primary difference between a feedfoward architecture and a recirculating arc
 As it has been shown#cite("perez_programmable_2019"), recirculating meshes offer the ability to create more advanced structures such as @iir elements, whereas feedforward architectures are limited to @fir components. This is due to the inability of feedfoward system to express feedback loops, limiting them to @fir components, whereas recirculating meshes allow the creation of feedback loops and therefore @iir components. Indeed, in a feedforward mesh, the typical structure being built is the Mach-Zehnder interferometer, whereas in a recirculating mesh, one may build structures such as ring resonators, which are inherently @iir components. Additionally, recirculating mesh are still capable of expressing structures such as @mzi, meaning that they are capable of representing both @iir components, but also @fir components.
 
 #info-box(kind: "conclusion")[
-    The recirculating mesh is more capable as it allows feedback loops, and therefore @iir components, whereas the feedforward mesh is limited to @fir components.
+    The recirculating mesh is more capable as it allows feedback loops, and therefore @iir components, whereas the feedforward mesh is limited to @fir components. Additionally, recirculating meshes allow light to travel in both directions in a single waveguide, which allows for more efficient routing and more complex structures.
 ]
 
 === Potential use cases of photonic processors <photonic_processors_use_cases>
