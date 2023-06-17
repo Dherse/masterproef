@@ -78,7 +78,7 @@ syn beam_forming(
         |> split(splat(1.0, phase_shifts.len()))
         |> constrain(d_phase = 0)
         |> zip(phase_shifts)
-        |> map(set modulate(type: Modulation::Phase))
+        |> map(set modulate(type_: Modulation::Phase))
         |> constrain(d_delay = 0)
 }
 ```
@@ -89,11 +89,11 @@ syn beam_forming(
 The time-domain simulation can easily be performed using the constraint-solver, yielding the results shown in @fig_beam_forming. In this simulation, only four channels were simulated, each with a time-dependent phase shift at a frequency of 1 MHz. In the first simulation #link(<fig_beam_forming>)[(a)], the phases are following @eq_phase_shift, where $k$ refers to the channel number starting at zero. And in the second simulation #link(<fig_beam_forming>)[(b)], they are following @eq_phase_shift_2. The simulation shows that the phase shifts are correctly applied to the optical signals, and that the optical signals are correctly constrained to have the same phase and delay.
 
 $
-    phi_k (t) = (k dot pi)/3 dot 2 pi dot 1 "MHz" dot t
+    phi_k (t) = (k dot pi)/3 + 2 pi dot 1 "MHz" dot t
 $<eq_phase_shift>
 
 $
-    phi_k (t) = sin((k dot pi)/3 dot 2 pi dot 1 "MHz" dot t)
+    phi_k (t) = sin((k dot pi)/3 + 2 pi dot 1 "MHz" dot t)
 $<eq_phase_shift_2>
 
 #figurex(
@@ -245,12 +245,11 @@ $<eq_lattice_filter>
     caption: [ @mzi based lattice filter in @phos, parametrically generated for the user, fully commented example in @anx_lattice_filter. ],
 )[
 ```phos
-syn lattice_filter(input: optical, filter_kind: FilterKind) -> optical {
+syn lattice_filter(a: optical, b: optical, filter_kind: FilterKind) -> (optical, optical) {
     filter_kind_coefficients(filter_kind)
-        |> fold(input, |acc, (coeff, phase)| {
-            acc |> split((coeff, 1 - coeff))
+        |> fold((a, b), |acc, (coeff, phase)| {
+            acc |> coupler(coeff)
                 |> constrain(d_phase = phase)
-                |> merge()
         })                                      
 }
 ```
@@ -278,3 +277,51 @@ syn lattice_filter(input: optical, filter_kind: FilterKind) -> optical {
 
 #pagebreak(weak: true)
 == Analog matrix multiplication
+
+#figurex(
+    title: [ @mzi based 4x4 Matrix-Vector-Multiplication (MVM) in @phos. ],
+    caption: [ @mzi based 4x4 Matrix-Vector-Multiplication (MVM) in @phos. ],
+)[
+```phos
+syn mzi(
+    a: optical,
+    b: optical,
+    (beta, theta): (Phase, Phase),
+) -> (optical, optical) {
+    (a, b)
+        |> coupler(0.5)
+        |> constrain(d_phase = beta)
+        |> coupler(0.5)
+        |> constrain(d_phase = theta)
+}
+
+syn matrix_vector_multiply(
+    source: optical,
+    (a, b, c, d): (electrical, electrical, electrical, electrical),
+    coefficients: (
+        (Phase, Phase),
+        (Phase, Phase),
+        (Phase, Phase),
+        (Phase, Phase),
+        (Phase, Phase),
+        (Phase, Phase)
+    )
+) -> (electrical, electrical, electrical, electrical) {
+    let (ref_a, ref_b, ref_c, ref_d, rest...) = source |> split(splat(1.0, 8));
+    let (a, b, c, d) = (a, b, c, d)
+        |> zip((ref_a, ref_b, ref_c, ref_d))
+        |> modulate(type_: Modulation::Amplitude)
+    
+    let (c1, d1) = mzi(c, d, coefficients.0);
+    let (b1, c2) = mzi(b, c1, coefficients.1);
+    let (y1, b2) = mzi(a, b1, coefficients.3);
+    let (c3, d2) = mzi(c2, d1, coefficients.2);
+    let (y2, c4) = mzi(b2, c3, coefficients.4);
+    let (y3, y4) = mzi(c4, d2, coefficients.5);
+
+    (y1, y2, y3, y4)
+        |> zip(rest)
+        |> demodulate(type_: Modulation::Coherent)
+}
+```
+]<lst_mvm>

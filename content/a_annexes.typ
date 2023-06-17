@@ -318,9 +318,10 @@ fn filter_kind_coefficients(
 
 // Implements the latice filter
 syn lattice_filter(
-    input: optical,
+    a: optical,
+    b: optical,
     filter_kind: FilterKind,
-) -> optical {
+) -> (optical, optical) {
     // Steps:
     // 1. we compute the coefficients of the filter in the form ((Fraction, Phase)...)
     //    that is: a list of coefficients and phases
@@ -328,19 +329,15 @@ syn lattice_filter(
     //    the list, and for each element, we apply a function to the current value
     //    and the element, and return the result as the new current value, turning a
     //    list of coefficients and phases into a single value, our starting value is
-    //    the input signal. In the fold we:
-    //   1. split the signal into two, the fraction that is split is based on the computed
-    //      coefficients, one that will have the phase difference applied to it, and one
-    //      that will have not the phase applied to it
+    //    the a tuple of both input signals. In the fold we:
+    //   1. couple the signals together with the computed coefficient
     //   2. we constrain the phase difference between the two signals, imposing the computed
     //      phase difference
-    //   3. we merge the two signals back into one
     filter_kind_coefficients(filter_kind)       // ((Fraction, Phase)...)
-        |> fold(input, |acc, (coeff, phase)| {  // Types insides:
-            acc                                     // optical
-                |> split((coeff, 1 - coeff))        // (optical, optical)
+        |> fold((a, b), |acc, (coeff, phase)| { // Fold over the list of coefficients:
+            acc                                     // (optical, optical)
+                |> coupler(coeff)                   // (optical, optical)
                 |> constrain(d_phase = phase)       // (optical, optical)
-                |> merge()                          // optical
-        })                                      // optical
+        })                                      // (optical, optical)
 }
 ```
