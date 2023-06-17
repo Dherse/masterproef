@@ -1667,7 +1667,7 @@ At this stage, the compiler has not yet resolved all of the path to the differen
 #figurex(
     kind: raw,
     caption: [
-        Example of name resolution in @phos, showing the process of name resolution, using the example from @lst_desug_ex.
+        Example of name resolution in @phos, using the example from @lst_desug_ex.
     ],
 )[
     ```phos

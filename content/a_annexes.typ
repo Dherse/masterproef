@@ -9,10 +9,16 @@
 #counter(figure.where(kind: raw)).update(0)
 
 = PHÔS: a formal grammar <anx_phos_grammar>
+#counter(figure.where(kind: table)).update(0)
+#counter(figure.where(kind: image)).update(0)
+#counter(figure.where(kind: raw)).update(0)
 #set figure(numbering: (x) => [A.#x])
 
 #set page(flipped: true, columns: 1)
 = AST data structure: overview <anx_ast_overview>
+#counter(figure.where(kind: table)).update(0)
+#counter(figure.where(kind: image)).update(0)
+#counter(figure.where(kind: raw)).update(0)
 #set figure(numbering: (x) => [B.#x])
 #figurex(
     title: [ UML diagram of parts of the @ast relevant for @sec_ast. ],
@@ -25,6 +31,9 @@
 
 #set page(flipped: true)
 = Bytecode execution <anx_bytecode_execution>
+#counter(figure.where(kind: table)).update(0)
+#counter(figure.where(kind: image)).update(0)
+#counter(figure.where(kind: raw)).update(0)
 #set figure(numbering: (x) => [C.#x])
 #figurex(
     title: [
@@ -39,6 +48,9 @@
 
 #set page(flipped: true)
 = Graph representation of a mesh <anx_bytecode_instruction_set>
+#counter(figure.where(kind: table)).update(0)
+#counter(figure.where(kind: image)).update(0)
+#counter(figure.where(kind: raw)).update(0)
 #set figure(numbering: (x) => [D.#x])
 
 #figurex(
@@ -52,6 +64,9 @@
 
 #set page(flipped: false)
 = Marshalling library example <anx_marshalling_library_example>
+#counter(figure.where(kind: table)).update(0)
+#counter(figure.where(kind: image)).update(0)
+#counter(figure.where(kind: raw)).update(0)
 #set figure(numbering: (x) => [E.#x])
 
 #figurex(
@@ -160,23 +175,40 @@ plt.show()
 #set page(flipped: false)
 
 = Example: Beam forming system <anx_beam_forming>
+#counter(figure.where(kind: table)).update(0)
+#counter(figure.where(kind: image)).update(0)
+#counter(figure.where(kind: raw)).update(0)
 #set figure(numbering: (x) => [F.#x])
 
+#figurex(
+    title: [ Example in @phos of beam forming system. ],
+    caption: [ Example in @phos of beam forming system, parametric over the number of channels. ],
+)[
 ```phos
+// Create a simple beam forming system
+// This system takes an input optical signal and a set of electrical signals
+//  1. It splits the input optical signal into N optical signals
+//  2. It ensures that the phase of each of the optical signals is the same
+//  3. It modulates each of the optical signals with the electrical signals
+//  4. It ensures that the delay of each of the optical signals is the same
 syn beam_forming(
     input: optical,
     phase_shifts: (electrical...),
 ) -> (optical...) {
-    input
-        |> split(splat(1.0, phase_shifts.len()))
-        |> constrain(d_phase = 0)
-        |> zip(phase_shifts)
-        |> map(set modulate(type: Modulation::Phase))
-        |> constrain(d_delay = 0)
+    input                                               // optical
+        |> split(splat(1.0, phase_shifts.len()))        // (optical...)
+        |> constrain(d_phase = 0)                       // (optical...)
+        |> zip(phase_shifts)                            // ((optical, electrical)...)
+        |> map(set modulate(type: Modulation::Phase))   // (optical...)
+        |> constrain(d_delay = 0)                       // (optical...)
 }
 ```
+]
 
 = Example: coherent 16-QAM transmitter <anx_coherent_transmitter>
+#counter(figure.where(kind: table)).update(0)
+#counter(figure.where(kind: image)).update(0)
+#counter(figure.where(kind: raw)).update(0)
 #set figure(numbering: (x) => [G.#x])
 
 #figurex(
@@ -207,6 +239,9 @@ syn coherent_transmitter(
 ```
 ] <lst_modulation>
 = Example: lattice filter <anx_lattice_filter>
+#counter(figure.where(kind: table)).update(0)
+#counter(figure.where(kind: image)).update(0)
+#counter(figure.where(kind: raw)).update(0)
 #set figure(numbering: (x) => [H.#x])
 
 #figurex(
@@ -256,6 +291,9 @@ syn lattice_filter(
 ]
 
 = Example: MVM <anx_matrix_vector>
+#counter(figure.where(kind: table)).update(0)
+#counter(figure.where(kind: image)).update(0)
+#counter(figure.where(kind: raw)).update(0)
 #set figure(numbering: (x) => [I.#x])
 
 #figurex(
@@ -263,7 +301,8 @@ syn lattice_filter(
     caption: [ Example in @phos of an analog matrix-vector multiplier. ],
 )[
 ```phos
-syn mzi(
+// A single Mach-Zehnder interferometer based gate
+syn mzi_gate(
     a: optical,
     b: optical,
     (beta, theta): (Phase, Phase),
@@ -275,6 +314,7 @@ syn mzi(
         |> constrain(d_phase = theta)
 }
 
+// Produces a 4x4 matrix-vector multiplier
 syn matrix_vector_multiply(
     source: optical,
     (a, b, c, d): (electrical, electrical, electrical, electrical),
@@ -288,12 +328,12 @@ syn matrix_vector_multiply(
         |> zip((ref_a, ref_b, ref_c, ref_d))
         |> modulate(type_: Modulation::Amplitude)
     
-    let (c1, d1) = mzi(c, d, coefficients.0);
-    let (b1, c2) = mzi(b, c1, coefficients.1);
-    let (y1, b2) = mzi(a, b1, coefficients.3);
-    let (c3, d2) = mzi(c2, d1, coefficients.2);
-    let (y2, c4) = mzi(b2, c3, coefficients.4);
-    let (y3, y4) = mzi(c4, d2, coefficients.5);
+    let (c1, d1) = mzi_gate(c, d, coefficients.0);
+    let (b1, c2) = mzi_gate(b, c1, coefficients.1);
+    let (y1, b2) = mzi_gate(a, b1, coefficients.3);
+    let (c3, d2) = mzi_gate(c2, d1, coefficients.2);
+    let (y2, c4) = mzi_gate(b2, c3, coefficients.4);
+    let (y3, y4) = mzi_gate(c4, d2, coefficients.5);
 
     (y1, y2, y3, y4)
         |> zip(rest)
