@@ -693,7 +693,7 @@ fn add_with_pipe(a: uint, b: uint) -> uint {
 
 === Function and synthesizable blocks
 
-@phos separates functions into three categories: functions denoted by the keyword `fn`, and synthesizable blocks denoted by the keyword `syn`. They are designated in such a way to create clearer separation between the concerns of the user, and to allow the compiler to better separate the different functions of the code. All functions in @phos, regardless of their type, are subject to constraints and the constraint-solver, whether these constraints be expressed on values, or on signals.
+@phos separates functions into three categories: functions denoted by the keyword `fn`, and synthesizable blocks denoted by the keyword `syn`. They are designated in such a way to create clearer separation between the concerns of the user, and to allow the compiler to better separate the different functions of the code. All functions in @phos, regardless of their type, are subject to constraints and the constraint solver, whether these constraints be expressed on values, or on signals.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
@@ -1564,7 +1564,7 @@ Building on top of the example shown in @lst_lexing_ex, the @ast for the functio
     )
 ] <lst_ast_ex>
 
-=== Abstract syntax tree: desugaring, expansion, and validation
+=== Abstract syntax tree: desugaring, expansion, and validation <sec_ast_desug>
 
 #info-box(kind: "info")[
     From this point in the document, the language is not yet implemented and therefore does not exist. These following steps are therefore not implemented, and are only description of what will be done when the language is fully implemented.
@@ -1581,7 +1581,7 @@ The first step in the compilation process is to remove syntactic sugar, as it is
 - Macro expansion;
 - and @ast validation.
 
-For this section, the example shown in @lst_desug_ex will be used, it shows a simple circuit involving a filter, a gain section that is gated behind a feature flag, implicit returns and imports. Since macros don't yet have a fixed syntax for a language, and are left as future work, see @sec_macros, there will not be an example involving macros.
+For this section, the example shown in @lst_desug_ex will be used, it shows a simple circuit involving a filter, a gain section that is gated behind a feature flag, implicit returns and imports. Since macros don't yet have a fixed syntax for a language, and are left as future work, see @sec_lang_improvements, there will not be an example involving macros.
 
 #figurex(
     kind: raw,
@@ -2534,7 +2534,7 @@ Another task of the synthesizer is to generate the user @hal. To do this, it wil
 
 == Constraint solver and provers <sec_constraint_solver>
 
-In the previous sections, the mention of the constraint-solver and of the user of prover has been discussed extensively. However, the exact way in which these tools will be used has not been discussed. This section will attempt to provide a brief overview of the way that these tools will be used. First, the constraint solver will be discussed, followed by the prover.
+In the previous sections, the mention of the constraint solver and of the user of prover has been discussed extensively. However, the exact way in which these tools will be used has not been discussed. This section will attempt to provide a brief overview of the way that these tools will be used. First, the constraint solver will be discussed, followed by the prover.
 
 === Constraint solver
 
@@ -2556,7 +2556,7 @@ Through the marshalling layers, which will be discussed in @sec_marshalling, the
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Simulating tunability*]
 }
-The constraint-solver is capable of simulating tunability in the time domain, by updating the signal flow graph based on the tunable values, it can easily reflect any changes in the tunable values. This can be leverage, in combination with co-simulation, to test whether the user's feedback loops work as intended. Allowing simulation and verification of the overall design, rather than just parts of it. All of the values that might still need to be computed, can be done using the @vm, since the @vm produces a partially evaluated bytecode, the constraint solver only needs to provide the @vm with the values of the tunable values to obtain the signal flow graph.
+The constraint solver is capable of simulating tunability in the time domain, by updating the signal flow graph based on the tunable values, it can easily reflect any changes in the tunable values. This can be leverage, in combination with co-simulation, to test whether the user's feedback loops work as intended. Allowing simulation and verification of the overall design, rather than just parts of it. All of the values that might still need to be computed, can be done using the @vm, since the @vm produces a partially evaluated bytecode, the constraint solver only needs to provide the @vm with the values of the tunable values to obtain the signal flow graph.
 
 === Prover
 

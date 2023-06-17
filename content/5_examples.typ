@@ -4,21 +4,8 @@
 
 = Examples of photonic circuit programming <sec_examples>
 
-Several different application areas were mentioned in @photonic_processors_use_cases, and in this section, some of these areas will be demonstrated using the @phos programming language. The examples are meant to be mockups of real applications, and are not meant to be complete implementations, focusing solely on the @phos part of their design. These examples will be explored in different levels of details depending on the complexity of the application and how much of the capabilities of @phos they demonstrate. The full code, with comments, and type annotations is available starting at @anx_spectrometer.
+Several different application areas were mentioned in @photonic_processors_use_cases, and in this section, some of these areas will be demonstrated using the @phos programming language. The examples are meant to be mockups of real applications, and are not meant to be complete implementations, focusing solely on the @phos part of their design. These examples will be explored in different levels of details depending on the complexity of the application and how much of the capabilities of @phos they demonstrate. The full code, with comments, and type annotations is available starting at @anx_beam_forming.
 
-Each example will begin with a short theoretical overview containing the relevant information to understand the example. Then, portions of the @phos code will be presented and explained. Finally, simulation results will be shown to demonstrate the correctness of the implementation.
-
-== Spectrometer
-
-Spectrometers are used to analyze and visualize the spectral content of an optical signal. They are used in many different applications, such as optical communications, medical devices, astronomy, and more. Additionally, they can be relatively easily built, they are generally based on filter banks filtering the signal into different frequency bands, here called bins, and their power measured. The power of each bin is then plotted to form a spectrum. The code for this example is available at @anx_spectrometer. This example will first cover the a naive implementation of a spectrometer, followed by a more optimized implementation.
-
-=== Simple implementation
-
-This first implementation, which can be seen in @anx_spectrometer, 
-
-=== Improved implementation
-
-#pagebreak(weak: true)
 == Beam forming
 
 Optical beam forming is being used to build new solid-state LiDAR systems @xu_fully_2022. These LiDARs need precise phase matching between all of the produced optical signals, as any imprecision over the phase and delay will negatively impact the precision of the overall system. Conveniently, @phos offers an easy way to ensure that signals are phase and delay matched: the `constrain` synthesizable block. It imposes a differential constraint over a number of signals, in this case, as will be visible in @lst_beam_forming, it is used to enforce equal phase into the modulators, and equal delay when going back towards the outputs.
@@ -35,7 +22,7 @@ Beam forming allows a system to control the directionality of a signal emitted b
 )[
     #image(
         "../figures/drawio/beam_forming_emission.png",
-        width: 80%,
+        width: 60%,
         alt: "Shows an ellipse with long length, representing the main lobe, followed by several smaller ellipses at its sides, representing the side lobes."
     )
 ]<fig_beam_forming_emission>
@@ -86,7 +73,7 @@ syn beam_forming(
 
 === Results
 
-The time-domain simulation can easily be performed using the constraint-solver, yielding the results shown in @fig_beam_forming. In this simulation, only four channels were simulated, each with a time-dependent phase shift at a frequency of 1 MHz. In the first simulation #link(<fig_beam_forming>)[(a)], the phases are following @eq_phase_shift, where $k$ refers to the channel number starting at zero. And in the second simulation #link(<fig_beam_forming>)[(b)], they are following @eq_phase_shift_2. The simulation shows that the phase shifts are correctly applied to the optical signals, and that the optical signals are correctly constrained to have the same phase and delay.
+The time-domain simulation can easily be performed using the constraint solver, yielding the results shown in @fig_beam_forming. In this simulation, only four channels were simulated, each with a time-dependent phase shift at a frequency of 1 MHz. In the first simulation #link(<fig_beam_forming>)[(a)], the phases are following @eq_phase_shift, where $k$ refers to the channel number starting at zero. And in the second simulation #link(<fig_beam_forming>)[(b)], they are following @eq_phase_shift_2. The simulation shows that the phase shifts are correctly applied to the optical signals, and that the optical signals are correctly constrained to have the same phase and delay.
 
 $
     phi_k (t) = (k dot pi)/3 + 2 pi dot 1 "MHz" dot t
@@ -184,7 +171,7 @@ From this code, one can build a signal flow diagram containing all of the intrin
 
 === Results
 
-This example is trivial to simulate for the constraint-solver, with four $100 "Gb"\/"s"$ binary sources, it finishes simulating a 1ns window in $45 "ms"$ on a recent _AMD_ @cpu. In @fig_results, one can see the simulation results, showing the input signal with its simulated noise in #link(<fig_results>)[(a)], the output signal in #link(<fig_results>)[(b)], and the intermediary signals in #link(<fig_results>)[(c)] and #link(<fig_results>)[(d)]. Finally in #link(<fig_results>)[(e)], one can see the constellation, from which the @evm can be calculated as $4.41%$, which is $-17.11 "dB"$ when expressed logarithmically. At these speeds, with a fairly high noise, this can be considered a good result as it leads to a @ber of zero.
+This example is trivial to simulate for the constraint solver, with four $100 "Gb"\/"s"$ binary sources, it finishes simulating a 1ns window in $45 "ms"$ on a recent _AMD_ @cpu. In @fig_results, one can see the simulation results, showing the input signal with its simulated noise in #link(<fig_results>)[(a)], the output signal in #link(<fig_results>)[(b)], and the intermediary signals in #link(<fig_results>)[(c)] and #link(<fig_results>)[(d)]. Finally in #link(<fig_results>)[(e)], one can see the constellation, from which the @evm can be calculated as $4.41%$, which is $-17.11 "dB"$ when expressed logarithmically. At these speeds, with a fairly high noise, this can be considered a good result as it leads to a @ber of zero.
 
 #figurex(
     title: [ Simulation results of a 16-#gloss("qam", short: true) modulator. ],
@@ -281,8 +268,6 @@ syn lattice_filter(a: optical, b: optical, filter_kind: FilterKind) -> (optical,
 
 As previously mentioned in @photonic_processor, there are two major kinds of programmable @pic[s], and while this work has mostly focused itself on recirculating mesh-based photonic processors, they are capable of building the same circuits as feedforward @pic[s]. A typical use case of feedfoward meshes, is #gloss("mvm", long: true), this is useful for very quickly and every efficiently perform @mvm, an operation that is very common in machine learning. This example will demonstration how such a @mvm photonic circuit is built in @phos, and how to use it to perform @mvm. The example shown in this example is based of off _Shokraneh et al._'s work @shokraneh_single_2019.
 
-=== Theoretical background
-
 This circuit is built from individual @mzi[s], with an added phase shifter, these groupings, which can be seen in @fig_mvm_mzi, are equivalent to the photonic gates from which a photonic processor is built, see @sec_photonic_proc_comp.  For this circuit, they are configured in a triangular shape, as can be seen in @fig_mvm_mzi_full. The circuit is built from 6 gates and is capable of multiplying a vector of size $4$ with a $4 times 4$ matrix.
 
 #figurex(
@@ -311,6 +296,6 @@ This circuit is built from individual @mzi[s], with an added phase shifter, thes
     )
 ]<fig_mvm_mzi_full>
 
-=== Building the circuit
+From these diagrams, it becomes clear that the matrix-vector multiplication is not trivial, assuming that the final operation being performed is $Y = bold(M) dot X$, where $Y$ and $X$ are vectors, and $bold(M)$ is a matrix, these cannot be mapped one-to-one with the values of the phase shifters on the circuit. The transformation from the matrix $bold(M)$ into the corresponding phase shifts is not the focus of this thesis, therefore, the ones from _Shokraneh et al._'s work will be used instead @shokraneh_single_2019. It is interesting to note that, by performing the matrix multiplication in the analog domain, while the circuit can be made to be extremely fast, it also introduces noise and imprecision. Therefore, while in machine-learning models that rely on low-precision arithmetic, this may not be a problem, it would have limited use in applications that depend on higher-precision arithmetic.
 
-=== Results
+The code to create this circuit in @phos is rather long and is therefore available in @anx_matrix_vector. It can successfully be simulated using the constraint solver. The tests were done with the following input vectors: $X = (0, 0, 0, 0), (1, 0, 0, 0), (0, 1, 0, 0), (0, 0, 1, 0), "and" (0, 0, 0, 1)$. From these values, one can verify that the circuit is indeed performing the correct operation by comparing that the first vector produces an empty vector, and that the other vectors return the corresponding column of the matrix.

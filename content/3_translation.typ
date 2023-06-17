@@ -468,7 +468,7 @@ The solver is the tool that the compiler uses to summarize and check constraints
 There are however limitations of the constraint system, most notably that, using the aforementioned constraint solver, constraints are limited to exclusively feedforward system, this is due to constraints being calculated one after the other, not allowing cyclic dependencies. And as discussed in @feedforward_approx, one can represent any recirculating circuit as a feedforward system. However, there is one necessary condition for this to hold: it _must_ be at a higher level of abstraction. When building the higher-level abstractions, this axiom cannot be assumed to be true, as the user is writing them at a lower-level of abstraction. Therefore, the constraint system is limited in such cases, and the system must provide an "escape-hatch" which allows the user to manually specify constraints at the edges of their abstractions, such that the compiler can use them outside of the abstraction while pausing constraint computation inside. When using this feature, the user can now express recirculating circuits easily by using the escape-hatch to specify constraints on signals that are not feedforward.
 
 #info-box(kind: "conclusion")[
-    Constraints can be used to validate signals, eliminate branches, and simulate the design. They are implemented using the constraint-solver which can either combine constraints or using the _Z3_ prover to verify constraints @z3. However, they are limited to feedforward systems, and therefore an escape-hatch is needed to specify constraints on recirculating circuits.
+    Constraints can be used to validate signals, eliminate branches, and simulate the design. They are implemented using the constraint solver which can either combine constraints or using the _Z3_ prover to verify constraints @z3. However, they are limited to feedforward systems, and therefore an escape-hatch is needed to specify constraints on recirculating circuits.
 ]
 
 == Tunability & Reconfigurability <sec_tunability_reconfigurability>
@@ -565,7 +565,7 @@ Each platform must come with a @hal which allows the user to interact with the d
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Constraint packages*]
 }
-It must also come with information regarding delays and phase response of its different components, as well as the capabilities of some of its components like amplifiers, modulators, etc. This information can be used by constraint-solver and the simulation ecosystem to more accurately represent the capabilities of the circuit and allow the user to make informed decisions. Additionally, a platform may come with additional simulation-specific constraints for more accurate simulations, in addition to the additional information provided by the constraint packages.
+It must also come with information regarding delays and phase response of its different components, as well as the capabilities of some of its components like amplifiers, modulators, etc. This information can be used by constraint solver and the simulation ecosystem to more accurately represent the capabilities of the circuit and allow the user to make informed decisions. Additionally, a platform may come with additional simulation-specific constraints for more accurate simulations, in addition to the additional information provided by the constraint packages.
 
 == Visualization <sec_visualization>
 
@@ -575,13 +575,13 @@ There are several types of simulations that may be useful for the user: the user
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Applying @dry*]
 }
-As is the case of the simulation ecosystem, one can reuse existing tools and libraries for visualization that are already on the market. This is an application of the #gloss("dry", long: true) principles, where one can reuse existing tools and libraries rather than rewriting them from scratch. This also allows the user to benefit from the large ecosystem of visualization tools that already exist, and to use the tools they are most familiar with, or that gives the best results for their application. Examples of such visualizations can be seen in @fig_reconfigurability that shows the mesh and the state of each gate, and a simulation result in @fig_simulation_result_example which shows the results of a time-domain simulation using the aforementioned constraint-solver.
+As is the case of the simulation ecosystem, one can reuse existing tools and libraries for visualization that are already on the market. This is an application of the #gloss("dry", long: true) principles, where one can reuse existing tools and libraries rather than rewriting them from scratch. This also allows the user to benefit from the large ecosystem of visualization tools that already exist, and to use the tools they are most familiar with, or that gives the best results for their application. Examples of such visualizations can be seen in @fig_reconfigurability that shows the mesh and the state of each gate, and a simulation result in @fig_simulation_result_example which shows the results of a time-domain simulation using the aforementioned constraint solver.
 
 #figurex(
     kind: image,
     title: [ Example visualization of a time-domain simulation result. ],
     caption: [
-        Example visualization of a time-domain simulation result, showing a $10 "Gb/s"$ modulated @prbs $15$ sequence on top of a $1550 "nm"$ carrier. The simulation was performed using the constraint-solver. Shown is a $10 "ns"$ window of the simulation. The simulation was ran for a total of $1 "µs"$ with an average execution time of $9 "ms"$. The simulation simulates a laser source with noise and the rise and fall time of the modulated signal, the rise and fall time being $50 "ps"$.
+        Example visualization of a time-domain simulation result, showing a $10 "Gb/s"$ modulated @prbs $15$ sequence on top of a $1550 "nm"$ carrier. The simulation was performed using the constraint solver. Shown is a $10 "ns"$ window of the simulation. The simulation was ran for a total of $1 "µs"$ with an average execution time of $9 "ms"$. The simulation simulates a laser source with noise and the rise and fall time of the modulated signal, the rise and fall time being $50 "ps"$.
     ],
 )[
     #image("../figures/simu_example.svg", alt: "Shows the startup of a 10Gb/s modulated optical signal with noise, rise and fall time.", width: 100%)

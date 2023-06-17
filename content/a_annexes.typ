@@ -155,87 +155,6 @@ plt.show()
 
 #set page(flipped: false)
 
-= Example: simple spectrometer <anx_spectrometer>
-
-```phos
-// A spectrometer with fixed, compile time bins.
-// Inputs:
-// - input: the input optical signal
-// - min: the minimum wavelength, constrained to be at most equal to the maximum wavelength
-// - max: the maximum wavelength, constrained to be at least equal to the minimum wavelength
-// - nbins: the number of bins, constrained to be at least 1
-// 
-// Output:
-// - electrical: the demodulate amplitude in each bin
-syn spectrometer(
-    input: optical,
-    @max(max)
-    min: Wavelength,
-    @min(min)
-    max: Wavelength,
-    @min(1)
-    nbins: uint
-) -> (electrical...) {
-    // We build a list of wavelength that we will use to split the input signal
-    let wavelengths: (float...) = linspace(min, max, nbins);
-
-    // We compute the bandwidth of each bin
-    let bandwidth: Bandwidth = (max - min) / tuning.len();
-
-    // We process the signal in the following steps:
-    // 1. we split the signal into `nbins` bins, each bin is a fraction of the input signal
-    // 2. we zip the signal with the wavelength, so that we can keep track of the wavelength
-    //    of each bin
-    // 3. we filter each bin to only keep the signal that is within the bandwidth of the bin
-    // 4. we detect the signal in each bin
-    input                                           // optical
-        |> split(splat(1.0, nbins))                 // (optical...)
-        |> zip(wavelengths)                         // ((optical, Wavelength)...)
-        |> map(set filter(bandwidth = bandwidth))   // (optical...)
-        |> map(detector)                            // (electrical...)
-}
-```
-
-= Example: improved spectrometer <anx_improved_spectrometer>
-
-```phos
-// A spectrometer with fixed, compile time bins, optimized for
-// lower power losses.
-syn low_loss_spectrometer(
-    input: optical,
-    @max(max)
-    min: Wavelength,
-    @min(min)
-    max: Wavelength,
-    @min(1)
-    nbins: uint
-) -> (electrical...) {
-    // We build a list of wavelength that we will use to split the input signal
-    let wavelengths: (float...) = linspace(min, max, nbins);
-
-    // We compute the bandwidth of each bin
-    let bandwidth: Bandwidth = (max - min) / tuning.len();
-
-    // We process the signal in the following steps:
-    // 1. we iterate over each wavelength
-    // 2. we pass each signal through a drop filter, that will drop the signal that is
-    //    outside of the bandwidth of the bin into a drop signal
-    //    Drop signals are are being used as a state in the folding operation, allowing
-    //    us to keep track of the last drop signal and use it as the input of the next
-    //    iteration
-    // 3. we detect the signal in each bin
-    // 4. we collect the detected signal and the last drop signal gets sent to a sink
-    wavelengths                                                  // (Wavelength...)
-        |> fold(((), input), |wavelength, (demod, drop)| {       // Types inside:
-            drop                                                    // optical
-                |> drop_filter(wavelength, bandwidth = bandwidth)   // (optical, optical)
-                |>((demod..., detector()), _)                       // ((electrical...), optical)
-        })                                                       // ((electrical...), optical)
-        |> (_, sink())                                           // ((electrical...), none)
-        |> get(0)                                                // (electrical...)
-}
-```
-
 = Example: Beam forming system <anx_beam_forming>
 
 ```phos
@@ -248,23 +167,6 @@ syn beam_forming(
         |> constrain(d_phase = 0)
         |> zip(phase_shifts)
         |> map(set modulate(type: Modulation::Phase))
-        |> constrain(d_delay = 0)
-}
-```
-
-= Example: Beam forming system <anx_fixed_beam_forming>
-
-```phos
-syn beam_forming(
-    input: optical,
-    n: uint,
-    phase: Phase,
-    phase_shift: electrical,
-) -> (optical...) {
-    input
-        |> map(set modulate(phase_shift, type: Modulation::Phase))
-        |> split(splat(1.0, n))
-        |> constrain(d_phase = phase)
         |> constrain(d_delay = 0)
 }
 ```
