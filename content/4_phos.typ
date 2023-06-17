@@ -811,7 +811,7 @@ Due to their _drive-once_, _read-once_ semantics, signals are an especially diff
 #figure(
     kind: raw,
     caption: [ 
-        Example in @phos of a `Fn` closure (a), a `Syn` closure (b), and a `SynOnce` closure (c).
+        Example in @phos of an `Fn` closure (a), a `Syn` closure (b), and a `SynOnce` closure (c).
     ],
 )[
     ```phos
@@ -831,7 +831,7 @@ let a = source(1550 nm)
 let syn_once_closure = || -> (optical...) {
     a |> split((0.5, 0.5))
 };
-    ```,
+    ```
 ] <lst_ex_closure_kind>
 
 #info-box(kind: "definition", footer: [ Adapted from @peyton_jones_how_2004 ])[
@@ -918,7 +918,7 @@ syn gain(
 
 === Unconstrained <sec_unconstrained>
 
-As mentioned in @sec_constraints, constraints only work for non-cyclic constraints, however this limitations removes the advantage of having a recirculating mesh inside of the photonic processor. Therefore, as was previously mentioned, @phos must provide a way to express blocks where the constraints are not automatically inferred, but must be manually specified. This is done by using the `unconstrained` keyword, which allows the user to specify the constraints manually at the boundary of a synthesizable block. An example of an unconstrained block can be seen in @lst_ex_unconstrained.
+As mentioned in @sec_constraints, constraints only work for non-cyclic cases#footnote[That is, constraints that do not depend on themselves.], however this limitations removes the advantage of having a recirculating mesh inside of the photonic processor. Therefore, as was previously mentioned, @phos must provide a way to express blocks where the constraints are not automatically inferred, but must be manually specified. This is done by using the `unconstrained` keyword, which allows the user to specify the constraints manually at the boundary of a synthesizable block. An example of an unconstrained block can be seen in @lst_ex_unconstrained.
 
 Additionally, unconstrained block allow the user to create their own signal, without needing to use a source intrinsic. This semantic is useful for creating recirculating elements in the photonic processor, as it allows the user to create temporary variables containing signals.
 

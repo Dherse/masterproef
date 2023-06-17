@@ -7,7 +7,6 @@
 
 #let font_size = 11pt
 #let section = state("section", "preface")
-
 #let raw_offset(offset) = {
     state("raw_offset", 0).update(offset)
 }
@@ -93,6 +92,9 @@
     set list(indent: 0.5cm)
     show par: set block(spacing: 16pt)
     section.update("body")
+
+    set math.equation(numbering: "(1)")
+
 
     show link: it => {
         if type(it.dest) == "string" {

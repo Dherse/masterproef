@@ -282,17 +282,27 @@ syn low_loss_spectrometer(
 }
 ```
 
-= Example: coherent QAM-16 transceiver <anx_coherent_transceiver>
+= Example: coherent 16-QAM transceiver <anx_coherent_transceiver>
 
 ```phos
+// Coherent transmitter, modulates four binary signals into a 16-QAM signal.
+// 1. the signal is split into four, each signal is a fraction of the input signal
+// 2. each signal is zipped with its corresponding electrical signal
+// 3. each signal is modulated using amplitude modulation
+// 4. the phase difference between the four signals is constrained to 90° between each
+//    other
+// 5. the four signals are merged back into one
+// Note: the splitting ratios and order of modulation are chosen to match the modulation
+//       order for the coherent transmission
 syn coherent_transmitter(
     input: optical,
-    (i, ni, q, nq): (electrical, electrical, electrical, electrical),
+    (a, b, c, d): (electrical, electrical, electrical, electrical),
 ) -> optical {
     input
-        |> split(splat(1.0, 4))
+        |> split((1.0, 1.0, 0.5, 0.5))
+        |> zip((a, c, b, d))
         |> modulate(type = Modulation::Amplitude)
-        |> constrain(d_phase = 90 deg)
+        |> constrain(d_phase = 90°)
         |> merge()
 }
 

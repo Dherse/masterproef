@@ -119,6 +119,11 @@ source when quoting results from this master dissertation.
     (key: "adc", short: "ADC", long: [Analog to Digital Converter]),
     (key: "dac", short: "DAC", long: [Digital to Analog Converter]),
     (key: "soa", short: "SOA", long: [ Semiconductor Optical Amplifier ]),
+    (key: "qam", short: "QAM", long: [ Quadrature Amplitude Modulation ]),
+    (key: "awgn", short: "AWGN", long: [ Additive White Gaussian Noise ]),
+    (key: "snr", short: "SNR", long: [ Signal to Noise Ratio ]),
+    (key: "ber", short: "BER", long: [ Bit Error Rate ]),
+    (key: "evm", short: "EVM", long: [ Error Vector Magnitude ]),
 ))
 
 
