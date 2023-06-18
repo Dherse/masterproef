@@ -15,7 +15,7 @@ This master's dissertation is part of an exam. Any comments formulated by the as
 presentation of the master's dissertation are not included in this text.
 
 = Acknowledgements <sec_ack>
-I would like to express my deepest gratitude to Prof. dr. ir. Wim Bogaerts and Prof. dr. ir. Dirk Stroobandt for their time, guidance, patience, and trust in applying for an #emph[FWO] proposal to extend this Master Thesis. Through their advice and guidance, I have gained a breadth of knowledge and understanding that I will carry with me for the rest of my career. It is with great pleasure that I write this document to share my findings with them and others within the community.
+I would like to express my deepest gratitude to Prof. dr. ir. Wim Bogaerts and Prof. dr. ir. Dirk Stroobandt for their time, guidance, patience, and trust in applying for an #emph[FWO] proposal to extend this Master Thesis. Through their advice and guidance, I have gained a breadth of knowledge and understanding that I have done my best to share in this thesis. It is with great pleasure that I write this document to share these findings and insights with them and others within the scientific community.
 
 I would also like to give my most heartfelt thanks to the best friend one could ever ask for: ir. Thomas Heuschling, for his patience, friendship, guidance and all of the amazing moments we spent throughout our studies. I would also like to thank him for his help in proofreading this thesis and his advice on the PHÔS programming language. I also would like to thank Alexandre Bourbeillon for his help and advice for the creation of the formal grammar of the PHÔS programming language and being a great friend for over a decade.
 
@@ -56,14 +56,14 @@ source when quoting results from this master dissertation.
     (key: "prg", short: "PRG", long: "Photonics Research Group"),
     (key: "fpga", short: "FPGA", long: "Field Programmable Gate Array"),
     (key: "cpld", short: "CPLD", long: "Complex Programmable Logic Device"),
-    (key: "spice", short: "SPICE", long: "Simulation Program with Integrated Circuit Emphasis"),
-    (key: "phos", short: "PHÔS", long: "Photonic Hardware Description Language"),
+    (key: "spice", short: [_SPICE_], long: "Simulation Program with Integrated Circuit Emphasis"),
+    (key: "phos", short: [_PHÔS_], long: "Photonic Hardware Description Language"),
     (key: "pic", short: "PIC", long: "Photonic Integrated Circuit"),
     (key: "rf", short: "RF", long: "Radio Frequency"),
-    (key: "verilog-ams", short: "Verilog-AMS", long: "Verilog for Analog and Mixed Signal"),
+    (key: "verilog-ams", short: [_Verilog-AMS_], long: "Verilog for Analog and Mixed Signal"),
     (
         key: "verilog-a", 
-        short: "Verilog-A", 
+        short: [_Verilog-A_], 
         long: [ A continuous-time subset of #gloss("verilog-ams") ]
     ),
     (key: "fir", short: "FIR", long: "Finite Impulse Response"),
@@ -87,12 +87,12 @@ source when quoting results from this master dissertation.
     (key: "dry", short: "DRY", long: "Don't Repeat Yourself"),
     (key: "hls", short: "HLS", long: "High Level Synthesis"),
     (key: "vhsic", short: "VHSIC", long: "Very High Speed Integrated Circuit"),
-    (key: "vhdl", short: "VHDL", long: [ #gloss("vhsic", short: true) Hardware Description Language ]),
+    (key: "vhdl", short: [_VHDL_], long: [ #gloss("vhsic", short: true) Hardware Description Language ]),
     (key: "gpl-3-0", short: "GPL-3.0", long: "GNU General Public License version 3.0"),
     (key: "ic", short: "IC", long: "Integrated Circuit"),
     (key: "gpu", short: "GPU", long: [Graphics Processing Unit -- also commonly used for highly parallel computing ]),
     (key: "cpu", short: "CPU", long: [Central Processing Unit]),
-    (key: "llvm", short: "LLVM", long: [Low Level Virtual Machine]),
+    (key: "llvm", short: [_LLVM_], long: [Low Level Virtual Machine]),
     (key: "hpc", short: "HPC", long: [High Performance Computing]),
     (key: "fsr", short: "FSR", long: [Free Spectral Range]),
     (key: "hal", short: "HAL", long: [Hardware Abstraction Layer]),

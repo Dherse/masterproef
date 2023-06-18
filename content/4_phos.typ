@@ -32,7 +32,7 @@ In the following sections, the initial specification, the syntax, constraint sys
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Paradigm*]
 }
-@phos is an imperative language with many functional elements, it purposefully keeps the easier aspects of imperative programming, while incorporating functional elements to make it both easier to reason about and easier to synthesize into hardware. The language is purposefully kept simple, with only a few elements from each paradigm, to ensure that it is easy to learn and easy to use. Form follows function, and the language is designed to be used by engineers and researchers, not by computer scientists.
+@phos is an imperative language with many functional elements, it purposefully keeps the easier aspects of imperative programming, while incorporating functional elements to make it both easier to reason about and easier to synthesize into hardware. The elements from functional programming relate especially to dataflow programming, as it has the closest semantics to light flowing from one component to another. The language is purposefully kept simple, with only a few elements from each paradigm, to ensure that it is easy to learn and easy to use. Form follows function, and the language is designed to be used by engineers and researchers, not by computer scientists.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
@@ -56,7 +56,7 @@ This section serves as an initial specification or reference to the @phos progra
 )[
     #image(
         "../figures/drawio/exec_model.png",
-        width: 100%,
+        width: 93%,
         alt: "Shows the execution model as the user code and the std lib going into the compiler, along with the platform support package. The result is bytecode which goes into the virtual machine in the evaluation stage. The VM communicates with the constraint solver and the Z3 prover to produce the constraints & intrinsic operations. These are then fed into the synthesizer which produces the user HAL and the programming binary for the photonic processor, all the while using the platform HAL generator and the place-and-route."
     )
 ]<fig_exec_model>

@@ -569,6 +569,10 @@ Additional features that the languages offer:
 - _C_ and _Rust_ are both well suited for embedded development, while _Python_ has seen use in embedded development, it is not as well suited as the other two languages, due to performance constraints;
 - _Rust_ does not have truthiness: only `true` and `false` are considered boolean values, while _Python_ and _C_ have truthiness, meaning that several types of values can be used as a boolean value.
 
+#info-box(kind: "conclusion")[
+    It was shown that traditional programming languages generally lack the features required to be used as a photonic @hdl. However, _Python_ is a strong candidate for the creation of an @api, and _Rust_ is a strong candidate for the implementation of a compiler.
+]
+
 === Digital hardware description languages
 
 Unlike traditional programming languages, digital @hdl[s] try and represent digital circuitry using code. This means that the code is not executed, but rather synthesized into hardware that can be built. This hardware is generally in one of two forms: logic gates that can be built discretely, or @lut[s] programmed on an FPGA. Both processes involve "running" the code through a synthesizer that produces a netlist and a list of operations that are needed to implement the circuit. As was previously discussed, in @sec_language_tool, languages can serve as the foundation to build abstractions over complex systems, however, most @hdl[s] tend to only have an abstraction over the #gloss("rtl", long: true) level, which is the level that describes the movement, and processing of data between registers. Registers are memory cells commonly used in digital logic that store the result of operations between clock cycles. This means that the abstraction level of most @hdl[s] is very low.
@@ -627,33 +631,104 @@ The final and third sample is in _SytemC_, in @lst_adder_systemc, it is verbose,
     #raw(lang: "c", read("../code/adder/systemc.c"), block: true)
 ] <lst_adder_systemc>
 
-Three languages were shown, starting with @vhdl, a language that is widely used in the industry and has a long history of support and use in hardware synthesis toolchains. A newer, very modern @rtl language based on _Python_ with a compelling feature set, _MyHDL_, was also shown. Finally, a @hls language, _SystemC_, was shown. It was shown that _MyHDL_ is a very user friendly language, with a low barrier to entry, and a very modern feature set. It was also shown that _SystemC_ is a very verbose language, and does not provide a good user experience. It was also shown that _SystemC_ does not support generics, and requires the use of macros to achieve the same functionality. This is in contrast to _MyHDL_, which supports generics and parameterization of designs. It was also shown that _MyHDL_ is a very modern language, with a very modern feature set, and a very low barrier to entry. This is in contrast to _SystemC_, which is a very verbose language, and does not provide a good user experience. It was also shown that _SystemC_ does not support generics, and requires the use of macros to achieve the same functionality. This is in contrast to _MyHDL_, which supports generics and parameterization of designs.
+Three languages were shown, starting with @vhdl, a language that is widely used in the industry and has a long history of support and use in hardware synthesis toolchains. A newer, very modern @rtl language based on _Python_ with a compelling feature set, _MyHDL_, was also shown. Finally, a @hls language, _SystemC_, was shown. It was shown that _MyHDL_ is a very user friendly language, with a low barrier to entry, and a very modern feature set. It was also shown that _SystemC_ is a very verbose language, and does not provide a good user experience. It was also shown that _SystemC_ does not support generics, and requires the use of macros to achieve the same functionality. This is in contrast to _MyHDL_, which supports generics and parameterization of designs. It was also shown that _MyHDL_ is a very modern language, with a very modern feature set, and a very low barrier to entry. This is in contrast to _SystemC_, which is a very verbose language, and does not provide a good user experience. It was also shown that _SystemC_ does not support generics, and requires the use of macros to achieve the same functionality. This is in contrast to _MyHDL_, which implicitly supports generics and parameterization of designs. However, this implicitness can be error prone, which in the case of @asic design would be very expensive.
+
+Finally, none of the aforementioned @hdl[s] provide any facilities for analog hardware description. Some like @vhdl can be made to provide analog modelling, but not hardware description. This is a major limitation of all digital electronic @hdl[s]. Additionally, the signal semantics they all use of _driven-once_, _drive_many_ could lead to issues with signal splitting, as will be discussed in @sec_signal_types.
+
+#info-box(kind: "conclusion")[
+    It was shown that traditional @rtl @hdl[s] are not suitable for photonic development. They are not easily approachable for non-expert and lack the correct semantic for analog processing. However, _MyHDL_ shows a promising approach to @hdl creation based on _Python_.
+]
 
 === Analog simulation languages
 
+There are several analog simulation languages, however, there are very few analog hardware description languages, and they mostly seem to be research languages #cite("murayama_top-down_1996", "mitra_study_2010"). Due to this overall unavailability of analog @hdl[s], this comparison will instead rely on analog simulation languages, namely @spice and @verilog-ams. These two languages are very different, designed for different purposes and at different points in time, however, they are both actively used. Their uses differ greatly as @spice is aimed at providing a netlist description of analog electrical circuitry to be simulated, whereas @verilog-ams is aimed at providing models of analog systems compatible with mixed-signal simulations of digital and analog electronics.
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*SPICE*]
+}
+@spice is not a programming language, instead being a configuration language: the user declares a list of nets and the components that connect these nets together. As such, @spice is very explicit, little in the way of programmatic features are offered. Additionally, @spice depends on models and it not meant to describe hardware. Which means it is a very low-level representation of a circuit, which goes against the goal of using a high-level language, as discussed in @initial_requirements.
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Verilog-AMS*]
+} @verilog-ams is a modern mixed-signal simulation, it suffers from the same issues as @spice, namely that it cannot be used for hardware description, but rather hardware modelling. While @verilog-ams has been used for photonic modelling, it is not a suitable candidate for use as a photonic @hdl.
+
+#info-box(kind: "conclusion")[
+    Existing analog modelling languages are not suitable for photonic hardware description, as they are not hardware description languages, but rather hardware modelling languages.
+]
+
 == Analysis of programming paradigms <sec_paradigms>
 
-=== Imperative programming
+#info-box(kind: "definition", footer: [ Adapted from @noauthor_programming_2020. ])[
+    A *programming paradigm* is a style of programming, a way of thinking, structuring, and solving problems in a language.
+]
+
+After an overview of existing programming languages, one must now consider the different programming paradigms that are available. When selecting or creating a language, particular care has to be taken when selecting one or more paradigms to use. This is because the choice of paradigms will affect the language's expressiveness, and the ease of use of the language. Generally, most languages, like _Python_ are imperative languages with elements from functional programming.
+
+There are two broad categories of programming paradigms, imperative and declarative programming. As mentioned in @sec_language_tool, imperative languages are concerned with the "how" of programming, whereas declarative languages are concerned with the "what". A complete overview of all programming paradigms is available in @anx_paradigms @van_roy_classification_nodate. In this comparison, the number of paradigm will be reduced as there exists many of them. Instead focusing on the most relevant ones, namely object-oriented, functional, logic, and dataflow programming. It is important to note that object-oriented programming is a subset of imperative programming, and that functional programming is a subset of declarative programming, with dataflow programming being a subset of functional programming. This means that the aforementioned paradigms are not mutually exclusive, and can, for example, be combined to create a language that is both object-oriented with functional elements @van_roy_programming_2012.
 
 === Object-oriented programming
 
+Object-oriented programming is one of the most common paradigms, being part of _Java_, _Python_, _C\#_, and many others. It follows the idea that data is the most important part of an application, and that it should, along with the methods acting upon it, be contained together in an object. For each piece of data, an instance of an object is created. In theory, this allows for the creation of complex data structure easily in a tree-like structure. Additionally, object-oriented also allows for inheritance, where one class of object inherits from another one. The most typical example is shown in @lst_oop_example, it shows a super class `Student` being inherited by a subclass `Sebastien`. This allows the subclass to override methods on the super class, as well as sharing its initialization function and state.
+
+#figurex(
+    title: [ Example of object-oriented programming in _Python_. ],
+    caption: [ Example of object-oriented programming in _Python_, showing inheritance and method overriding. ],
+)[
+```python
+class Student:
+    def __init__(self, name):
+        self.name = name
+    def print_thesis_grade(self, grade):
+        print("Thesis grade of " + self.name + " is " + grade)
+class Sebastien(Student):
+    def __init__(self):
+        super().__init__("Sébastien d'Herbais de Thun")
+    def print_thesis_grade(self, grade):
+        print("Thesis grade of Sébastien is A+")
+```
+]<lst_oop_example>
+
+#{
+    set text(size: 12pt, fill: rgb(30, 100, 200))
+    smallcaps[*Criticism*]
+} Object-oriented programming has been criticised for its tendency to create overly complex, and sometimes confusing, data structures. This is because it is very easy to create complex tree of classes, all interconnected, and all inheriting from one-another in not-always obvious ways. Additionally, one of the stated goals of object-oriented programming is to make code more modularized, and therefore reusable. However, in practice, this is not always the case, as it is easy to create classes that are overly specialized @cardelli_bad_1996.
+
 === Functional programming
+
+Functional programming views programs in the opposite way of object-oriented programming, placing instead the emphasis on procedures being done on data. In purely functional programming, all data is immutable, meaning that a value cannot be changed, only ever created or destroyed. This has advantages with regards to limiting the number of side-effects, and therefore making the code easier to reason about. However, it can also make implementing some programs that require side-effects very difficult, such as communicating with other programs.
 
 === Logic programming
 
+Logic programming is a subset of functional programming, instead focused on mathematical logical relations. The most common example of a logic programming language is _Prolog_. In logic programming, the programmer defines a set of rules, and the program will try to find a solution to the problem. This is done by defining a set of rules, and a set of facts. The program will then try to find a solution to the problem by applying the rules to the facts.  Logic programming does not find its use in common programming, rather in proving mathematical theorems, and solving mathematical problems. As such, it is not suitable for hardware description.
+
 === Dataflow programming
+
+Dataflow programming is another subset of functional programming, where the program is represented as a graph of nodes, where each node performs a function, and edges of the graph are the data flowing between the nodes. Its data model is particularly interesting for hardware description, as it can be used to represent the operations being done on a signals, with the "flow" of light being the edges of the graph. Indeed, this is the approach taken by _DFiant_, a _Scala_ based @rtl @hdl that uses dataflow programming as its paradigm @port_dfiant_2017. And as will be seen in @sec_phos, is part of the paradigm used by @phos, the language created in this thesis.
 
 == Existing framework
 
+#todo("here")
+
 == Long term compatibility and cross-vendor support
 
+#todo("here")
+
+
 == A primer on calculability and complexity
+
+#todo("here")
+
 
 == Hardware-software codesign
 
 #info-box(kind: "definition", footer: [ Adapted from @darwish_trends_2005. ])[
     *Hardware-software codesign* is the process of designing a system where both the hardware and software components are designed together, with the goal of interoperating hardware components and software systems more easily. And optimizing the system as a whole, rather than optimizing the hardware and software components separately.
 ]
+
+#todo("here")
+
 
 == Summary <sec_language_summary>
 
