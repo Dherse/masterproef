@@ -41,7 +41,17 @@ source when quoting results from this master dissertation.
 ]
 
 = Abstract
-#lorem(30)
+In this thesis, a novel way of programmatically designing photonic circuits is introduced, using a new programming language called PHÔS.
+
+The primary goal of this thesis is the research of which paradigms, techniques, and languages are best suited for programmatic description of photonic circuits, with a special emphasis on programmable photonics as it is being researched at Ghent University. This involves an in-depth analysis of existing programming languages and paradigms, followed by a careful analysis of the functional requirements of photonic circuit design. This analysis highlights the need for a new language dedicated to photonic circuit design, that is able to concisely and effectively express photonic circuits.
+
+The design of this language is then shown, with all of the steps for its implementation carefully detailed. Parts of this language are implemented in a prototype compiler. One of its components called the constraint-solver was the primary focus of this development effort, which has shown to be capable of simulating a large variety of photonic circuits, based on simple constraints and operations. 
+
+Finally, meaningful demonstrations of the capabilities of the language and the constraint-solver are shown.
+
+== Keywords
+
+Programmable photonic, photonic circuit design, programming language, photonic circuit simulation.
 
 // Table of contents
 #outline(title: "Table of contents", indent: true, depth: 3)

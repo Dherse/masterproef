@@ -6,5 +6,11 @@
         "phos",
         "synthesizable",
         "Typst"
+    ],
+    "grammarly.selectors": [
+        {
+            "language": "typst",
+            "scheme": "file"
+        }
     ]
 }

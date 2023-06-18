@@ -4,15 +4,15 @@
 
 = Programmable photonics <sec_programmable_photonics>
 
-As previously mentioned in @motivation, the primary goal of this thesis is to find which paradigms and languages are best suited for the programming of photonic @fpga[s]. However, before discussing these topics in detail, it is necessary to start discussing the basics of photonic processors. This chapter will start by discussing what photonic processors are, what niche they fill and how they work. From this, the chapter will then discuss the different types of photonic processors and how they differ from one another. Finally, this chapter will conclude with the first and most important assumption made in all subsequent design decisions.
+As previously mentioned in @motivation, the primary goal of this thesis is to find which paradigms and languages are best suited for the programming of photonic @fpga[s]. However, before discussing these topics in detail, it is necessary to start discussing the basics of photonic processors. This chapter will discuss photonic processors, their niche, and how they work. From this, the chapter will discuss the different types of photonic processors and how they differ. Finally, this chapter will conclude with the first and most important assumption made in all subsequent design decisions.
 
 #info-box(kind: "info")[
-    In this document, the names Photonic @fpga and Photonic Processor are used interchangeably. They are both used to refer to the same thing, that being a programmable photonic device. The difference is that the former predates the latter in its use. Sometimes, they are also called #gloss("fppga", long: true) #cite("perez-lopez_multipurpose_2020").
+    This document uses the names Photonic @fpga and Photonic Processor interchangeably. They both refer to the same thing: a programmable photonic device. The difference is that the former predates the latter in its use. Sometimes, they are also called #gloss("fppga", long: true) #cite("perez-lopez_multipurpose_2020").
 ]
 
 == Photonic processors <photonic_processor>
 
-A photonic @fpga or photonic processor is the optical analogue to the traditional digital @fpga. It is composed of a certain number of gates connected using waveguides, which can be programmed to perform some function #cite("capmany_programmable_2016"). However, whereas traditional @fpga[s] use electrical current to carry information, photonic processors use light confined within waveguides to perform analog processing tasks.
+A photonic @fpga or photonic processor is the optical analog to the traditional digital @fpga. It comprises several gates connected using waveguides, which can be programmed to perform some function #cite("capmany_programmable_2016"). However, whereas traditional @fpga[s] use electrical current to carry information, photonic processors use light confined within waveguides to perform analog processing tasks.
 
 However, it is interesting to note that, just like traditional @fpga[s], some devices are more general forms of programmable #gloss("pic", long: true)#cite("bogaerts_programmable_2020-1") than others, just like @cpld[s] are less general forms of @fpga[s]. As any @pic with configurable elements could be considered a programmable @pic, it is reasonable to construct a hierarchy of programmability, where the most general device is the photonic processor, which is of interest for this document, going down to the simplest tunable structures.
 
@@ -44,12 +44,12 @@ Therefore, looking at @pic_hierarchy, one can build four large categories of @pi
         image(
             "../figures/drawio/feedforward-pic.png",
             width: 100%,
-            alt: "Shows a very simple feedforward PIC composed for eight ports, each going in groups of two to gates, in total there are five gates."
+            alt: "Shows a very simple feedforward PIC composed of eight ports, each going in groups of two to gates. In total, there are five gates."
         ),
         image(
             "../figures/drawio/recirculating.png",
             width: 100%,
-            alt: "Shows a very simple recirculating PIC composed for eight ports, three hexagonal sections, and two modulators."
+            alt: "Shows a very simple recirculating PIC composed of eight ports, three hexagonal sections, and two modulators."
         ),
         "(c)",
         "(d)",
@@ -62,7 +62,7 @@ In this work, the focus will be on the fourth kind of tunability, the most gener
     At a sufficiently high level of abstraction, can a photonic component be considered to be equivalent to a feedforward component?
 ]
 
-This question, which will be the driving factor behind this first section, will be answered in @feedforward_approx. However, before answering this question, it is necessary to first discuss the different types of photonic processors and how they differ. Additionally, the answer to that question will show that the solution suggested in this thesis also applied to feedforward systems. As this thesis is not focused on creating a photonic processor but on the programming of said processor, building techniques will not be explored further.
+This question, which will be the driving factor behind this first section, will be answered in @feedforward_approx. However, before answering this question, it is necessary first to discuss the different types of photonic processors and how they differ. The answer to that question will also show that the solution suggested in this thesis also applies to feedforward systems. As this thesis is not focused on creating a photonic processor but on the programming of said processor, building techniques will not be explored further.
 
 === Components <sec_photonic_proc_comp>
 
@@ -70,11 +70,11 @@ As previously mentioned, a photonic gate consists of several components. This se
 
 ==== Waveguides
 
-The most basic photonic component that is used in #gloss("pic", suffix: "s") is the waveguide. It is a structure that confines light within a specific area, allowing it to travel, following a pre-determined path from one place on the chip to another. Waveguides are, ideally, low loss, meaning that as small of a fraction of the light as possible is lost as it travels through the waveguide. They can also be made low dispersion allowing the light to travel at the same speed regardless of its wavelength. This last point allows modulated signals to be transmitted without distortion, which is important for high-speed communication.
+The most basic photonic component that is used in #gloss("pic", suffix: "s") is the waveguide. It is a structure that confines light within a specific area, allowing it to travel, following a pre-determined path from one place on the chip to another. Waveguides are, ideally, low loss, meaning that as small of a fraction of the light as possible is lost as it travels through the waveguide. They can also be made with low dispersion allowing the light to travel at the same speed regardless of its wavelength. This last point allows modulated signals to be transmitted without distortion, which is essential for high-speed communication.
 
 ==== Tunable 2x2 couplers
 
-A @2x2 is a structure that allows two waveguides to interact pre-determinedly. It is composed of two waveguides whose coupling, the amount of light "going" from one waveguide to the other, can be controlled. There are numerous ways of implementing couplers. In @tunable_2x2, an overview of the different modes of operation of a @2x2 is given, along with a basic diagram of a @2x2 #link(<tunable_2x2>)[(a)]. It shows that, depending on user input, an optical coupler can be in one of three modes, the first one #link(<tunable_2x2>)[(b)] is the bar mode, where there is little to no coupling between the waveguides, the second one #link(<tunable_2x2>)[(c)] is the cross mode, where the light is mainly coupled from one waveguide to the other and the third one #link(<tunable_2x2>)[(d)] is the partial mode, where the light is partially coupled from one waveguide to the other based on proportions given by the user.
+A @2x2 is a structure that allows two waveguides to interact pre-determinedly. It is composed of two waveguides whose coupling, the amount of light "going" from one waveguide to the other, can be controlled. There are numerous ways of implementing couplers. In @tunable_2x2, an overview of the different modes of operation of a @2x2 is given, along with a basic diagram of a @2x2 #link(<tunable_2x2>)[(a)]. It shows that depending on user input, an optical coupler can be in one of three modes; the first one #link(<tunable_2x2>)[(b)] is the bar mode, where there is little to no coupling between the waveguides, the second one #link(<tunable_2x2>)[(c)] is the cross mode, where the light is mainly coupled from one waveguide to the other, and the third one #link(<tunable_2x2>)[(d)] is the partial mode, where the light is partially coupled from one waveguide to the other based on proportions given by the user.
 
 The first mode #link(<tunable_2x2>)[(b)] allows light to travel without interacting, allowing for tight routing of light in a photonic mesh. The second mode is also useful for routing, allowing signals to cross with little interference. The final state allows the user to interfere two optical signals together based on predefined proportions. This is useful for applications such as filtering for ring resonators or splitting.
 
@@ -128,7 +128,7 @@ Detectors are used to turn optical signals into electrical signals. In photonic 
 
 ==== Modulators <sec_modulators>
 
-Contrary to detectors, modulators used to turn an electrical signal into an optical signal. They do not do this by producing the signal but by modulating the phase or the amplitude of the optical signal. There are several kinds of modulators, for high-speed modulators, they are generally built from drop @reed_silicon_2010.
+Contrary to detectors, modulators used to turn electrical signals into optical signals. They do not do this by producing the signal but by modulating the phase or the amplitude of the optical signal. There are several kinds of modulators, for high-speed modulators, they are generally built from doped regions of silicon @reed_silicon_2010.
 
 === Meshes <sec_meshes>
 
@@ -174,17 +174,17 @@ There are four kinds of meshes that can be built for programmable photonics, sho
 
 All of the architectures rely on the same components #cite("bogaerts_programmable_2020-1"), those being #gloss("2x2", suffix: "s", long: true), optical phase shifters and optical waveguides. These elements are combined in all-optical gates, which can be configured to achieve the user's intent. Additionally, to provide more functionality, the meshed gates can be connected to other devices, such as high-speed modulators, amplifiers, etc. #cite("bogaerts_programmable_2020-1", "capmany_programmable_2016", "perez_programmable_2019").
 
-The primary difference between a feedforward architecture and recirculating architecture is the ability of the designer to make light travel both ways in one waveguide. As is known #cite("ghatak_introduction_1998"), in a waveguide, light can travel in two directions with little to no interactions. This means that, without additional waveguides or hardware complexity, a photonic circuit can support two guiding modes, one in each direction. This property can be used for more efficient routing along anc create more complex and varied structures #cite("bogaerts_programmable_2020-1").
+The primary difference between a feedforward architecture and recirculating architecture is the ability of the designer to make light travel both ways in one waveguide. As is known #cite("ghatak_introduction_1998"), in a waveguide, light can travel in two directions with little to no interactions. This means that, without additional waveguides or hardware complexity, a photonic circuit can support two guiding modes, one in each direction. This property can be used for more efficient routing and the creation of more complex and varied structures #cite("bogaerts_programmable_2020-1").
 
-As it has been shown#cite("perez_programmable_2019"), recirculating meshes offer the ability to create more advanced structures, such as @iir elements, whereas feedforward architectures are limited to @fir components. This is due to the inability of feedforward system to express feedback loops, limiting them to @fir components, whereas recirculating meshes allow the creation of feedback loops and @iir components. Indeed, in a feedforward mesh, the typical structure being built is the Mach-Zehnder interferometer. In contrast, in a recirculating mesh, one may build structures such as ring resonators, which are inherently @iir components. Additionally, recirculating mesh are still capable of expressing structures such as @mzi, meaning that can represent both @iir components and @fir components.
+As it has been shown#cite("perez_programmable_2019"), recirculating meshes offer the ability to create more advanced structures, such as @iir elements, whereas feedforward architectures are limited to @fir components. This is due to the inability of feedforward system to express feedback loops, limiting them to @fir components, whereas recirculating meshes allow the creation of feedback loops and @iir components. Indeed, in a feedforward mesh, the typical structure being built is the Mach-Zehnder interferometer. In contrast, in a recirculating mesh, one may build structures such as ring resonators, which are inherently @iir components. Additionally, recirculating meshes are still capable of expressing structures such as @mzi, meaning that can represent both @iir components and @fir components.
 
 #info-box(kind: "conclusion")[
-    The recirculating mesh is more capable as it allows feedback loops, and therefore @iir components, whereas the feedforward mesh is limited to @fir components. Additionally, recirculating meshes allow light to travel in both directions in a single waveguide, which allows for more efficient routing and more complex structures.
+    The recirculating mesh is more capable as it allows feedback loops and @iir components, whereas the feedforward mesh is limited to @fir components. Additionally, recirculating meshes allow light to travel in both directions in a single waveguide, which allows for more efficient routing and more complex structures.
 ]
 
 === Potential use cases of photonic processors <photonic_processors_use_cases>
 
-There are many use cases for photonic processors, some of which will be shown in this thesis as examples in @sec_examples. However, this section will first discuss areas of particular interest for photonic processors. The first and primary advantage of photonic processors is that they can replace the need to develop custom @pic[s], which is extremely expensive. They can also be used during the development of said @pic[s] as a platform for prototyping. Another one of their advantages, which broadens their reach, is the ability to reprogram the processor in the field, just like a traditional @fpga. In the following paragraphs, several broad areas of interest will be discussed, along with examples of applications in those areas. Those areas are namely, telecommunication, optical computation, @rf processing, and sensing applications.
+There are many use cases for photonic processors, some of which will be shown in this thesis as examples in @sec_examples. However, this section will first discuss areas of particular interest for photonic processors. The first and primary advantage of photonic processors is that they can replace the need to develop custom @pic[s], which is extremely expensive. They can also be used during the development of said @pic[s] as a platform for prototyping. Another one of their advantages, which broadens their reach, is the ability to reprogram the processor in the field, just like a traditional @fpga. In the following paragraphs, several broad areas of interest will be discussed and  examples of applications in those areas will be mentioned. Those areas are telecommunication, optical computation, @rf processing, and sensing applications.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
@@ -212,28 +212,28 @@ Sensing can take many forms, such as LiDAR, which is used in self-driving cars, 
 
 === Embedding a photonic processor in a larger system <photonic_processors_in_systems>
 
-In this thesis, the focus will mainly be on the design of circuits for photonic processors. However, one must keep in mind that photonic processors are not standalone systems but rather components of larger, more complex systems. Complex systems are rarely limited to a single domain, indeed, they are often composed of multiple technologies, such as digital electronics, analog electronics, photonic circuits, realtime processing, etc. Therefore, it is important to understand how photonic processors can be embedded in these larger systems, and how it can be integrated in existing systems. The act of integrating multiple technologies together is often called codesign. Photonic processors are already a form of codesign, as they are composed of both photonic and electronic components. But this section  will be on how photonic processors can be integrated in larger designs.
+In this thesis, the focus will mainly be on the design of circuits for photonic processors. However, one must keep in mind that photonic processors are not standalone systems but rather components of larger, more complex systems. Complex systems are rarely limited to a single domain, indeed, they are often composed of multiple technologies, such as digital electronics, analog electronics, photonic circuits, realtime processing, etc. Therefore, it is important to understand how photonic processors can be embedded into these larger systems, and how they can be integrated in existing systems. The act of integrating multiple technologies is often called codesign. Photonic processors are already a form of codesign, as they are composed of both photonic and electronic components. But this section  will be on how photonic processors can be integrated in larger designs.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Integration with electronics*]
 }
-As previously mentioned, photonic processors integrate two kinds of electro-optic interfaces: modulators and detectors. These components can be used to interface the insides of the photonic processor with a larger electronic scheme. Due to their nature, these components can be used for both digital electronics and analog electronics. Indeed, photonic processors can therefore be used as analog signal processors, and be used in mixed-domain systems. This is of particular interest for @rf signal processing, as photonic processors can offer high bandwidth, high-speed, and low energy consumption signal processing, all of which are difficult to simultaneously achieve in analog electronics.
+As previously mentioned, photonic processors integrates two kinds of electro-optic interfaces: modulators and detectors. These components can be used to interface the insides of the photonic processor with a larger electronic scheme. Due to their nature, these components can be used for both digital electronics and analog electronics. Indeed, photonic processors can therefore be used as analog signal processors and be used in mixed-domain systems. This is of particular interest for @rf signal processing, as photonic processors can offer high bandwidth, high-speed, and low energy consumption signal processing, all of which are difficult to achieve in analog electronics.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Integration with software*]
 }
-While integration with electronics will not be discussed at length in this thesis, integration with software will. As will be discussed later on in this section, in @initial_requirements, there is an interest in integration software control over the functionality and behaviour of photonic processors. Due to their nature, photonic processors cannot take decisions, but they can be interface with software that is able to process data and make decisions. Additionally, software may be used by the designer, to create feedback loops to control their photonic circuit from software.
+While integration with electronics will not be discussed at length in this thesis, integration with software will. As will be discussed later in this section, in @initial_requirements, there is an interest in integration software control over the functionality and behaviour of photonic processors. Due to their nature, photonic processors cannot take decisions, but they can be interfaced with software that is able to process data and make decisions. Additionally, the designer may use software to create feedback loops to control their photonic circuit from software.
 
-In @fig_uses, one can see how a photonic processor may be integrated with analog electronics, digital electronics, and embedded software. By using @dac[s] and @adc[s] to interface with the photonic processor, an @fpga for high-speed digital processing, and an embedded processor for control. However, while it does not show how external inputs and outputs may be used, it provides a high-level overview of how a photonic processor may be interfaced in a bigger system, as well as some of its internal components.
+In @fig_uses, one can see how a photonic processor may be integrated with analog electronics, digital electronics, and embedded software, by using @dac[s] and @adc[s] to interface with the photonic processor, an @fpga for high-speed digital processing, and an embedded processor for control. However, while it does not show how external inputs and outputs may be used, it provides a high-level overview of how a photonic processor may be interfaced in a bigger system, and some of its internal components.
 
 #figurex(
     title: [
         Figure showing the integration of a photonic processor with electronics and software.
     ],
     caption: [
-        Figure showing the integration of a photonic processor with electronics and software. It shows how a photonic processor is composed of the photonic @ic, but also of @adc[s] and @dac[s] to interface with its integrated controller. It then shows how the overall photonic processor may be integrated with digital electronics and software running on an embedded processor. Blue elements represent digital electronics, while green elements represent analog electronics.
+        Figure showing the integration of a photonic processor with electronics and software. It shows how a photonic processor is composed of the photonic @ic and @adc[s] and @dac[s] to interface with its integrated controller. It then shows how the overall photonic processor may be integrated with digital electronics and software running on an embedded processor. Blue elements represent digital electronics, while green elements represent analog electronics.
     ]
 )[
     #image(
