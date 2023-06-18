@@ -104,7 +104,7 @@ syn main(input: optical, modulated: electrical) -> (optical, optical) {
 # Import the marshalling library
 import phos as ph
 
-# Import the platform support package
+# Import the platform-support package
 import prg_device as prg
 
 # Create the device with the specific support package

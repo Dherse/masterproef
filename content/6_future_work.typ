@@ -36,7 +36,7 @@ While algorithm for the routing of photonic components on photonic processor hav
 
 == Programming of generic photonic circuits <sec_phos_generic>
 
-This thesis is mostly focused on photonic processors, however, @phos can be used for the creation of generic photonic circuits. By replacing the platform support package with a photonic development kit would allow the user to create any circuit. This development kit would then interface with a manufacturer's PDK, allowing the user to create custom chips from their design. Some parts of the design would need to be done externally, such as placement, but there are already tools for that, such as _Luceda's IPKISS_. This is made especially easy through the marshalling library, discussed in @sec_marshalling, which allows the user to easily interface with a _Python_-based PDK.
+This thesis is mostly focused on photonic processors, however, @phos can be used for the creation of generic photonic circuits. By replacing the platform-support package with a photonic development kit would allow the user to create any circuit. This development kit would then interface with a manufacturer's PDK, allowing the user to create custom chips from their design. Some parts of the design would need to be done externally, such as placement, but there are already tools for that, such as _Luceda's IPKISS_. This is made especially easy through the marshalling library, discussed in @sec_marshalling, which allows the user to easily interface with a _Python_-based PDK.
 
 == Language improvements <sec_lang_improvements>
 

@@ -22,7 +22,7 @@ Therefore, looking at @pic_hierarchy, one can build four large categories of @pi
     kind: image,
     title: [ A hierarchy of programmable #gloss("pic", long: true, suffix: "s"). ],
     caption: [
-        Shows, a hierarchy of programmable #gloss("pic", long: true, suffix: "s"), starting at the non-programmable single function @pic (a), moving then to the tunable @pic (b), the feedforward architecture (c) and finally to the photonic processor (d).
+        Shows a hierarchy of programmable #gloss("pic", long: true, suffix: "s"), starting at the non-programmable single function @pic (a), moving then to the tunable @pic (b), the feedforward architecture (c) and finally to the photonic processor (d).
     ],
 )[
     #table(
@@ -62,7 +62,7 @@ In this work, the focus will be on the fourth kind of tunability, the most gener
     At a sufficiently high level of abstraction, can a photonic component be considered equivalent to a feedforward component?
 ]
 
-This question, which will be the driving factor behind this first section, will be answered in @feedforward_approx. However, before answering this question, it is necessary first to discuss the different types of photonic processors and how they differ. The answer to that question will also show that the solution suggested in this thesis also applies to feedforward systems. As this thesis is not focused on creating a photonic processor but on the programming of said processors, building techniques will not be explored in detail.
+This question, which will be the driving factor behind this first section, will be answered in @feedforward_approx. However, before answering this question, it is necessary first to discuss the different types of photonic processors and how they differ. The answer to that question will also show that the solution suggested in this thesis also applies to feedforward systems. As this thesis is not focused on creating a photonic processor, but on the programming of said processors, building techniques will not be explored in detail.
 
 === Components <sec_photonic_proc_comp>
 
@@ -117,7 +117,7 @@ The first mode #link(<tunable_2x2>)[(b)] allows light to travel without interact
 ]<tunable_2x2>
 
 #info-box(kind: "note")[
-    The color scheme shown in @tunable_2x2 for the different modes is kept throughout this document when showing photonic gates and their modes.
+    The colour scheme shown in @tunable_2x2 for the different modes is kept throughout this document when showing photonic gates and their modes.
 ]
 
 There are many construction techniques for building @2x2[s], each with its own advantages and disadvantages. The most common ones are the Mach-Zehnder interferometers with two phase shifters. However, other techniques involve using #gloss("mems") or liquid crystals #cite("bogaerts_programmable_2020-1", "capmany_programmable_2016", "perez_programmable_2019").
@@ -215,7 +215,7 @@ Sensing can take many forms, such as LiDAR, which is used in self-driving cars, 
 
 === Embedding a photonic processor in a larger system <photonic_processors_in_systems>
 
-In this thesis, the focus will mainly be on the design of circuits for photonic processors. However, one must keep in mind that photonic processors are not standalone systems but rather components of larger, more complex systems. Complex systems are rarely limited to a single domain. Indeed, they are often composed of multiple technologies, such as digital electronics, analog electronics, photonic circuits, and real-time processing. Therefore, it is important to understand how photonic processors can be embedded into these larger systems and how they can be integrated into existing systems. The act of integrating multiple technologies is often called codesign. Photonic processors are already a form of codesign, since they are composed of both photonic and electronic components.
+In this thesis, the focus will mainly be on the design of circuits for photonic processors. However, one must keep in mind that photonic processors are not standalone systems but rather components of larger, more complex systems. Complex systems are rarely limited to a single domain. Indeed, they are often composed of multiple technologies, such as digital electronics, analog electronics, photonic circuits, and real-time processing. Therefore, it is important to understand how photonic processors can be embedded into these larger systems and how they can be integrated into existing systems. The act of integrating multiple technologies is often called codesign. Photonic processors are already a form of codesign since they are composed of both photonic and electronic components.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
@@ -236,7 +236,7 @@ In @fig_uses, one can see how a photonic processor may be integrated with analog
         Figure showing the integration of a photonic processor with electronics and software.
     ],
     caption: [
-        Figure showing the integration of a photonic processor with electronics and software. It shows how a photonic processor is composed of the photonic @ic and @adc[s] and @dac[s] to interface with its integrated controller. It then shows how the overall photonic processor may be integrated with digital electronics and software running on an embedded processor. Blue elements represent digital electronics, while green elements represent analog electronics.
+        Figure showing the integration of a photonic processor with electronics and software. It shows how a photonic processor is composed of the photonic @ic, @adc[s], and @dac[s] to interface with its integrated controller. It then shows how the overall photonic processor may be integrated with digital electronics and software running on an embedded processor. Blue elements represent digital electronics, while green elements represent analog electronics.
     ]
 )[
     #image(
@@ -248,7 +248,7 @@ In @fig_uses, one can see how a photonic processor may be integrated with analog
 
 == Circuit representation <circuit_repr>
 
-When creating tools for circuit design, it is important to carefully consider how the circuit will be represented, as both the users of the tool, and its developers, will need to interact with this model for many steps in the design process, such as for simulation, optimization, synthesis, and validation. As far as this thesis is concerned, it will use one of the most common photonic circuit representation, that of the netlist. In addition, the guided mode in each direction of the waveguides will be represented as a separate net.
+When creating tools for circuit design, it is important to carefully consider how the circuit will be represented, as both the users of the tool, and its developers, will need to interact with this model for many steps in the design process, such as for simulation, optimisation, synthesis, and validation. As far as this thesis is concerned, it will use one of the most common photonic circuit representations, the netlist. In addition, the guided mode in each direction of the waveguides will be represented as a separate net.
 
 #info-box(kind: "definition", footer: [ Adapted from @netlist. ])[
     A *netlist* is a list of components and their connections used to represent a photonic circuit. A *net* is a connection between two components, which represents a waveguide.
@@ -262,22 +262,22 @@ Bidirectional ports, such as the ones on the edge of a photonic processor, are r
 
 As mentioned in @photonic_processor, a type of programmable photonic @ic is the feedforward processor, which assumes that light travels from an input port to an output port in a single direction. However, this thesis is focused on the more general kind of processor that uses recirculating meshes. Therefore, one may wonder whether it is possible to model components using a feedforward approximation. Indeed, this section will discuss the axiom that any photonic circuit can be represented as a feedforward circuit, given a sufficiently high level of abstraction.
 
-From theory, it is known that light can travel in both directions of a waveguide with little to no interactions @xing_behavior_2017. Additionally, the scattering matrix defining the circuit is symmetric for reciprocal and time-invariant components. Conveniently, it so happens that most passive, or pseudo-passive#footnote[Components that are actively powered, but slow varying enough to be considered passive. ] photonic components are reciprocal and time-invariant. Therefore, most photonic components can always be represented under this formalism. For components that are not reciprocal, one can split the component into two components, one for each direction, and model them as a set of separate components. Finally, components that are not time-invariant, such as modulators, can be modeled as time-invariant components as long as the variation in time is slow enough, compared to the oscillation period of the light, such that it can be considered constant. Finally, for components such as isolators, one can consider them a three-port device with two inputs, one being sunk, the other not, and one output.
+From theory, it is known that light can travel in both directions of a waveguide with little to no interactions @xing_behavior_2017. Additionally, the scattering matrix defining the circuit is symmetric for reciprocal and time-invariant components. Conveniently, it so happens that most passive, or pseudo-passive#footnote[Components that are actively powered, but slow varying enough to be considered passive. ] photonic components are reciprocal and time-invariant. Therefore, most photonic components can always be represented under this formalism. For components that are not reciprocal, one can split the component into two components, one for each direction, and model them as a set of separate components. Finally, components that are not time-invariant, such as modulators, can be modelled as time-invariant components as long as the variation in time is slow enough, compared to the oscillation period of the light, such that it can be considered constant. Finally, for components such as isolators, one can consider them a three-port device with two inputs, one being sunk, the other not, and one output.
 
-Some components may be difficult to accurately model in this formalism. For example, @soa[s] can be challenging to express in this formalism since their gain is spread over both modes. However, this can be solved by modeling the @soa as a unidirectional component. This removes the ability to model the @soa as a bidirectional component, but it is a reasonable approximation for most cases. Additionally, if the user needs to model the @soa as a bidirectional component, they could model it as two components whose exact response depends on the other component.
+Some components may be difficult to accurately model in this formalism. For example, @soa[s] can be challenging to express in this formalism since their gain is spread over both modes. However, this can be solved by modelling the @soa as a unidirectional component. This removes the ability to model the @soa as a bidirectional component, but it is a reasonable approximation for most cases. Additionally, if the user needs to model the @soa as a bidirectional component, they could model it as two components whose exact response depends on the other component.
 
-Intuitively, one can think of these abstracted models as black boxes, where the contents do not matter as long as the expected functionality is present. For example, a ring resonator can be modeled as a black box with two inputs and two outputs, where the input and output ports are labeled as $a_"in", b_"in"$ and $a_"out", b_"out"$ respectively. This is shown in @fig_ring_resonator_black_box. In this model, one can use the properties of a ring resonator to model the relations between these ports.
+Intuitively, one can think of these abstracted models as black boxes, where the contents do not matter as long as the expected functionality is present. For example, a ring resonator can be modelled as a black box with two inputs and two outputs, where the input and output ports are labelled as $a_"in", b_"in"$ and $a_"out", b_"out"$ respectively. This is shown in @fig_ring_resonator_black_box. In this model, one can use the properties of a ring resonator to model the relations between these ports.
 
 #figurex(
     title: [ A black box representation of a ring resonator. ],
     caption: [
-        A black box representation of a ring resonator. The input and output ports are labeled as $a_"in", b_"in"$ and $a_"out", b_"out"$ respectively.,
+        A black box representation of a ring resonator. The input and output ports are labelled as $a_"in", b_"in"$ and $a_"out", b_"out"$ respectively.,
     ],
 )[
     #image(
         "../figures/ring_resonator_black_box.png",
         width: 200pt,
-        alt: "Shows an unloaded microring resonator, with two inputs and two outputs, respectively labeled as a_in, b_in, a_out, b_out."
+        alt: "Shows an unloaded microring resonator, with two inputs and two outputs, respectively labelled as a_in, b_in, a_out, b_out."
     )
 ]<fig_ring_resonator_black_box>
 
@@ -327,9 +327,9 @@ The code should work across devices with little to no adjustment. This would avo
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Tunability and reconfigurability*]
 }
-Ideally, the user would want to tune their design while it is running, allowing them to build feedback loops of their control and adjust their design's behavior on the fly; this functionality is called tunability. Furthermore, the user might want to completely replace parts of their device's functionality without reprogramming the entire device. This is called reconfigurability. These two features work hand-in-hand, providing a powerful tool for the user to build their designs and fully exploit the photonic processor's field-programmable nature.
+Ideally, the user would want to tune their design while it is running, allowing them to build feedback loops of their control and adjust their design's behaviour on the fly; this functionality is called tunability. Furthermore, the user might want to completely replace parts of their device's functionality without reprogramming the entire device. This is called reconfigurability. These two features work hand-in-hand, providing a powerful tool for the user to build their designs and fully exploit the photonic processor's field-programmable nature.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Solutions to non-idealities*]
-} One can categorize the previously mentioned non-idealities in two categories: time invariant non-idealities, and time variant ones. The former do not change over time, such as manufacturing variabilities, and therefore can be compensated for using calibration tables that are uniquely generated for each chip, or batches of chips.  Time variant non-idealities, however, require an active approach, such as feedback loops, which the design solution for these photonic processors must provide for the user. In order to build these feedback loops, measurements must be taken of the signals of interest. These measurements are taken inside of the photonic processor, by using photodetectors built into the chip. These measurements allow the integrated control system to make adjustments to components, such as gain sections, or phase shifters, to compensate for the non-idealities.
+} One can categorise the previously mentioned non-idealities into time-invariant non-idealities and time-variant ones. The former does not change over time, such as manufacturing variabilities. It, therefore, can be compensated by using calibration tables that are uniquely generated for each chip or batches of chips.  Time variant non-idealities, however, require an active approach, such as feedback loops, which the design solution for these photonic processors must provide for the user. In order to build these feedback loops, measurements must be taken of the signals of interest. These measurements are taken inside the photonic processor using photodetectors built into the chip. These measurements allow the integrated control system to adjust components, such as gain sections or phase shifters, to compensate for the non-idealities.

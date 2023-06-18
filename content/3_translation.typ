@@ -5,7 +5,7 @@
 
 = Translation of intent & requirements <sec_intent>
 
-In @sec_programming_photonic_processors, the different programming ecosystem components, paradigms and tradeoffs were discussed. In this section, the translation of the user's intent -- i.e the design they wish to implement -- will be discussed in further detail. The translation of intent is the way in which the user will write down their design, and how the program translate that design into an actionable, programmable, design. This section will also outline some of the features that are needed for easier translation of intent. This will be done by discussing important features such as _tunability_, _reconfigurability_, and _programmability_. These features revolve around the ability for the user to tune the operation of their programmed photonic processor as it is running. For this purpose, this section will introduce some novel concepts, such as _constraints_ and its _solver_ and _reconfigurability through branching_. These two important concepts will be discussed in details and synergize to create an easy to use, yet powerful, programming ecosystem for photonic processors.
+In @sec_programming_photonic_processors, the different programming ecosystem components, paradigms and tradeoffs were discussed. In this section, the translation of the user's intent -- i.e the design they wish to implement -- will be discussed in further detail. The translation of intent is how the user will write down their design, and how the program translates that design into an actionable, programmable design. This section will also outline some of the features that are needed for easier translation of intent. This will be done by discussing important features such as _tunability_, _reconfigurability_, and _programmability_. These features revolve around the ability for the user to tune the operation of their programmed photonic processor as it is running. For this purpose, this section will introduce some novel concepts, such as _constraints_ and its _solver_ and _reconfigurability through branching_. These two important concepts will be discussed in details and synergize to create an easy to use, yet powerful, programming ecosystem for photonic processors.
 
 Additionally to the aforementioned points, several key features were discussed in @initial_requirements, the features relate to realtime control, which works in pair with _reconfigurability_ and _tunability_, simulation, which will use _constraints_ and its solver. Platform independence, which will be achieved through the design of a unified vendor-agnostic ecosystem and, the visualization of the design, which has lead to the design of the _marshalling layers_ which will be discussed in @sec_marshalling.
 
@@ -472,7 +472,7 @@ There are however limitations of the constraint system, most notably that, using
 == Tunability & Reconfigurability <sec_tunability_reconfigurability>
 
 #info-box(kind: "definition")[
-    *Tunability* is the ability to change the value of a parameter at runtime to impact the behavior of the programmed device.
+    *Tunability* is the ability to change the value of a parameter at runtime to impact the behaviour of the programmed device.
 ]
 
 Tunable values are values that can be interacted with, by the user, at runtime. They can be any non-signal value in the user's program, typically numerical values, that the user defines as being tunable values. These values can be seen as tuning-knobs that the user can access at runtime to change the behaviour of their circuit, and to implement their own custom feedback loops. Tunable values can impact several parts of the design at once, for example, a single value may determine the center frequency of operation of a bank of filters, all of them being tuned at once. This makes tunable values especially powerful as their impact can be propagated through the entire design.
@@ -481,7 +481,7 @@ The core idea behind tunable values is that the user can now represent parts of 
 
 Additionally, the user should be able to name and access their tunable values by name within their own code. This further improves the usability of the system, as it removes the need to maintain complex, error-prone table of registers and their corresponding values. Instead, the user can address their tunable value in a natural way through its name, and @hal can take care of the rest: translating these names and values into an appropriate set of registers and values.
 
-This means that the physical parameters of each element, can be represented as natural parameters -- i.e numerical values -- while the underlying hardware uses lower-level likely binary values and flags. This improves the development experience of the device provider as well, as they can now integrate within their platform support package the code required to do data conversion, further simplifying the development of new support packages.
+This means that the physical parameters of each element, can be represented as natural parameters -- i.e numerical values -- while the underlying hardware uses lower-level likely binary values and flags. This improves the development experience of the device provider as well, as they can now integrate within their platform-support package the code required to do data conversion, further simplifying the development of new support packages.
 
 Furthermore, the use of constraints on values, such as explained in @sec_constraints, can be used by the compiler to further detect the need for reconfigurability automatically, without additional user input. It can also be used to validate that when a tunable value is changed in the user's software, that it meets its requirements, ensuring that the user cannot change the value to an invalid one, where the device might then operate in an undefined state.
 
@@ -539,7 +539,7 @@ There exist many tools for simulation of photonic circuits. Additionally, there 
 
 == Platform independence <sec_platform_independence>
 
-As the development of photonic processor continues, it must be expected that new devices will bring new features, different hardware programming interfaces, and characteristics. Ideally, all of the code would be backward and forward compatible, being able to be programmed on an older or a newer device with little to no adjustments. Therefore, one must plan for platform support right at the core of the design of a photonic processor ecosystem. In this document several approaches will be suggested for tackling this issue. These approaches are meant to be used in conjunction with each other.
+As the development of photonic processor continues, it must be expected that new devices will bring new features, different hardware programming interfaces, and characteristics. Ideally, all of the code would be backward and forward compatible, being able to be programmed on an older or a newer device with little to no adjustments. Therefore, one must plan for platform-support right at the core of the design of a photonic processor ecosystem. In this document several approaches will be suggested for tackling this issue. These approaches are meant to be used in conjunction with each other.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
@@ -551,7 +551,7 @@ All platforms must share a common standard library that contains base building b
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Platform support packages*]
 }
-Each platform must come with a platform support packages that implements several tools: a hardware programmer for programming the circuit onto the device; compatibility layer for the standard library such that the standard library is compatible with the hardware; some device-specific libraries for additional features if needed; a place-and-route implementation, it may be shared across many devices, but the support package must at least list compatible place-and-route implementations. With these components, the user's circuit should be able to be compiled, while using the standard library, then  programmed onto the device for a working circuit.
+Each platform must come with a platform-support packages that implements several tools: a hardware programmer for programming the circuit onto the device; compatibility layer for the standard library such that the standard library is compatible with the hardware; some device-specific libraries for additional features if needed; a place-and-route implementation, it may be shared across many devices, but the support package must at least list compatible place-and-route implementations. With these components, the user's circuit should be able to be compiled, while using the standard library, then  programmed onto the device for a working circuit.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
