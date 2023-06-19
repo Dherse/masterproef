@@ -71,7 +71,7 @@
 #figurex(
     title: [ Graph representation of a mesh. ],
     caption: [
-        Graph representation of a mesh, showing the direction that light is travelling in, and all of the possible connections. Based on the work of Xiangfeng Chen, et al. @chen_graph_2020. This visualization was created with the collaboration of Léo Masson, as mentioned in #link(<sec_ack>)[the acknowledgements].
+        Graph representation of a mesh, showing the direction that light is travelling in, and all of the possible connections. Based on the work of Xiangfeng Chen, et al. @chen_graph_2020. This visualisation was created with the collaboration of Léo Masson, as mentioned in #link(<sec_ack>)[the acknowledgements].
     ],
 )[
     #hexagonal_interconnect(side: 13cm, hex-side: 1.5cm, 10, 14)
@@ -124,8 +124,8 @@ electrical   = device.electrical_input(0)
 instance = module(input, electrical, name="Module Instance")
                 .output(output0, output1)
 
-# Build the design, this will run synthesis, with area optimization
-built = device.synthesize(instance, optimization="area")
+# Build the design, this will run synthesis, with area optimisation
+built = device.synthesise(instance, optimisation="area")
 
 # Create the user HAL in the `./iq_modulator` directory
 built.generate_hal("./iq_modulator")
@@ -196,11 +196,11 @@ plt.show()
 #set figure(numbering: (x) => [G.#x])
 
 #figurex(
-    title: [ Example in @phos of beam forming system. ],
-    caption: [ Example in @phos of beam forming system, parametric over the number of channels. ],
+    title: [ Example in @phos of beam-forming system. ],
+    caption: [ Example in @phos of beam-forming system, parametric over the number of channels. ],
 )[
 ```phos
-// Create a simple beam forming system
+// Create a simple beam-forming system
 // This system takes an input optical signal and a set of electrical signals
 //  1. It splits the input optical signal into N optical signals
 //  2. It ensures that the phase of each of the optical signals is the same

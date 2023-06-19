@@ -26,19 +26,19 @@ In the following sections, the initial specification, the syntax, constraint sys
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Synthesizable*]
 }
-@phos separates regular functions from synthesizable blocks, whereas synthesizable blocks are able to interact with signals, regular functions are forbidden from operating on signals. This is done to ensure that branching reconfigurability computations are only done on synthesizable blocks. Ideally, synthesizable blocks would be kept as short as possible while functions can be much longer.
+@phos separates regular functions from synthesisable blocks, whereas synthesisable blocks are able to interact with signals, regular functions are forbidden from operating on signals. This is done to ensure that branching reconfigurability computations are only done on synthesisable blocks. Ideally, synthesisable blocks would be kept as short as possible while functions can be much longer.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Paradigm*]
 }
-@phos is an imperative language with many functional elements, it purposefully keeps the easier aspects of imperative programming, while incorporating functional elements to make it both easier to reason about and easier to synthesize into hardware. The elements from functional programming relate especially to dataflow programming, as it has the closest semantics to light flowing from one component to another. The language is purposefully kept simple, with only a few elements from each paradigm, to ensure that it is easy to learn and easy to use. Form follows function, and the language is designed to be used by engineers and researchers, not by computer scientists.
+@phos is an imperative language with many functional elements, it purposefully keeps the easier aspects of imperative programming, while incorporating functional elements to make it both easier to reason about and easier to synthesise into hardware. The elements from functional programming relate especially to dataflow programming, as it has the closest semantics to light flowing from one component to another. The language is purposefully kept simple, with only a few elements from each paradigm, to ensure that it is easy to learn and easy to use. Form follows function, and the language is designed to be used by engineers and researchers, not by computer scientists.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Constraints*]
 }
-@phos can express constraints directly in its syntax, this is opposed to other languages such as @vhdl and _SystemVerilog_ which require timing constraints to be specified externally. This is done to ensure that the constraints are always in sync with the code, and that the constraints are always available at a glance. Additionally, @phos uses a constraint system that is compatible with both signals and regular values, this is done for several purpose, chief among them is to ensure that reconfigurability regions can be minimized as discussed later on, in @sec_branching_reconfig.
+@phos can express constraints directly in its syntax, this is opposed to other languages such as @vhdl and _SystemVerilog_ which require timing constraints to be specified externally. This is done to ensure that the constraints are always in sync with the code, and that the constraints are always available at a glance. Additionally, @phos uses a constraint system that is compatible with both signals and regular values, this is done for several purpose, chief among them is to ensure that reconfigurability regions can be minimised as discussed later on, in @sec_branching_reconfig.
 
 == PHÔS: an initial specification <sec_spec>
 
@@ -46,7 +46,7 @@ This section serves as an initial specification or reference to the @phos progra
 
 === Execution model <sec_exec_model>
 
-@phos is a photonic hardware description language, due to its unique requirements, it is not designed in a traditional way and instead separates the compilation to hardware into three distinct steps: compilation, evaluation, and synthesis. The compilation step is responsible for taking the source code, written in human-readable text, and turning it into an executable form called the bytecode, see @sec_mir_to_bytecode. Followed by the evaluation, the evaluation interprets the bytecode, performs several tasks discussed in @sec_vm, and produces a tree of intrinsic operations, constraints and collected stacks. This tree is then synthesized into the output artefacts of the language, namely, the user @hal and a programming file for programming the photonic processor. The execution model is shown graphically in @fig_exec_model, showing all of the major components of the language and how they interact with each other. Further on, more details will be added as more components are discussed.
+@phos is a photonic hardware description language, due to its unique requirements, it is not designed in a traditional way and instead separates the compilation to hardware into three distinct steps: compilation, evaluation, and synthesis. The compilation step is responsible for taking the source code, written in human-readable text, and turning it into an executable form called the bytecode, see @sec_mir_to_bytecode. Followed by the evaluation, the evaluation interprets the bytecode, performs several tasks discussed in @sec_vm, and produces a tree of intrinsic operations, constraints and collected stacks. This tree is then synthesised into the output artefacts of the language, namely, the user @hal and a programming file for programming the photonic processor. The execution model is shown graphically in @fig_exec_model, showing all of the major components of the language and how they interact with each other. Further on, more details will be added as more components are discussed.
 
 #figurex(
     title: [ Execution model of the @phos programming language ],
@@ -57,7 +57,7 @@ This section serves as an initial specification or reference to the @phos progra
     #image(
         "../figures/drawio/exec_model.png",
         width: 93%,
-        alt: "Shows the execution model as the user code and the std lib going into the compiler, along with the platform-support package. The result is bytecode which goes into the virtual machine in the evaluation stage. The VM communicates with the constraint solver and the Z3 prover to produce the constraints & intrinsic operations. These are then fed into the synthesizer which produces the user HAL and the programming binary for the photonic processor, all the while using the platform HAL generator and the place-and-route."
+        alt: "Shows the execution model as the user code and the std lib going into the compiler, along with the platform-support package. The result is bytecode which goes into the virtual machine in the evaluation stage. The VM communicates with the constraint solver and the Z3 prover to produce the constraints & intrinsic operations. These are then fed into the synthesiser which produces the user HAL and the programming binary for the photonic processor, all the while using the platform HAL generator and the place-and-route."
     )
 ]<fig_exec_model>
 
@@ -177,7 +177,7 @@ The execution model of functions in the @phos programming language is similar to
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Synthesizable execution model*]
 }
-Synthesizable blocks follow a different execution model due to reconfigurability: when a block of code cannot be evaluated, it is analyzed to remove as much code as possible before being collected into a stack. The stack is then stored along with the intrinsic subtree of that reconfigurability region. Additionally, synthesizable block produce intrinsic operations and constraints that are stored in a global tree of operations in order to produce the expected output.
+Synthesizable blocks follow a different execution model due to reconfigurability: when a block of code cannot be evaluated, it is analyzed to remove as much code as possible before being collected into a stack. The stack is then stored along with the intrinsic subtree of that reconfigurability region. Additionally, synthesisable block produce intrinsic operations and constraints that are stored in a global tree of operations in order to produce the expected output.
 
 === Typing system
 
@@ -198,7 +198,7 @@ In this initial design of @phos, constraints are seen as metadata on values and 
 
 === Mutability, memory management and purity
 
-@phos does only allow mutating of state, following the functional approach of limiting side effects @mailund_functional_2017, this makes the work of the prover used for reconfigurability easier. It also ensures that all functions are pure functions, something that can be exploited by the compiler to optimize the code, as well as be used in future iterations of the design to provide features such as memoization for faster compile time. This also means that @phos does not have a garbage collector, as it does not need to manage memory. As the lifetime of all values is predictable, @phos can simply discard values when they fall out of scope. This is done by the compiler, and does not require any action from the user. This is a deliberate choice to reduce the complexity of the compiler.
+@phos does only allow mutating of state, following the functional approach of limiting side effects @mailund_functional_2017, this makes the work of the prover used for reconfigurability easier. It also ensures that all functions are pure functions, something that can be exploited by the compiler to optimise the code, as well as be used in future iterations of the design to provide features such as memoization for faster compile time. This also means that @phos does not have a garbage collector, as it does not need to manage memory. As the lifetime of all values is predictable, @phos can simply discard values when they fall out of scope. This is done by the compiler, and does not require any action from the user. This is a deliberate choice to reduce the complexity of the compiler.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
@@ -212,7 +212,7 @@ In this initial design of @phos, constraints are seen as metadata on values and 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Optical*]
-} Optical signals follow a _drive-once_, _read-once_ semantics, meaning that they must be produced by a source element and must be consumed by a sink element, signals cannot be empty or be discarded without being used. The goal of this semantic is to make signals less error prone by avoiding the possibility of signals being left unconnected. Additionally, the _drive-once_ semantics ensure that signals are split explicitly by the user and not implicitly with difficult to predict results. Consider the example in @lst_ex_opt_splitting, depending on the compiler's implementation, it may lead to two splitting schemes, both shown in @fig_ex_opt_splitting, it shows that with an automatic scheme, based on the compiler architecture, it may lead to two different results. However, with an explicit scheme, the user is able to clearly define the splitting scheme, and the compiler no longer has to make any assumptions about the splitting scheme. Additionally, optical signals only support being passed into, used, or sourced inside of synthesizable blocks. This restriction aims at making the work of the compiler easier and creating a stronger distinction for users.
+} Optical signals follow a _drive-once_, _read-once_ semantics, meaning that they must be produced by a source element and must be consumed by a sink element, signals cannot be empty or be discarded without being used. The goal of this semantic is to make signals less error prone by avoiding the possibility of signals being left unconnected. Additionally, the _drive-once_ semantics ensure that signals are split explicitly by the user and not implicitly with difficult to predict results. Consider the example in @lst_ex_opt_splitting, depending on the compiler's implementation, it may lead to two splitting schemes, both shown in @fig_ex_opt_splitting, it shows that with an automatic scheme, based on the compiler architecture, it may lead to two different results. However, with an explicit scheme, the user is able to clearly define the splitting scheme, and the compiler no longer has to make any assumptions about the splitting scheme. Additionally, optical signals only support being passed into, used, or sourced inside of synthesisable blocks. This restriction aims at making the work of the compiler easier and creating a stronger distinction for users.
 
 #figurex(caption: [ Optical signal splitting example ])[
     ```phos
@@ -255,7 +255,7 @@ let d = a |> modulate(external_signal, type_: Modulation::Amplitude)
 
 === Primitive types and primitive values
 
-@phos aims at providing primitive types that are useful for the domain of optical signal processing. As such, it provides a limited set of primitive types, not all of which are synthesizable. To understand how primitive types are synthesizable, see @sec_stack_collection. In @tab_primitive_types, the primitive types are listed, along with a short description. Primitive types are all denoted by their lowercase identifiers, this is a convention to make a distinction between composite types and primitive types. These primitive types are very similar to those found in other high-level programming languages such as _Python_ @python_reference.
+@phos aims at providing primitive types that are useful for the domain of optical signal processing. As such, it provides a limited set of primitive types, not all of which are synthesisable. To understand how primitive types are synthesisable, see @sec_stack_collection. In @tab_primitive_types, the primitive types are listed, along with a short description. Primitive types are all denoted by their lowercase identifiers, this is a convention to make a distinction between composite types and primitive types. These primitive types are very similar to those found in other high-level programming languages such as _Python_ @python_reference.
 
 #figurex(
     title: [ Primitive types in @phos. ],
@@ -537,12 +537,12 @@ In order for match statements to be correct, the compiler must be able to prove,
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Pattern matching and reconfigurability*]
 }
-As previously mentioned, exhaustiveness helps ensure that reconfigurability is reliably achievable, as it allows the compiler to prove that all possible cases are covered. Additionally, the compiler can use constraints to remove branches that it can prove will never be taken. This is a very important and powerful feature as it decreases the configuration space of the user's design, and it allows the compiler to be faster and optimize the user's design further.
+As previously mentioned, exhaustiveness helps ensure that reconfigurability is reliably achievable, as it allows the compiler to prove that all possible cases are covered. Additionally, the compiler can use constraints to remove branches that it can prove will never be taken. This is a very important and powerful feature as it decreases the configuration space of the user's design, and it allows the compiler to be faster and optimise the user's design further.
 
 
 === Branching and reconfigurability <sec_branching_reconfig>
 
-@phos supports branching as many other languages do, however, due to its use as a photonics @hdl, @phos has the special ability to use branching as boundaries for reconfigurability regions in synthesizable contexts. This feature was previously discussed in @sec_tunability_reconfigurability. The general form of branching can be seen in @lst_ex_branching. Reconfigurability through branching is designed to be very simple to use, the user can simply branch in their code, if the compiler detects that signals are being used across the branches, it will automatically create a new reconfigurability region, meaning that the work is implicit and the user does not need to do anything special to enable reconfigurability.
+@phos supports branching as many other languages do, however, due to its use as a photonics @hdl, @phos has the special ability to use branching as boundaries for reconfigurability regions in synthesisable contexts. This feature was previously discussed in @sec_tunability_reconfigurability. The general form of branching can be seen in @lst_ex_branching. Reconfigurability through branching is designed to be very simple to use, the user can simply branch in their code, if the compiler detects that signals are being used across the branches, it will automatically create a new reconfigurability region, meaning that the work is implicit and the user does not need to do anything special to enable reconfigurability.
 
 #block(breakable: false)[
     #figurex(
@@ -689,15 +689,15 @@ fn add_with_pipe(a: uint, b: uint) -> uint {
 ]
 
 
-=== Function and synthesizable blocks
+=== Function and synthesisable blocks
 
-@phos separates functions into three categories: functions denoted by the keyword `fn`, and synthesizable blocks denoted by the keyword `syn`. They are designated in such a way to create clearer separation between the concerns of the user, and to allow the compiler to better separate the different functions of the code. All functions in @phos, regardless of their type, are subject to constraints and the constraint solver, whether these constraints be expressed on values, or on signals.
+@phos separates functions into three categories: functions denoted by the keyword `fn`, and synthesisable blocks denoted by the keyword `syn`. They are designated in such a way to create clearer separation between the concerns of the user, and to allow the compiler to better separate the different functions of the code. All functions in @phos, regardless of their type, are subject to constraints and the constraint solver, whether these constraints be expressed on values, or on signals.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Functions*]
 }
-Function represent code that cannot consume nor produce signals, whether electrical or optical. They can only process primitive types, composite types, and @adt[s]. They are intended to separate any coefficient computation from the signal path, creating a strong separation between the two. An example could be a lattice filter, it implements a series of coefficients, which are likely to be computed by a function, instead of computing them inline with the signal, they can be computed in a function and then joined with the signal in a synthesizable block. Function branches do not represent reconfiguration boundaries, which greatly simplifies the work of the compiler. An example of a function can be seen in @lst_ex_function.
+Function represent code that cannot consume nor produce signals, whether electrical or optical. They can only process primitive types, composite types, and @adt[s]. They are intended to separate any coefficient computation from the signal path, creating a strong separation between the two. An example could be a lattice filter, it implements a series of coefficients, which are likely to be computed by a function, instead of computing them inline with the signal, they can be computed in a function and then joined with the signal in a synthesisable block. Function branches do not represent reconfiguration boundaries, which greatly simplifies the work of the compiler. An example of a function can be seen in @lst_ex_function.
 
 #block(breakable: false)[
     #figurex(
@@ -718,15 +718,15 @@ fn sum(a: (uint...)) -> uint {
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Synthesizable blocks*]
 }
-Synthesizable functions have the added semantic of being able to source and sink signals. They are intended to represent the signal path, and are the only functions that can be used to create reconfiguration boundaries. They can be used to create a synthesizable block that can be tuned or reconfigured at runtime. An example of a synthesizable block can be seen in @lst_ex_synthesizable_block.
+Synthesizable functions have the added semantic of being able to source and sink signals. They are intended to represent the signal path, and are the only functions that can be used to create reconfiguration boundaries. They can be used to create a synthesisable block that can be tuned or reconfigured at runtime. An example of a synthesisable block can be seen in @lst_ex_synthesisable_block.
 
 #block(breakable: false)[
     #figurex(
         title: [ 
-            Example in @phos of a synthesizable block.
+            Example in @phos of a synthesisable block.
         ],
         caption: [
-            Example in @phos of a synthesizable block, showing an @mzi built discretely using the `split`, `constrain` and `merge` functions.
+            Example in @phos of a synthesisable block, showing an @mzi built discretely using the `split`, `constrain` and `merge` functions.
         ]
     )[
         ```phos
@@ -742,7 +742,7 @@ syn filter(input: optical) -> optical {
           |> merge()
 }
         ```
-    ] <lst_ex_synthesizable_block>
+    ] <lst_ex_synthesisable_block>
 ]
 
 
@@ -804,7 +804,7 @@ let sum = |a: (uint...)| -> uint {
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Signals in closures*]
 }
-Due to their _drive-once_, _read-once_ semantics, signals are an especially difficult case for closures. Normally, closures are allowed to capture variables from their environment, and are equivalent to functions. However, signals are not normal variables, and the capturing mechanism has to be different. For this reason, closures are separated into three types: `Fn` which are closures that operate like regular functions, `Syn` which are closures that operate like regular synthesizable blocks, while they can process signals, they cannot capture signals, `SynOnce` which are closure that are synthesizable, but must called once, essentially following the same _drive-once_, _read-once_ semantic as other signals. The difference between the three kind can be seen in @lst_ex_closure_kind.
+Due to their _drive-once_, _read-once_ semantics, signals are an especially difficult case for closures. Normally, closures are allowed to capture variables from their environment, and are equivalent to functions. However, signals are not normal variables, and the capturing mechanism has to be different. For this reason, closures are separated into three types: `Fn` which are closures that operate like regular functions, `Syn` which are closures that operate like regular synthesisable blocks, while they can process signals, they cannot capture signals, `SynOnce` which are closure that are synthesisable, but must called once, essentially following the same _drive-once_, _read-once_ semantic as other signals. The difference between the three kind can be seen in @lst_ex_closure_kind.
 
 #figure(
     kind: raw,
@@ -887,7 +887,7 @@ for i in 0..5 {
 === Constraints <sec_phos_constraints>
 
 #info-box(kind: "info")[
-    It has been discussed that the syntax of constraints should be changed to declutter function/synthesizable block signatures. This would allow constraints to be cleaner, and would ideally be expressed as its own part of the signature, rather than being defined with the arguments. However, this has not yet been designed, and is therefore not discussed further in this document.
+    It has been discussed that the syntax of constraints should be changed to declutter function/synthesisable block signatures. This would allow constraints to be cleaner, and would ideally be expressed as its own part of the signature, rather than being defined with the arguments. However, this has not yet been designed, and is therefore not discussed further in this document.
 ]
 
 @phos models constraints as additional data carried by values and signals, it applies the semantics discussed in @sec_constraints. In the current iteration of the design, constraints are therefore a evaluation-time concept that cannot be checked by the compiler. This is a limitation of the current design, and will be addressed in future iterations. An example of a constraint can be seen in @lst_ex_constraint.
@@ -895,7 +895,7 @@ for i in 0..5 {
 #figure(
     kind: raw,
     caption: [ 
-        Example in @phos of a constrained synthesizable block.
+        Example in @phos of a constrained synthesisable block.
     ],
 )[
     ```phos
@@ -916,14 +916,14 @@ syn gain(
 
 === Unconstrained <sec_unconstrained>
 
-As mentioned in @sec_constraints, constraints only work for non-cyclic cases#footnote[That is, constraints that do not depend on themselves.], however this limitations removes the advantage of having a recirculating mesh inside of the photonic processor. Therefore, as was previously mentioned, @phos must provide a way to express blocks where the constraints are not automatically inferred, but must be manually specified. This is done by using the `unconstrained` keyword, which allows the user to specify the constraints manually at the boundary of a synthesizable block. An example of an unconstrained block can be seen in @lst_ex_unconstrained.
+As mentioned in @sec_constraints, constraints only work for non-cyclic cases#footnote[That is, constraints that do not depend on themselves.], however this limitations removes the advantage of having a recirculating mesh inside of the photonic processor. Therefore, as was previously mentioned, @phos must provide a way to express blocks where the constraints are not automatically inferred, but must be manually specified. This is done by using the `unconstrained` keyword, which allows the user to specify the constraints manually at the boundary of a synthesisable block. An example of an unconstrained block can be seen in @lst_ex_unconstrained.
 
 Additionally, unconstrained block allow the user to create their own signal, without needing to use a source intrinsic. This semantic is useful for creating recirculating elements in the photonic processor, as it allows the user to create temporary variables containing signals.
 
 #figure(
     kind: raw,
     caption: [ 
-        Example in @phos of an unconstrained synthesizable block.
+        Example in @phos of an unconstrained synthesisable block.
     ],
 )[
     ```phos
@@ -959,11 +959,11 @@ fn response(coupling: float, length: Length) -> FrequencyResponse {
     ```
 ] <lst_ex_unconstrained>
 
-=== Stack collection and synthesizable non-signal types <sec_stack_collection>
+=== Stack collection and synthesisable non-signal types <sec_stack_collection>
 
-One of the issues that arises from tunability, and especially with reconfigurability, is that the tunable values can be of any type, and therefore need to be converted into the values that the physical hardware can interpret. When designing the circuit, or the hardware platform package, it is natural to convert these meaningful high level values into lower level, less explicit values using @phos. Ideally, as much as the conversion as possible should be done in @phos, such that the circuit code can act as a source of truth and decrease the complexity of the hardware-software codesign. But this creates an issue: when using tunable value, the @phos @vm cannot compute these low-level values directly, as it does not know the value of the tunable value. Additionally, when tunable values lead to reconfigurability, the @vm cannot evaluate the conditions that lead to reconfigurability statically.
+One of the issues that arises from tunability, and especially with reconfigurability, is that the tunable values can be of any type, and therefore need to be converted into the values that the physical hardware can interpret. When designing the circuit, or the hardware platform package, it is natural to convert these meaningful high level values into lower-level, less explicit values using @phos. Ideally, as much as the conversion as possible should be done in @phos, such that the circuit code can act as a source of truth and decrease the complexity of the hardware-software codesign. But this creates an issue: when using tunable value, the @phos @vm cannot compute these low-level values directly, as it does not know the value of the tunable value. Additionally, when tunable values lead to reconfigurability, the @vm cannot evaluate the conditions that lead to reconfigurability statically.
 
-Therefore, it is required the parts of the code that perform conversion between high-level values and low-level values be synthesizable. Of course, the photonic processor being an analog processor, it is not possible to perform this synthesis on the actual mesh. However, as mentioned in @sec_programmability, one of the compilation artefact is the user @hal, which is generated for the user based on their design. It would therefore be possible to collect these operations and package them into the hal, such that when the user programmatically tunes their design, the conversion is done inside of the user @hal and sent to the processor's controller as a low-level value. The name is based off of the fact that @phos uses a stack-based virtual machine, and that the operations are collected into the user @hal and converted into _Rust_ (the implementation language of the @hal) automatically by the compiler.
+Therefore, it is required the parts of the code that perform conversion between high-level values and low-level values be synthesisable. Of course, the photonic processor being an analog processor, it is not possible to perform this synthesis on the actual mesh. However, as mentioned in @sec_programmability, one of the compilation artefact is the user @hal, which is generated for the user based on their design. It would therefore be possible to collect these operations and package them into the @hal, such that when the user programmatically tunes their design, the conversion is done inside of the user @hal and sent to the processor's controller as a low-level value. The name is based off of the fact that @phos uses a stack-based virtual machine, and that the operations are collected into the user @hal and converted into _Rust_ (the implementation language of the @hal) automatically by the compiler.
 
 #info-box(kind: "definition")[
     *Stack collection* is the process of collecting the operations that convert high-level values into low-level values, and packaging them into the user @hal.
@@ -1016,7 +1016,7 @@ fn sum(a: (uint...)) -> uint {
         align(center)[#smallcaps[*Synthesizable*]],
         align(center)[#required],
         align(center)[#not_needed],
-        align(left)[ Declares a synthesizable function. ],
+        align(left)[ Declares a synthesisable function. ],
         ```phos
 syn gain(input: optical) -> optical {
     input |> std::intrinsic::gain(10 dB)
@@ -1088,7 +1088,7 @@ Expressions are a subset of statements, that operate on one or more values and m
     kind: table,
     title: [ The list of language expressions supported in @phos ],
     caption: [ 
-        The list of language expressions supported in @phos, along with a short description and a short example. Additionally lists whether the expression is a control flow expression, constant expression, unary expression, binary expression, or special expression. Where a control flow expression is an expression that can be used to control the flow of the program, a constant expression is a value that can be determined at compile time, a unary expression is an expression that takes only one argument, a binary expression is an expression that takes two arguments, and a special expression is an expression that is not easily categorized and that performs more complex actions, with well defined semantics.
+        The list of language expressions supported in @phos, along with a short description and a short example. Additionally lists whether the expression is a control flow expression, constant expression, unary expression, binary expression, or special expression. Where a control flow expression is an expression that can be used to control the flow of the program, a constant expression is a value that can be determined at compile time, a unary expression is an expression that takes only one argument, a binary expression is an expression that takes two arguments, and a special expression is an expression that is not easily categorised and that performs more complex actions, with well defined semantics.
     ]
 )[
     #tablex(
@@ -1432,11 +1432,11 @@ C
 
 == Standard library <sec_stdlib>
 
-In addition to the language itself, @phos will come with a standard library: a library of functions and synthesizable blocks that come with the language. The standard library will be written in a mixture of @phos for synthesizable blocks and functions, and some native _Rust_ code for either performance critical sections, or areas where external libraries are required. The standard library will be organized as logically as possible, providing the necessary building blocks for new users to be productive with the language. However, the standard library will be limited in scope such that it does not become a burden to maintain. Relying instead on third-party libraries and @ip[s] for more complex functionality. A notable goal of the standard library is to provide synthesizable blocks for all common functions, like modulators, filters, and so on. But not for more complex functionality like larger components, or even entire systems.
+In addition to the language itself, @phos will come with a standard library: a library of functions and synthesisable blocks that come with the language. The standard library will be written in a mixture of @phos for synthesisable blocks and functions, and some native _Rust_ code for either performance critical sections, or areas where external libraries are required. The standard library will be organized as logically as possible, providing the necessary building blocks for new users to be productive with the language. However, the standard library will be limited in scope such that it does not become a burden to maintain. Relying instead on third-party libraries and @ip[s] for more complex functionality. A notable goal of the standard library is to provide synthesisable blocks for all common functions, like modulators, filters, and so on. But not for more complex functionality like larger components, or even entire systems.
 
 Most intrinsic operations discussed in @sec_intrinsic_operations are more complex than they first appear. As previously mentioned in @sec_programmable_photonics, most photonic components are actually reciprocal, meaning that they are the same whether light is travelling forwards or backwards. Additionally, waveguides support two modes, one in each direction, meaning that each device may be used for two purposes. Removing the user's ability to exploit these properties would be greatly limiting, and as such, the standard library must provide ways of accessing these fully-featured intrinsic operations. However, the user cannot be expected to only program using these low-level primitives, Furthermore, as they are mostly unconstrained and would require constrained blocks to be used to their full extent, due to the limitation on constraints regarding cyclic dependencies. Therefore, one of the main goals of the standard library is to provide higher-level primitives that wrap these unconstrained intrinsic operations into constrained block following the feedforward approximation (@feedforward_approx).
 
-The standard library should also decouple synthesizable blocks from computational methods. For example, a filter block may need other functions to compute the coupling coefficient, or the length of a ring resonator. These functions will need to be part of the standard library to offer filter synthesis, but they should be accessible separately, such that if a user wishes to implement some function themselves, they can rely on the existing code present in the standard library to make their work easier. This also means that the standard library should be as modular as possible, perhaps even in the future allowing users to replace default behaviour in the standard library with their own implementations. This modularity also helps in the development of the platform-support packages, as these need to be able to support the standard library, something that may be done by replacing parts of the standard library with platform specific implementations, while keeping the exposed @api the same.
+The standard library should also decouple synthesisable blocks from computational methods. For example, a filter block may need other functions to compute the coupling coefficient, or the length of a ring resonator. These functions will need to be part of the standard library to offer filter synthesis, but they should be accessible separately, such that if a user wishes to implement some function themselves, they can rely on the existing code present in the standard library to make their work easier. This also means that the standard library should be as modular as possible, perhaps even in the future allowing users to replace default behaviour in the standard library with their own implementations. This modularity also helps in the development of the platform-support packages, as these need to be able to support the standard library, something that may be done by replacing parts of the standard library with platform specific implementations, while keeping the exposed @api the same.
 
 Finally, the standard library can serve as a series of examples for new users. A photonic engineer, that is knowledgeable with photonic circuit design would benefit from the standard library as a source of high quality examples onto which they may base themselves. Similarly, a software engineer, that is knowledgeable with software development, but not photonic circuit design, would benefit from the standard library as a source of high quality examples of basic building blocks of photonic circuits. The standard library should be written in a way that is easy to understand, and that is well documented, such that it can serve as a learning resource for new users.
 
@@ -1445,7 +1445,7 @@ Finally, the standard library can serve as a series of examples for new users. A
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Constrain*]
 }
-A unique feature of the standard library is the `constrain` method, it is used to impose differential constraints on signals. This means that constraints over delay or phase, which are always relative, can be expressed between signals. This tells the synthesizer to ensure that these constraints are respected between signals. Indeed, if it were not for this method, the user could not easily represent phase matched or delay matched signals. During the examples, in @sec_examples, the use of this method will become clear, and its implication and why it is so important will be discussed.
+A unique feature of the standard library is the `constrain` method, it is used to impose differential constraints on signals. This means that constraints over delay or phase, which are always relative, can be expressed between signals. This tells the synthesiser to ensure that these constraints are respected between signals. Indeed, if it were not for this method, the user could not easily represent phase matched or delay matched signals. During the examples, in @sec_examples, the use of this method will become clear, and its implication and why it is so important will be discussed.
 
 #pagebreak(weak: true)
 == Compiler architecture <sec_arch>
@@ -1541,7 +1541,7 @@ Additionally, the grammar of @phos contains the priority of operations, meaning 
 #pagebreak(weak: true)
 === The abstract syntax tree <sec_ast>
 
-The #gloss("ast", long: true) is the result of the previous compilation step -- parsing -- and it is a tree-like data structure that represents the syntax of the user's code in a meaningful way. It shows the elements as bigger groups than tokens, such as expressions, synthesizable blocks, etc. The @ast is the base data structure on which all subsequent compilation steps are based. The @ast would also used by the @ide to provide code completion, syntax highlighting, and code formatting.
+The #gloss("ast", long: true) is the result of the previous compilation step -- parsing -- and it is a tree-like data structure that represents the syntax of the user's code in a meaningful way. It shows the elements as bigger groups than tokens, such as expressions, synthesisable blocks, etc. The @ast is the base data structure on which all subsequent compilation steps are based. The @ast would also used by the @ide to provide code completion, syntax highlighting, and code formatting.
 
 Just as is the case for parsing, syntax trees have a hierarchy, it generally consists of two categories: the #gloss("cst", long: true) and the #gloss("ast", long: true). The @cst aims at being a concrete representation of the grammar, being as faithful as possible, keeping as much information as possible. On the other hand, an @ast only keep the information necessary to perform the compilation, therefore, it is generally simpler and smaller than an equivalent @cst. However, while this can be seen as a hierarchy, it is more of a spectrum, as the @ast can be made more concrete and closer to a @cst depending on the needs. In fact, the @ast of @phos keeps track of all tokens, and their position in the source code, making it possible to reconstruct the original source code from the @ast. The only thing it discards are whitespaces, linebreaks, and comments. Additionally, the @ast of @phos also keeps track of spans where the code comes from, just like in the lexer, it is used to provide better error messages.
 
@@ -1695,7 +1695,7 @@ It is also important to note, that @phos may benefit more from reflection level 
 
 === AST lowering, type inference, and exhaustiveness checking <sec_ast_to_hir>
 
-As this point in the compilation pipeline, much of the initial complexity of the user's code has been removed, however many critical aspects of compiling the language have not been performed yet. Most notably with regards to type inference, type checking and exhaustiveness checking. These functions are all performed on the @hir, but at this point, the compiler still only has the @ast. Therefore, the first process in this step is to lower the @ast. Essentially, the compiler must transform the @ast into a lower level, simpler form of the code, called the @hir.
+As this point in the compilation pipeline, much of the initial complexity of the user's code has been removed, however many critical aspects of compiling the language have not been performed yet. Most notably with regards to type inference, type checking and exhaustiveness checking. These functions are all performed on the @hir, but at this point, the compiler still only has the @ast. Therefore, the first process in this step is to lower the @ast. Essentially, the compiler must transform the @ast into a lower-level, simpler form of the code, called the @hir.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
@@ -1768,7 +1768,7 @@ syn example(
 
 === Constant evaluation, control flow, liveness, and pipe desugaring <sec_mir_to_mir>
 
-After processing the @hir, it is reduced into an even simpler form based on a #gloss("cfg", long: true). During this stage, almost all of the elements of the language are removed, even conditional branching is now implemented using `goto` operations. All of this with the aim of making the code as easy to analyze as possible. From this stage, as everything as been reduced to the most basic elements, the compiler can now do some optimization, it can compute the values of all constants and inline them where they are used, it can also perform control flow optimizations, such as performing liveness analysis, which is the process of determining which code is used and which is not, and removing the parts that are not used. Finally, it can remove pipe operators replacing them instead of function calls, performing the pattern matching at compile time.
+After processing the @hir, it is reduced into an even simpler form based on a #gloss("cfg", long: true). During this stage, almost all of the elements of the language are removed, even conditional branching is now implemented using `goto` operations. All of this with the aim of making the code as easy to analyze as possible. From this stage, as everything as been reduced to the most basic elements, the compiler can now do some optimisation, it can compute the values of all constants and inline them where they are used, it can also perform control flow optimisations, such as performing liveness analysis, which is the process of determining which code is used and which is not, and removing the parts that are not used. Finally, it can remove pipe operators replacing them instead of function calls, performing the pattern matching at compile time.
 
 Using the aforementioned analysis, the compiler can now also detect whether all signals are being used, and if not, it can create an error for the user, indicating which part of the code is problematic. This is a useful feature of the compiler, as it enforces that all signals are at least _read-once_, which is part of the signal semantics discussed in @sec_signal_types. The way in which liveness and dead code elimination can be done is through the use of the @cfg, as it allows the compiler to easily determine which code does not contribute to the final result, and therefore can be removed, it detects unused signal simply by checking whether any signals are used within dead code.
 
@@ -1897,7 +1897,7 @@ fn add_my_const(
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Pipe desugaring*]
 }
-The final syntactic sugar that has yet to be simplified, is the pipe operator (`|>`). This operator is used on iterable tuples to pass data from one function or synthesizable block to another easily while keeping the code readable. The pipe operator performs pattern matching on its input values, and into the function arguments it is piping into. Doing so is quite difficult, which is why it is performed close to the end of all transformations. As this stage, the types are all known, operations have been simplified to the maximum, and therefore, it is the easiest point in the compilation process for the compiler to perform this transformation. In @lst_pipe_desugaring, one can see a piece of code before pipe desugaring (a), and after pipe desugaring (b), while both of these expressions are equivalent, the former is easier to read and understand. In more complex cases, where the pipe operator is used to pattern match over multiple values, this simplification is more complex. 
+The final syntactic sugar that has yet to be simplified, is the pipe operator (`|>`). This operator is used on iterable tuples to pass data from one function or synthesisable block to another easily while keeping the code readable. The pipe operator performs pattern matching on its input values, and into the function arguments it is piping into. Doing so is quite difficult, which is why it is performed close to the end of all transformations. As this stage, the types are all known, operations have been simplified to the maximum, and therefore, it is the easiest point in the compilation process for the compiler to perform this transformation. In @lst_pipe_desugaring, one can see a piece of code before pipe desugaring (a), and after pipe desugaring (b), while both of these expressions are equivalent, the former is easier to read and understand. In more complex cases, where the pipe operator is used to pattern match over multiple values, this simplification is more complex. 
 
 #figurex(
     caption: [
@@ -1951,7 +1951,7 @@ Finally, along with the bytecode, the previously built @cfg is also included, wi
 
 #figurex(
     title: [ Instruction set of the @phos #gloss("vm", long: true). ],
-    caption: [ Instruction set of the @phos #gloss("vm", long: true). Showing the instruction and its static arguments (i.e arguments that are produced during compilation), and the operations that each instruction does on the stack. ],
+    caption: [ Instruction set of the @phos #gloss("vm", long: true). Showing the instruction and its static arguments (i.e. arguments that are produced during compilation), and the operations that each instruction does on the stack. ],
     kind: table,
 )[
     #tablex(
@@ -2422,27 +2422,27 @@ fn @sum(@0: (int...)) -> (int, bool):
 
 It has been shown that the @vm executes bytecode, however, one may wonder how the @vm handles tunable values. The answer is that the @vm will use _partial evaluation_. Meaning that the @vm will collect the code impacted by the tunable values, and will try and evaluate as much of the code as possible, while leaving the code it cannot evaluate as is. This means that the @vm will produce a new program that performs the same functionality as the user's original program, but specialized based on the static inputs, needing only the tunable values as inputs for it to be complete.
 
-Additionally, it will still analyze the intrinsic operations -- impacted by tunability -- that are present within the user's design, and collect them separately such that they can still be synthesized. These operations, also depend on tunable values, but using the constraints on those tunable values, if any, the compiler will still be capable, in most cases, of synthesizing them into a photonic mesh. This will allow the @vm to produce a special subtree of the signal flow tree, that represents tunable sections, along with their intrinsic operations and constraints, but requiring tunable values for finalization.
+Additionally, it will still analyze the intrinsic operations -- impacted by tunability -- that are present within the user's design, and collect them separately such that they can still be synthesised. These operations, also depend on tunable values, but using the constraints on those tunable values, if any, the compiler will still be capable, in most cases, of synthesizing them into a photonic mesh. This will allow the @vm to produce a special subtree of the signal flow tree, that represents tunable sections, along with their intrinsic operations and constraints, but requiring tunable values for finalization.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Tunability failures*]
 }
-In some cases, if tunable values are not sufficiently constrained, the synthesis of these components may fail. In such cases, the user will be invited to provide more constraints, such that the synthesizer can produce the photonic mesh for the given intrinsic operation. If however, the user were not to be able to provide these additional constraint, they would need to rework their design to either avoid the use of broad range tunable values, or to be able to provide the additional constraints. Therefore, one may understand tunable values as a tool to help the user tune their photonic circuit, but not as a tool for broad range reconfiguration.
+In some cases, if tunable values are not sufficiently constrained, the synthesis of these components may fail. In such cases, the user will be invited to provide more constraints, such that the synthesiser can produce the photonic mesh for the given intrinsic operation. If however, the user were not to be able to provide these additional constraint, they would need to rework their design to either avoid the use of broad range tunable values, or to be able to provide the additional constraints. Therefore, one may understand tunable values as a tool to help the user tune their photonic circuit, but not as a tool for broad range reconfiguration.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Broad-range reconfiguration*]
 }
-As previously mentioned, if tunability has failed, the user must be able to constrain their tunability values more, in some cases, this may prove difficult. However, @phos also provides the ability of creating reconfigurability regions, which are regions of the photonic circuit that can be reconfigured. The way in which the user may be able to constrain their tunable values, is by using reconfigurability regions. If they can partially constrain their tunable values, such that it can be used for reconfigurability, in addition to tunability, then the synthesizer will be able to produce a photonic mesh for their design.
+As previously mentioned, if tunability has failed, the user must be able to constrain their tunability values more, in some cases, this may prove difficult. However, @phos also provides the ability of creating reconfigurability regions, which are regions of the photonic circuit that can be reconfigured. The way in which the user may be able to constrain their tunable values, is by using reconfigurability regions. If they can partially constrain their tunable values, such that it can be used for reconfigurability, in addition to tunability, then the synthesiser will be able to produce a photonic mesh for their design.
 
-Looking at @lst_broad_ex, in (a), one can see a circuit that relies on broad-range reconfigurability if parameter `gain` is not constrained, and the platform only supports a short gain in the range $[0"dB"..5"dB"]$, or a long gain in the range $]5"dB", 10"dB"]$, the synthesizer will fail to make the circuit. However, if the user were to constrain the `gain` in the range supported by the platform then match on the gain to create either a `short_gain` section or a `long_gain` section, the code would be synthesizable, this second case is shown in (b).
+Looking at @lst_broad_ex, in (a), one can see a circuit that relies on broad-range reconfigurability if parameter `gain` is not constrained, and the platform only supports a short gain in the range $[0"dB"..5"dB"]$, or a long gain in the range $]5"dB", 10"dB"]$, the synthesiser will fail to make the circuit. However, if the user were to constrain the `gain` in the range supported by the platform then match on the gain to create either a `short_gain` section or a `long_gain` section, the code would be synthesisable, this second case is shown in (b).
 
 However, when looking at this code (b), one might think that it is much longer than the original code (a), however, most of this complexity would actually be contained within the standard library, and the user would only need to add the `range` constraint on their gain to match their platform's capabilities.
 
 #figurex(
     caption: [
-        Code example in @phos, showing the original unsynthesizable code (a), and the fixed code (b)
+        Code example in @phos, showing the original unsynthesisable code (a), and the fixed code (b)
     ],
     kind: raw
 )[
@@ -2478,7 +2478,7 @@ syn my_module(
 
 == Synthesis <sec_synthesis>
 
-Now that the first two steps in the overall synthesis of a @phos design, namely compilation and evaluation, have been explained, the last step is to synthesize the design. This step is likely to be the most complex, and a lot of work is still needed both at the design stage, and at the algorithm stage. However, the goal of this section is to explain the general idea behind the synthesis of a @phos design. Therefore, this section can be assumed to be less precise and formal than previous ones, focusing more on overall ideas and concepts, rather than on specific details.
+Now that the first two steps in the overall synthesis of a @phos design, namely compilation and evaluation, have been explained, the last step is to synthesise the design. This step is likely to be the most complex, and a lot of work is still needed both at the design stage, and at the algorithm stage. However, the goal of this section is to explain the general idea behind the synthesis of a @phos design. Therefore, this section can be assumed to be less precise and formal than previous ones, focusing more on overall ideas and concepts, rather than on specific details.
 
 The core goal of the synthesis stage, is to take the signal flow tree produced by the @vm and turn it into two things: the user @hal that the user can use to interact with their design, and the binary programming files used by the actual hardware. These two goals are very different, and by far the simplest is the generation of the user @hal. The generation of the binary programming files, require processing all of the constraints and all of the intrinsics into gate descriptions, followed by placing them on the chip and routing between them. This is a problem that is already incredibly difficult for traditional @fpga[s] to solve, but it exacerbated by, both the two modes that can be supported in waveguides, but also by the recirculating hexagonal nature of the mesh. Therefore, synthesis of a @phos design is incredibly difficult and computationally expensive, and is still an active area of research.
 
@@ -2511,24 +2511,24 @@ The first step in synthesizing the circuit, is determining for each intrinsic op
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Filter synthesis*]
 }
-Filters are purposefully made into their own intrinsic operation despite being compound components. As was explained in @sec_intrinsic_operations, filters may be optimized based on the platform, for example, some platforms may even have built-in tunable filters placed on the edge. Therefore, the platform is responsible for the synthesis of the filters. As the synthesizer is provided with the input wavelength constraint, and the expected wavelength response, wether it be a bandpass filter, or any other filter, it should be able to synthesize the filter into its component gates. In some cases, it is possible that filter synthesis might fail, in such cases, the synthesizer should produce an error for the user.
+Filters are purposefully made into their own intrinsic operation despite being compound components. As was explained in @sec_intrinsic_operations, filters may be optimised based on the platform, for example, some platforms may even have built-in tunable filters placed on the edge. Therefore, the platform is responsible for the synthesis of the filters. As the synthesiser is provided with the input wavelength constraint, and the expected wavelength response, wether it be a bandpass filter, or any other filter, it should be able to synthesise the filter into its component gates. In some cases, it is possible that filter synthesis might fail, in such cases, the synthesiser should produce an error for the user.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Tunability*]
 }
-At this point, some components may depend on tunable values, nonetheless, the synthesis tool must be capable of handling tunable components. Meaning that it must understand that components are tunable within a certain range, indicated with constraints, and still produce the appropriate gates. This task should generally be relatively similar to regular intrinsic-to-gate translation, assuming that the parts of the standard library implemented for the platform were done correctly. Indeed, the task of separating widely tunable values into smaller tunable ranges, is in parts, the task of the designer, in other parts, the task of the standard library as it is implemented by the chip designer. This means that, at this point in the synthesis pipeline, all tunable intrinsic operations should be synthesizable. If they are not, then the platform-support package would be to blame, since it would mean that its implementation of the standard library is invalid.
+At this point, some components may depend on tunable values, nonetheless, the synthesis tool must be capable of handling tunable components. Meaning that it must understand that components are tunable within a certain range, indicated with constraints, and still produce the appropriate gates. This task should generally be relatively similar to regular intrinsic-to-gate translation, assuming that the parts of the standard library implemented for the platform were done correctly. Indeed, the task of separating widely tunable values into smaller tunable ranges, is in parts, the task of the designer, in other parts, the task of the standard library as it is implemented by the chip designer. This means that, at this point in the synthesis pipeline, all tunable intrinsic operations should be synthesisable. If they are not, then the platform-support package would be to blame, since it would mean that its implementation of the standard library is invalid.
 
 === Place-and-route <sec_place_and_route>
 
-As was previously discussed, there are currently no algorithms that can place and route all of the components that can be present in a mesh. Since @phos provides the constraints on each signals to the place-and-route engine, it is expected that it will utilize those constraints to improve its placement and routing. Furthermore, the place-and-route algorithm will be provided by optimization targets by the user, these targets should be an indication of what matters most for the user: the area that a given circuit occupies, the power consumed by the circuit, or the optical losses in the circuits. Additionally, in some cases, the user may want to create their own metric for further customization. Finally, despite there being no place-and-route algorithm, there are a number of routing algorithms that are being developed, including at Ghent University, which are showing promising results @kerchove_automated_2023. Once routing has been improved, these algorithms may be able to be included in place-and-route implementations.
+As was previously discussed, there are currently no algorithms that can place and route all of the components that can be present in a mesh. Since @phos provides the constraints on each signals to the place-and-route engine, it is expected that it will utilize those constraints to improve its placement and routing. Furthermore, the place-and-route algorithm will be provided by optimisation targets by the user, these targets should be an indication of what matters most for the user: the area that a given circuit occupies, the power consumed by the circuit, or the optical losses in the circuits. Additionally, in some cases, the user may want to create their own metric for further customization. Finally, despite there being no place-and-route algorithm, there are a number of routing algorithms that are being developed, including at Ghent University, which are showing promising results @kerchove_automated_2023. Once routing has been improved, these algorithms may be able to be included in place-and-route implementations.
  
 === Hardware abstraction library <sec_hal>
 
-Another task of the synthesizer is to generate the user @hal. To do this, it will use pre-made routine, that have yet to be designed, coupled with the platform-support package, which will provide information with regards to interconnecting the generated, high-level user @hal and the low-level core @hal provided my the chip designer. This task is expected to be relatively simple, as it is mostly a matter of connecting the dots between the two @hal. Additionally, the user @hal would be generated in _Rust_, in a way that is compatible with #gloss("ffi", long: true) for interoperability with _C_ and _C++_.
+Another task of the synthesiser is to generate the user @hal. To do this, it will use pre-made routine, that have yet to be designed, coupled with the platform-support package, which will provide information with regards to interconnecting the generated, high-level user @hal and the low-level core @hal provided my the chip designer. This task is expected to be relatively simple, as it is mostly a matter of connecting the dots between the two @hal. Additionally, the user @hal would be generated in _Rust_, in a way that is compatible with #gloss("ffi", long: true) for interoperability with _C_ and _C++_.
 
 #info-box(kind: "conclusion")[
-    At this point, little is known about the exact way that the synthesizer will work, however, this section has hopefully provided pointers that may be used in future research for the implementation of this stage.
+    At this point, little is known about the exact way that the synthesiser will work, however, this section has hopefully provided pointers that may be used in future research for the implementation of this stage.
 ]
 
 == Constraint solver and provers <sec_constraint_solver>
@@ -2591,7 +2591,7 @@ As was discussed, when presented with constraints, it is very difficult for the 
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Reachability*]
 }
-The evaluation stage, when encountering tunability, may have more reconfigurability states that needed given the current constraints, just like with exhaustiveness checking, a prover can be used to verify whether branches are even reachable, if they are not, then they can safely be discarded, and the synthesizer will have less work to perform.
+The evaluation stage, when encountering tunability, may have more reconfigurability states that needed given the current constraints, just like with exhaustiveness checking, a prover can be used to verify whether branches are even reachable, if they are not, then they can safely be discarded, and the synthesiser will have less work to perform.
 
 == Marshalling library <sec_marshalling>
 
@@ -2643,7 +2643,7 @@ Due to its length, the code of this example is shown in @anx_marshalling_library
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Synthesis*]
 }
-One can see in @lst_marshalling_comp, that the user starts by importing the marshalling library `phos` (line $#2$), and their device support package `prg_device` (line $#5$) -- a fictitious device from the @prg. A device instant is then created from the `phos` library and the device support package (line $#8$). From this, the module can be loaded from its `phos` file. Moving on to the creation of the inputs and outputs (I/O) of the device (lines $#14-#17$), the electrical input is created, with its device-specific identifier being $0$. Then, each of the three optical ports are created, depending on whether they are used as inputs, outputs, their remaining port is discarded. Here as well, the device-specific ID is being used. The reason why device-specific IDs are being used is to assign the ports of the device to the logical ports of the module. Then, the module is instantiated, given a name, and all of its inputs and outputs are assigned. It can then finally be synthesized. In a real design, one would likely specify more parameters and more than one module, indeed, the marshalling library can be used to compose modules together, and to synthesize more than one module. In this example, the synthesis stage has only one parameter set, the optimization of the design set to area optimization. Finally, from the synthesized design, the user @hal and programming files cna be generated.
+One can see in @lst_marshalling_comp, that the user starts by importing the marshalling library `phos` (line $#2$), and their device support package `prg_device` (line $#5$) -- a fictitious device from the @prg. A device instant is then created from the `phos` library and the device support package (line $#8$). From this, the module can be loaded from its `phos` file. Moving on to the creation of the inputs and outputs (I/O) of the device (lines $#14-#17$), the electrical input is created, with its device-specific identifier being $0$. Then, each of the three optical ports are created, depending on whether they are used as inputs, outputs, their remaining port is discarded. Here as well, the device-specific ID is being used. The reason why device-specific IDs are being used is to assign the ports of the device to the logical ports of the module. Then, the module is instantiated, given a name, and all of its inputs and outputs are assigned. It can then finally be synthesised. In a real design, one would likely specify more parameters and more than one module, indeed, the marshalling library can be used to compose modules together, and to synthesise more than one module. In this example, the synthesis stage has only one parameter set, the optimisation of the design set to area optimisation. Finally, from the synthesised design, the user @hal and programming files cna be generated.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))

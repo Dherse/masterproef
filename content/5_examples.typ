@@ -8,16 +8,16 @@ Several different application areas were mentioned in @photonic_processors_use_c
 
 == Beam forming
 
-Optical beam forming is being used to build new solid-state LiDAR systems @xu_fully_2022. These LiDARs need precise phase matching between all of the produced optical signals, as any imprecision over the phase and delay will negatively impact the precision of the overall system. Conveniently, @phos offers an easy way to ensure that signals are phase and delay matched: the `constrain` synthesizable block. It imposes a differential constraint over a number of signals, in this case, as will be visible in @lst_beam_forming, it is used to enforce equal phase into the modulators, and equal delay when going back towards the outputs.
+Optical beam-forming is being used to build new solid-state LiDAR systems @xu_fully_2022. These LiDARs need precise phase matching between all of the produced optical signals, as any imprecision over the phase and delay will negatively impact the precision of the overall system. Conveniently, @phos offers an easy way to ensure that signals are phase and delay matched: the `constrain` synthesisable block. It imposes a differential constraint over a number of signals, in this case, as will be visible in @lst_beam_forming, it is used to enforce equal phase into the modulators, and equal delay when going back towards the outputs.
 
 === Theoretical background
 
 Beam forming allows a system to control the directionality of a signal emitted by its antennae. It requires multiple antennae at the transmitter. The transmitter then controls the phases of the emitted signals to create constructive interference in the desired direction of interest and destructive interference in the others. This allows the transmitter to focus its signal in a specific direction. This has several advantages, it can allow a transmitter to reach longer distances at the same transmitted power, it can be used to decrease interference with other transmitters, and it can be used to increase the directional precision of a system, such as in the case of a LiDAR #cite("van_veen_beamforming_1988", "zou_analog_2017").
 
 #figurex(
-    title: [ Demonstration emission pattern of a beam forming system. ],
+    title: [ Demonstration emission pattern of a beam-forming system. ],
     caption: [ 
-        Demonstration emission pattern of a beam forming system, showing the main lobe and side lobes.
+        Demonstration emission pattern of a beam-forming system, showing the main lobe and side lobes.
     ],
 )[
     #image(
@@ -35,12 +35,12 @@ The @phos implementation relies on several key features of the @phos language, i
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Constrain*]
-} `constrain` is a synthesizable block that allows the user to create constraints between signals. It can be used to impose one of two constraints, either a phase constraints, matching the phases of the different signals, or a delay constraints, matching the delays of the different signals. In this case, the phase constraint is used to ensure that all of the signals have the same phase when reaching a certain component, and the delay constraint is used to ensure that all of the signals have the same delay. Recalling @sec_constraints, these constraints are different due to the large order of magnitude difference between the frequency of light and the frequency of modulated content, a phase shift on the light will have a negligible impact on the modulated content, but a delay shift on the light will have a large impact on the modulated content.
+} `constrain` is a synthesisable block that allows the user to create constraints between signals. It can be used to impose one of two constraints, either a phase constraints, matching the phases of the different signals, or a delay constraints, matching the delays of the different signals. In this case, the phase constraint is used to ensure that all of the signals have the same phase when reaching a certain component, and the delay constraint is used to ensure that all of the signals have the same delay. Recalling @sec_constraints, these constraints are different due to the large order of magnitude difference between the frequency of light and the frequency of modulated content, a phase shift on the light will have a negligible impact on the modulated content, but a delay shift on the light will have a large impact on the modulated content.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Modulate*]
-} `modulate` is a synthesizable block used to modulate an optical signal, it can perform either phase modulation or amplitude modulation. In the case of amplitude modulation, the synthesis stage may create a @mzi to perform a phase to amplitude conversion. In this example, it is sed to modulate the external phase shifts onto the optical signals.
+} `modulate` is a synthesisable block used to modulate an optical signal, it can perform either phase modulation or amplitude modulation. In the case of amplitude modulation, the synthesis stage may create a @mzi to perform a phase to amplitude conversion. In this example, it is sed to modulate the external phase shifts onto the optical signals.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
@@ -53,8 +53,8 @@ The @phos implementation relies on several key features of the @phos language, i
 } `zip` allows two lists to be zipped together, creating a list of tuples, where each tuple contains the elements of the two lists at the same index. `map` allows a function to be applied to each element of a list. In this case, `zip` is used to zip the list of phase shifts with the list of optical signals, creating a list of tuples where each tuple contains an optical signal and a phase shift. This list is then mapped to a function that sets the phase shift of the optical signal to the phase shift of the tuple.
 
 #figurex(
-    title: [ @phos implementation of a configurable optical beam forming system. ],
-    caption: [ @phos implementation of a configurable optical beam forming system. A fully commented version is available in @anx_beam_forming. ],
+    title: [ @phos implementation of a configurable optical beam-forming system. ],
+    caption: [ @phos implementation of a configurable optical beam-forming system. A fully commented version is available in @anx_beam_forming. ],
 )[
 ```phos
 syn beam_forming(
@@ -84,8 +84,8 @@ $
 $<eq_phase_shift_2>
 
 #figurex(
-    title: [ Simulation results of the beam forming system. ],
-    caption: [ Simulation results of the beam forming system, showing the time-dependent phase shifts applied to the optical signals. ],
+    title: [ Simulation results of the beam-forming system. ],
+    caption: [ Simulation results of the beam-forming system, showing the time-dependent phase shifts applied to the optical signals. ],
     kind: image,
 )[
     #table(
@@ -120,9 +120,9 @@ In this next example, a simple 16-#gloss("qam", short: true) transmitter will be
 
 In telecommunications, and especially in high-speed communication, engineers need to be able to transmit as much information as possible in a given bandwidth, while still maintaining good immunity to noise and other impairments. One way to achieve these higher throughputs, is by using more advanced modulation schemes, the state of the art in photonic communication being 64-#gloss("qam", short: true) @ishimura_64-qam_2022. In this example however, the state of the art will not be reproduced and will instead be focused on a simpler 16-#gloss("qam", short: true) modulation scheme, based on the work by _Talkhooncheh, Arian Hashemi, et al._ @talkhooncheh_200gbs_2023.
 
-Modulations are often visualized using two types of diagrams: so-called _eye diagrams_ which show the transitions between symbols, and _constellation diagrams_ which show the actual symbols after sampling. These two visualizations are used to measure the quality of the received signal and to visualize any impairment it might have suffered during transmission. Eye diagrams are built by overlaying many transitions between symbols over one another, slowly building a statistical representation of the signal. Constellation diagrams are built by sampling the signal at a given rate, and plotting its magnitude and phase in a complex plane. The resulting plot is a point cloud that can be used to visualize the symbols that were transmitted.
+Modulations are often visualized using two types of diagrams: so-called _eye diagrams_ which show the transitions between symbols, and _constellation diagrams_ which show the actual symbols after sampling. These two visualisations are used to measure the quality of the received signal and to visualize any impairment it might have suffered during transmission. Eye diagrams are built by overlaying many transitions between symbols over one another, slowly building a statistical representation of the signal. Constellation diagrams are built by sampling the signal at a given rate, and plotting its magnitude and phase in a complex plane. The resulting plot is a point cloud that can be used to visualize the symbols that were transmitted.
 
-Finally, the measure that will be used to quantify the quality of the transmitter is not the @ber, as the measurement will be taken at the output of the transmitter, and therefore the bit error rate will be zero, but rather the @evm. The @evm is a measure of the difference between the ideal constellation and the actual constellation, and is defined as in @eq_evm, with $N$ the number of samples, $I_"err"$ and $Q_"err"$ the error in the in-phase and quadrature components of the constellation, $"EVM"_"%"$ the @evm in percentage, and $"EVM Normalization Factor"$ is a normalization factor that depends on the modulation scheme used, for 16-#gloss("qam", short: true), it is the maximum magnitude of the constellation @keysight_technologies_evm. A visualization of EVM can be found in @fig_evm. One this definition, one can see that the @evm is a measure of the average distance between the ideal constellation and the actual constellation and should, therefore, be minimized.
+Finally, the measure that will be used to quantify the quality of the transmitter is not the @ber, as the measurement will be taken at the output of the transmitter, and therefore the bit error rate will be zero, but rather the @evm. The @evm is a measure of the difference between the ideal constellation and the actual constellation, and is defined as in @eq_evm, with $N$ the number of samples, $I_"err"$ and $Q_"err"$ the error in the in-phase and quadrature components of the constellation, $"EVM"_"%"$ the @evm in percentage, and $"EVM Normalization Factor"$ is a normalization factor that depends on the modulation scheme used, for 16-#gloss("qam", short: true), it is the maximum magnitude of the constellation @keysight_technologies_evm. A visualisation of EVM can be found in @fig_evm. One this definition, one can see that the @evm is a measure of the average distance between the ideal constellation and the actual constellation and should, therefore, be minimised.
 
 $
 "EVM"_"%" = sqrt(1 / N sum_(i = 0)^(N - 1)(I_"err" [i]^2 + Q_"err" [i]^2)) / "EVM Normalization Factor" dot 100%
