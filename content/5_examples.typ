@@ -4,20 +4,20 @@
 
 = Examples of photonic circuit programming <sec_examples>
 
-Several different application areas were mentioned in @photonic_processors_use_cases, and in this section, some of these areas will be demonstrated using the @phos programming language. The examples are meant to be mockups of real applications, and are not meant to be complete implementations, focusing solely on the @phos part of their design. These examples will be explored in different levels of details depending on the complexity of the application and how much of the capabilities of @phos they demonstrate. The full code, with comments, and type annotations is available starting at @anx_beam_forming.
+Several different application areas were mentioned in @photonic_processors_use_cases, and in this section, some of these areas will be demonstrated using the @phos programming language. The examples are meant to be mockups of real applications and not complete implementations, focusing solely on the @phos part of their design. These examples will be explored in different levels of detail depending on the complexity of the application and how much of the capabilities of @phos they demonstrate. The full code, comments, and type annotations are available starting at @anx_beam_forming.
 
-== Beam forming
+== beamforming
 
-Optical beam-forming is being used to build new solid-state LiDAR systems @xu_fully_2022. These LiDARs need precise phase matching between all of the produced optical signals, as any imprecision over the phase and delay will negatively impact the precision of the overall system. Conveniently, @phos offers an easy way to ensure that signals are phase and delay matched: the `constrain` synthesisable block. It imposes a differential constraint over a number of signals, in this case, as will be visible in @lst_beam_forming, it is used to enforce equal phase into the modulators, and equal delay when going back towards the outputs.
+Optical beamforming is being used to build new solid-state LiDAR systems @xu_fully_2022. These LiDARs need precise phase matching between all of the produced optical signals, as any imprecision over the phase and delay will negatively impact the precision of the overall system. Conveniently, @phos offers an easy way to ensure that signals are phase and delay matched: the `constrain` synthesisable block. It imposes a differential constraint over a number of signals, in this case, as will be visible in @lst_beam_forming, it is used to enforce equal phase into the modulators, and equal delay when going back towards the outputs.
 
 === Theoretical background
 
 Beam forming allows a system to control the directionality of a signal emitted by its antennae. It requires multiple antennae at the transmitter. The transmitter then controls the phases of the emitted signals to create constructive interference in the desired direction of interest and destructive interference in the others. This allows the transmitter to focus its signal in a specific direction. This has several advantages, it can allow a transmitter to reach longer distances at the same transmitted power, it can be used to decrease interference with other transmitters, and it can be used to increase the directional precision of a system, such as in the case of a LiDAR #cite("van_veen_beamforming_1988", "zou_analog_2017").
 
 #figurex(
-    title: [ Demonstration emission pattern of a beam-forming system. ],
+    title: [ Demonstration emission pattern of a beamforming system. ],
     caption: [ 
-        Demonstration emission pattern of a beam-forming system, showing the main lobe and side lobes.
+        Demonstration emission pattern of a beamforming system, showing the main lobe and side lobes.
     ],
 )[
     #image(
@@ -30,22 +30,22 @@ Beam forming allows a system to control the directionality of a signal emitted b
 #pagebreak(weak: true)
 === PHÔS implementation
 
-The @phos implementation relies on several key features of the @phos language, it utilizes the `split` function which is used to split a signal based on a list of weight, these weights are provided by the `splat` function which creates a list of $n$ elements all of the same value. Those signals are then constrained to have the same phase before being phase modulated using the `modulate` function. The resulting signals are then constrained to have the same delay before being sent to the outputs. The code for this example is available at @lst_beam_forming, with the fully commented code being available in @anx_beam_forming.
+The @phos implementation relies on several key features of the @phos language. It utilises the `split` function which is used to split a signal based on a list of weights. These weights are provided by the `splat` function which creates a list of $n$ elements all of the same value. Those signals are then constrained to have the same phase before being phase modulated using the `modulate` function. The resulting signals are then constrained to have the same delay before being sent to the outputs. The code for this example is available at @lst_beam_forming, with the fully commented code being available in @anx_beam_forming.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Constrain*]
-} `constrain` is a synthesisable block that allows the user to create constraints between signals. It can be used to impose one of two constraints, either a phase constraints, matching the phases of the different signals, or a delay constraints, matching the delays of the different signals. In this case, the phase constraint is used to ensure that all of the signals have the same phase when reaching a certain component, and the delay constraint is used to ensure that all of the signals have the same delay. Recalling @sec_constraints, these constraints are different due to the large order of magnitude difference between the frequency of light and the frequency of modulated content, a phase shift on the light will have a negligible impact on the modulated content, but a delay shift on the light will have a large impact on the modulated content.
+} `constrain` is a synthesisable block that allows the user to create constraints between signals. It can be used to impose one of two constraints, either a phase constraint, matching the phases of the different signals, or a delay constraint, matching the delays of the different signals. In this case, the phase constraint is used to ensure that all of the signals have the same phase when reaching a certain component, and the delay constraint is used to ensure that all of the signals have the same delay. Recalling @sec_constraints, these constraints are different due to the large order of magnitude difference between the frequency of light and the frequency of modulated content; a phase shift on the light will have a negligible impact on the modulated content, but a delay shift on the light will have a large impact on the modulated content.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Modulate*]
-} `modulate` is a synthesisable block used to modulate an optical signal, it can perform either phase modulation or amplitude modulation. In the case of amplitude modulation, the synthesis stage may create a @mzi to perform a phase to amplitude conversion. In this example, it is sed to modulate the external phase shifts onto the optical signals.
+} `modulate` is a synthesisable block used to modulate an optical signal, it can perform either phase modulation or amplitude modulation. In the case of amplitude modulation, the synthesis stage may create a @mzi to perform a phase-to-amplitude conversion. In this example, it is used to modulate the external phase shifts onto the optical signals.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Partial function*]
-} `set` allows the creation of a partial function, where parts of the arguments have already been filled, in this case, it is used to create a partial function of `modulate` where the type of modulation is already set to phase modulation.
+} `set` allows the creation of a partial function where parts of the arguments have already been filled. In this case, it is used to create a partial function of `modulate` where the type of modulation is already set to phase modulation.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
@@ -53,8 +53,8 @@ The @phos implementation relies on several key features of the @phos language, i
 } `zip` allows two lists to be zipped together, creating a list of tuples, where each tuple contains the elements of the two lists at the same index. `map` allows a function to be applied to each element of a list. In this case, `zip` is used to zip the list of phase shifts with the list of optical signals, creating a list of tuples where each tuple contains an optical signal and a phase shift. This list is then mapped to a function that sets the phase shift of the optical signal to the phase shift of the tuple.
 
 #figurex(
-    title: [ @phos implementation of a configurable optical beam-forming system. ],
-    caption: [ @phos implementation of a configurable optical beam-forming system. A fully commented version is available in @anx_beam_forming. ],
+    title: [ @phos implementation of a configurable optical beamforming system. ],
+    caption: [ @phos implementation of a configurable optical beamforming system. A fully commented version is available in @anx_beam_forming. ],
 )[
 ```phos
 syn beam_forming(
@@ -84,8 +84,8 @@ $
 $<eq_phase_shift_2>
 
 #figurex(
-    title: [ Simulation results of the beam-forming system. ],
-    caption: [ Simulation results of the beam-forming system, showing the time-dependent phase shifts applied to the optical signals. ],
+    title: [ Simulation results of the beamforming system. ],
+    caption: [ Simulation results of the beamforming system, showing the time-dependent phase shifts applied to the optical signals. ],
     kind: image,
 )[
     #table(
@@ -110,19 +110,19 @@ $<eq_phase_shift_2>
 #pagebreak(weak: true)
 == Coherent 16-QAM transmitter
 
-In this next example, a simple 16-#gloss("qam", short: true) transmitter will be demonstrated along with simulation results. The code for this example is available at @anx_coherent_transmitter. This example will first cover the theoretical background needed to understand the motivation for the example and the measurements taken, followed the modulation aspects of the transmitter.
+In this next example, a simple 16-#gloss("qam", short: true) transmitter will be demonstrated along with simulation results. The code for this example is available at @anx_coherent_transmitter. This example will first cover the theoretical background needed to understand the motivation for the example and the measurements taken, followed by the transmitter's modulation aspects.
 
 === Theoretical background
 
 #info-box(kind: "definition", footer: [ Adapted from @ref_qam. ])[
-    *QAM* refers to *quadrature amplitude modulation*, a modulation scheme where the information is encoded in both the amplitude and the phase of the signal. The *16* refers to the number of symbols in the constellation, which is the number of different values that the signal can take. In this case, the data encoded is therefore 4 bits per symbol, for a total of 16 possible values.
+    *QAM* refers to *quadrature amplitude modulation*, a modulation scheme where the information is encoded in both the amplitude and the phase of the signal. The *16* refers to the number of symbols in the constellation, which is the number of different values the signal can take. In this case, the data encoded is 4 bits per symbol for 16 possible values.
 ]
 
-In telecommunications, and especially in high-speed communication, engineers need to be able to transmit as much information as possible in a given bandwidth, while still maintaining good immunity to noise and other impairments. One way to achieve these higher throughputs, is by using more advanced modulation schemes, the state of the art in photonic communication being 64-#gloss("qam", short: true) @ishimura_64-qam_2022. In this example however, the state of the art will not be reproduced and will instead be focused on a simpler 16-#gloss("qam", short: true) modulation scheme, based on the work by _Talkhooncheh, Arian Hashemi, et al._ @talkhooncheh_200gbs_2023.
+In telecommunications, and especially in high-speed communication, engineers need to be able to transmit as much information as possible in a given bandwidth while still maintaining good immunity to noise and other impairments. One way to achieve these higher throughputs is by using more advanced modulation schemes, state-of-the-art in photonic communication being 64-#gloss("qam", short: true) @ishimura_64-qam_2022. In this example, however, state-of-the-art will not be reproduced and will instead be focused on a simpler 16-#gloss("qam", short: true) modulation scheme, based on the work by _Talkhooncheh, Arian Hashemi, et al._ @talkhooncheh_200gbs_2023.
 
-Modulations are often visualised using two types of diagrams: so-called _eye diagrams_ which show the transitions between symbols, and _constellation diagrams_ which show the actual symbols after sampling. These two visualisations are used to measure the quality of the received signal and to visualise any impairment it might have suffered during transmission. Eye diagrams are built by overlaying many transitions between symbols over one another, slowly building a statistical representation of the signal. Constellation diagrams are built by sampling the signal at a given rate, and plotting its magnitude and phase in a complex plane. The resulting plot is a point cloud that can be used to visualise the symbols that were transmitted.
+Modulations are often visualised using two types of diagrams: so-called _eye diagrams_ which show the transitions between symbols, and _constellation diagrams_ which show the actual symbols after sampling. These two visualisations are used to measure the quality of the received signal and to visualise any impairment it might have suffered during transmission. Eye diagrams are built by overlaying many transitions between symbols over one another, slowly building a statistical representation of the signal. Constellation diagrams are built by sampling the signal at a given rate and plotting its magnitude and phase in a complex plane. The resulting plot is a point cloud that can be used to visualise the symbols that were transmitted.
 
-Finally, the measure that will be used to quantify the quality of the transmitter is not the @ber, as the measurement will be taken at the output of the transmitter, and therefore the bit error rate will be zero, but rather the @evm. The @evm is a measure of the difference between the ideal constellation and the actual constellation, and is defined as in @eq_evm, with $N$ the number of samples, $I_"err"$ and $Q_"err"$ the error in the in-phase and quadrature components of the constellation, $"EVM"_"%"$ the @evm in percentage, and $"EVM Normalization Factor"$ is a normalization factor that depends on the modulation scheme used, for 16-#gloss("qam", short: true), it is the maximum magnitude of the constellation @keysight_technologies_evm. A visualisation of EVM can be found in @fig_evm. One this definition, one can see that the @evm is a measure of the average distance between the ideal constellation and the actual constellation and should, therefore, be minimised.
+Finally, the measure that will be used to quantify the quality of the transmitter is not the @ber, as the measurement will be taken at the transmitter's output. Therefore the bit error rate will be zero, but rather the @evm. The @evm is a measure of the difference between the ideal constellation and the actual constellation and is defined as in @eq_evm, with $N$ the number of samples, $I_"err"$ and $Q_"err"$ the error in the in-phase and quadrature components of the constellation, $"EVM"_"%"$ the @evm in percentage, and $"EVM Normalization Factor"$ is a normalisation factor that depends on the modulation scheme used, for 16-#gloss("qam", short: true), it is the maximum magnitude of the constellation @keysight_technologies_evm. A visualisation of EVM can be found in @fig_evm. With this definition, one can see that the @evm measures the average distance between the ideal constellation and the actual constellation and should, therefore, be minimised.
 
 $
 "EVM"_"%" = sqrt(1 / N sum_(i = 0)^(N - 1)(I_"err" [i]^2 + Q_"err" [i]^2)) / "EVM Normalization Factor" dot 100%
@@ -141,7 +141,7 @@ $ <eq_evm>
 
 === PHÔS implementation
 
-The circuit being built is shown in @fig_qam_mod, it consists of a laser source, which, in the @phos code shown in @lst_modulation, is considered to be external to the device. The light is then split into four parts, two of which are split to one quarter of the total light, while the remaining two each receive half of the total light. Each signal is then modulated, on a real chip, this could be done using an electro-absorption modulator (EAM) or a @mzi based modulator. The signals are then phase shifted to form the _I_ and the _Q_ modulation. The first two signals form the in-phase modulation, while the remaining two signals form the quadrature modulation. The four modulated signals are then combined and sent to the output.
+The circuit being built is shown in @fig_qam_mod, with its code in @anx_coherent_transmitter. It consists of a laser source, which, in the @phos code shown in @lst_modulation, is considered to be external to the device. The light is then split into four parts, two of which are split into one-quarter of the total light, while the remaining two each receive half of the total light. Each signal is then modulated, on a real chip. This could be done using an electro-absorption modulator (EAM) or a #gloss("mzi")-based modulator. The signals are then phase-shifted to form the _I_ and the _Q_ modulation. The first two signals are form the in-phase modulation, while the remaining two form the quadrature modulation. The four modulated signals are then combined and sent to the output.
 
 #figurex(
     title: [ 16-#gloss("qam", short: true) modulator circuit. ],
@@ -154,9 +154,9 @@ The circuit being built is shown in @fig_qam_mod, it consists of a laser source,
     )
 ]<fig_qam_mod>
 
-The input signal is first split into four parts (line $#15$) into four parts with weight $1.0$, $1.0$, $0.5$, and $0.5$. These four signals are zipped (line $#16$), meaning that they are combined into a single value containing an optical and an electrical signal each. All of those values are then amplitude modulated (line $#17$). The second, third, and fourth signals are then phases shifted such that they are $0$, $90$, and $180$ degrees out of phase with the first signal (line $#18$). The four signals are then interfered together (line $#19$) and sent to the output. The resulting signal is a 16-#gloss("qam", short: true) modulated signal, composed of four binary values per symbol.
+The input signal is first split into four parts (line $#15$) into four parts with weights $1.0$, $1.0$, $0.5$, and $0.5$. These four signals are zipped (line $#16$), meaning that they are combined into a single value containing an optical and an electrical signal each. All of those values are then amplitude modulated (line $#17$). The second, third, and fourth signals are then phases shifted such that they are $0$, $90$, and $180$ degrees out of phase with the first signal (line $#18$). The four signals are then interfered together (line $#19$) and sent to the output. The resulting signal is a 16-#gloss("qam", short: true) modulated signal composed of four binary values per symbol.
 
-From this code, one can build a signal flow diagram containing all of the intrinsic operations and constraints, note that the input was replaced with a source of intensity in arbitrary unit of $1.0$, with an @awgn with mean $0.0$ and standard deviation $0.025$ added to it. The resulting signal flow diagram can be found in @fig_qam_tx_sgd.
+One can build a signal flow diagram from this code containing all of the intrinsic operations and constraints. Note that the input was replaced with a source of intensity in an arbitrary unit of $1.0$, with an @awgn with mean $0.0$ and standard deviation $0.025$ added to it. The resulting signal flow diagram can be found in @fig_qam_tx_sgd.
 
 #figurex(
     title: [ Signal flow diagram of a 16-#gloss("qam", short: true) modulator. ],
@@ -266,14 +266,14 @@ syn lattice_filter(a: optical, b: optical, filter_kind: FilterKind) -> (optical,
 #pagebreak(weak: true)
 == Analog matrix-vector multiplication
 
-As previously mentioned in @photonic_processor, there are two major kinds of programmable @pic[s], and while this work has mostly focused itself on recirculating mesh-based photonic processors, they are capable of building the same circuits as feedforward @pic[s]. A typical use case of feedforward meshes, is #gloss("mvm", long: true), this is useful for very quickly and every efficiently perform @mvm, an operation that is very common in machine learning. This example will demonstration how such a @mvm photonic circuit is built in @phos, and how to use it to perform @mvm. The example shown in this example is based of off _Shokraneh et al._'s work @shokraneh_single_2019.
+As previously mentioned in @photonic_processor, there are two major kinds of programmable @pic[s], and while this work has mostly focused itself on recirculating mesh-based photonic processors, they are capable of building the same circuits as feedforward @pic[s]. A typical use case of feedforward meshes is #gloss("mvm", long: true). This is useful for very quickly and efficiently performing @mvm, a common machine learning operation. This example will demonstrate how such a @mvm photonic circuit is built in @phos and how to use it to perform @mvm. The example shown in this example is based on _Shokraneh et al._'s work @shokraneh_single_2019.
 
-This circuit is built from individual @mzi[s], with an added phase shifter, these groupings, which can be seen in @fig_mvm_mzi, are equivalent to the photonic gates from which a photonic processor is built, see @sec_photonic_proc_comp.  For this circuit, they are configured in a triangular shape, as can be seen in @fig_mvm_mzi_full. The circuit is built from 6 gates and is capable of multiplying a vector of size $4$ with a $4 times 4$ matrix.
+This circuit is built from individual @mzi[s], with an added phase shifter, these groupings, which can be seen in @fig_mvm_mzi, are equivalent to the photonic gates from which a photonic processor is built, see @sec_photonic_proc_comp.  For this circuit, they are configured in a triangular shape, as can be seen in @fig_mvm_mzi_full. The circuit is built from 6 gates and can multiply a vector of size $4$ with a $4 times 4$ matrix.
 
 #figurex(
     title: [ Diagram of a single @mzi gate used when building an @mvm circuit. ],
     caption: [
-        Diagram of a single @mzi gate used when building an @mvm circuit. The @mzi gate is built from two couplers, and two phase shifters, the first coupler is used to split the input signal into two, the second coupler is used to recombine the two signals, the first phase shifter is used to add a phase shift to the top signal, and the second phase shifter is used to add a phase shift to the bottom signal.
+        Diagram of a single @mzi gate used when building an @mvm circuit. The @mzi gate is built from two couplers and two phase shifters. The first coupler is used to split the input signal into two, the second coupler is used to recombine the two signals, the first phase shifter is used to add a phase shift to the top signal, and the second phase shifter is used to add a phase shift to the bottom signal.
     ]
 )[
     #image(
@@ -284,9 +284,9 @@ This circuit is built from individual @mzi[s], with an added phase shifter, thes
 ]<fig_mvm_mzi>
 
 #figurex(
-    title: [ Diagram of a the full @mzi @mvm circuit. ],
+    title: [ Diagram of the full @mzi @mvm circuit. ],
     caption: [
-        Diagram of a the full @mzi @mvm circuit. With the inputs annotated $I_1$ through to $I_4$, and the output annotated $Y_0$ through to $Y_3$. The circuit is built from 6 @mzi gates, with 4 inputs, and 4 outputs.
+        Diagram of the full @mzi @mvm circuit. With the inputs annotated $I_1$ through to $I_4$, and the output annotated $Y_0$ through to $Y_3$. The circuit is built from 6 @mzi gates, with four inputs and four outputs.
     ]
 )[
     #image(
@@ -296,6 +296,6 @@ This circuit is built from individual @mzi[s], with an added phase shifter, thes
     )
 ]<fig_mvm_mzi_full>
 
-From these diagrams, it becomes clear that the matrix-vector multiplication is not trivial, assuming that the final operation being performed is $Y = bold(M) dot X$, where $Y$ and $X$ are vectors, and $bold(M)$ is a matrix, these cannot be mapped one-to-one with the values of the phase shifters on the circuit. The transformation from the matrix $bold(M)$ into the corresponding phase shifts is not the focus of this thesis, therefore, the ones from _Shokraneh et al._'s work will be used instead @shokraneh_single_2019. It is interesting to note that, by performing the matrix multiplication in the analog domain, while the circuit can be made to be extremely fast, it also introduces noise and imprecision. Therefore, while in machine-learning models that rely on low-precision arithmetic, this may not be a problem, it would have limited use in applications that depend on higher-precision arithmetic.
+From these diagrams, it becomes clear that the matrix-vector multiplication is not trivial, assuming that the final operation being performed is $Y = bold(M) dot X$, where $Y$ and $X$ are vectors, and $bold(M)$ is a matrix, these cannot be mapped one-to-one with the values of the phase shifters on the circuit. The transformation from the matrix $bold(M)$ into the corresponding phase shifts is not the focus of this thesis. Therefore, the ones from _Shokraneh et al._'s work will be used instead @shokraneh_single_2019. It is interesting to note that, by performing the matrix multiplication in the analog domain, while the circuit can be made to be extremely fast, it also introduces noise and imprecision. Therefore, while machine-learning models that rely on low-precision arithmetic may not be a problem, they would have limited use in applications that depend on higher-precision arithmetic.
 
-The code to create this circuit in @phos is rather long and is therefore available in @anx_matrix_vector. It can successfully be simulated using the constraint solver. The tests were done with the following input vectors: $X = (0, 0, 0, 0), (1, 0, 0, 0), (0, 1, 0, 0), (0, 0, 1, 0), "and" (0, 0, 0, 1)$. From these values, one can verify that the circuit is indeed performing the correct operation by comparing that the first vector produces an empty vector, and that the other vectors return the corresponding column of the matrix.
+The code to create this circuit in @phos is rather long and is therefore available in @anx_matrix_vector. It can successfully be simulated using the constraint solver. The tests were done with the following input vectors: $X = (0, 0, 0, 0), (1, 0, 0, 0), (0, 1, 0, 0), (0, 0, 1, 0), "and" (0, 0, 0, 1)$. From these values, one can verify that the circuit is indeed performing the correct operation by comparing that the first vector produces an empty vector and that the other vectors return the corresponding column of the matrix.

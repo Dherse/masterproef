@@ -106,7 +106,7 @@ Fiber sensors have been used in many industries, including gas and oil, aerospac
 === Medical
 The medical industry has been using optical fibers for a long time, and photonic processors can be used as processing units for these fibers. They can also be included in the RF processing chains of equipment like MRI machines.
 
-All of these factors combine place photonic processors in a unique way where they can be integrated into many existing technologies and fields, making them a promising technology.
+All of these factors combined place photonic processors in a unique way where they can be integrated into many existing technologies and fields, making them a promising technology.
 
 #colbreak(weak: true)
 = PHÔS
@@ -131,13 +131,13 @@ These challenges and requirements make it difficult for existing languages to de
 PHÔS is a language based on traditional imperative programming, with features from functional and dataflow programming languages. It is a strongly typed language with a type system inspired by _Rust_'s and a syntax inspired by _Rust_'s, _Python_'s, and _Elixir_'s. PHÔS separates hardware synthesis into three stages: compilation, evaluation, and synthesis. During compilation, the user's code is turned into a bytecode representing their code, which contains information about the program's structure, types, functions, and signal flow. The bytecode is executed during evaluation, and the program's output is computed. Parts of the program that depend on tunable values are collected for further processing. The output of the evaluation stage is a graph representing the program's signal flow. This graph is then used to synthesise the program into a photonic circuit. Some of the core concepts will be discussed in the following few sections.
 
 === Constraints
-Constraints are placed on values and signals to inform PHÔS of what values or content is expected at any point in the program. These constraints can then be used for validation of the design and to optimise the design. Constraints are also used when simulating the circuit quickly and efficiently simulate the circuit.
+Constraints are placed on values and signals to inform PHÔS of what values or content is expected at any point in the program. These constraints can then be used for validation of the design and to optimise the design. Constraints are also used when simulating the circuit to make the simulation quicker and more efficient.
 
 === Tunable values
 Like any other variables or argument, tunable values are declared in the source code. Only when the user instantiates the module are the tunable values configured; this occurs during the evaluation stage. When this happens, as the user's program is being evaluated, all operations that cannot be performed due to missing values are collected into stacks for further processing.
 
 === Reconfigurability through branching
-PHÔS handles the reconfigurability of the circuit it produces through branching in its source code; when tunable values are present, these branches represent the boundaries of reconfigurability regions. PHÔS discards the branches that are not needed based on the constraints of the tunable values. These constraints allow PHÔS to produce a reconfigurable and tunable circuit while avoiding unnecessary work of unreachable states.
+PHÔS handles the reconfigurability of the circuit it produces through branching in its source code; when tunable values are present, these branches represent the boundaries of reconfigurability regions. PHÔS discards the branches that are not needed based on the constraints of the tunable values. These constraints allow PHÔS to produce a reconfigurable and tunable circuit while avoiding the unnecessary work of unreachable states.
 
 === Intrinsic operations
 PHÔS decomposes the user's program during evaluation into a series of intrinsic operations. These operations are the unit operations performed on the signal in the circuit. These operations are then used to synthesise the circuit.
@@ -154,10 +154,10 @@ fn hello_world() {
 ```
 ] <lst_hello_world>
 
-=== Synthesizable blocks
-PHÔS makes a semantic difference between functions and synthesisable blocks. Synthesizable blocks are similar to functions but can take in and return signals. This distinction encourages the user to separate the concerns between their parameters' computation and the circuit's signal flow they are trying to build. In @lst_syn_block, such a synthesisable block performs filtering on an input signal. It also shows some of the unique features of PHÔS, such as using the pipe operator (`|>`) to chain operations and the ability to express SI units directly in the code.
+=== Synthesisable blocks
+PHÔS makes a semantic difference between functions and synthesisable blocks. Synthesisable blocks are similar to functions but can take in and return signals. This distinction encourages the user to separate the concerns between their parameters' computation and the circuit's signal flow they are trying to build. In @lst_syn_block, such a synthesisable block performs filtering on an input signal. It also shows some of the unique features of PHÔS, such as using the pipe operator (`|>`) to chain operations and the ability to express SI units directly in the code.
 
-#figure(caption: [Synthesizable block in PHÔS. ])[
+#figure(caption: [Synthesisable block in PHÔS. ])[
 ```phos
 syn my_circuit(input: optical) -> optical {
     optical |> filter(1550 nm, bandwidth = 10 GHz)
@@ -169,7 +169,7 @@ syn my_circuit(input: optical) -> optical {
 
 Constraints are expressed in PHÔS using decorators on input arguments and output values. This syntax may be changed in the future, but as of the writing of this paper, it is the syntax used. In @lst_constraints, the `@power` decorator represents that the signal has specific power content.
 
-#figure(caption: [Synthesizable block with constraints in PHÔS. ])[
+#figure(caption: [Synthesisable block with constraints in PHÔS. ])[
 ```phos
 syn my_circuit(
     @power(0 dBm) input: optical
@@ -181,7 +181,7 @@ syn my_circuit(
 
 = 16-QAM 400Gb/s transmitter
 
-After this short introduction to the PHÔS language, this section will present a 16-QAM 400Gb/s transmitter designed using PHÔS. This example is based on the work by _Talkhooncheh, Arian Hashemi, et al._ @talkhooncheh_200gbs_2023. The code of this example can be found in @lst_16qam, showing the circuit as taking four electrical inputs, which are the four binary sources that will be modulated. It also takes an optical signal, which is the source laser. It then splits the laser source into four signals, one for each binary source. These signals are then modulated using amplitude modulation. Their phase is then constrained to be within 90° of each other. Finally, the four signals are merged back into a single signal.
+After this short introduction to the PHÔS language, this section will present a 16-QAM 400Gb/s transmitter designed using PHÔS. This example is based on the work by _Talkhooncheh, Arian Hashemi, et al._ @talkhooncheh_200gbs_2023. The code of this example can be found in @lst_16qam, showing the circuit as taking four electrical inputs, which are the four binary sources that will be modulated. It also takes an optical signal, which is the source laser. It then splits the laser source into four signals, one for each binary source. These signals are then modulated using amplitude modulation. Their phases are then constrained to be within 90° of each other. Finally, the four signals are merged back into a single signal.
 
 #figure(
     caption: "16-QAM 400Gb/s transmitter designed using PHÔS.",

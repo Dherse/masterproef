@@ -1,6 +1,6 @@
 #import "./template.typ": todo, section
 
-#let disabled = true
+#let disabled = false
 
 #let glossary_entries = state("glossary_entries", (:))
 

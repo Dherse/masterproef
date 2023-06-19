@@ -158,7 +158,7 @@ A lot of applications will need the generation of laser light; while this is dif
     set text(size: 12pt, fill: rgb(30, 100, 200))
     smallcaps[*Phase shifter*]
 }
-Phase shifters are a necessary building block for a lot of more complex structures such as tunable @mzi[s], tunable filters, coherent communication, power combiners, etc. Therefore, as an integral part of the functioning of photonic processing, they must be present as an intrinsic operation. Additionally, they may be used in two different modes: the first mode is as a phase shifter, shifting the phase of a single signal, and the second mode is as a differential phase shifter, imposing a phase shift with respect to another signal. This case is especially interesting as it can be used to implement complex quadrature modulation schemes. In @sec_examples, examples regarding coherent communication will be presented that makes use of this intrinsic operation to implement complex modulation schemes, as well as to implement a beam-forming network.
+Phase shifters are a necessary building block for a lot of more complex structures such as tunable @mzi[s], tunable filters, coherent communication, power combiners, etc. Therefore, as an integral part of the functioning of photonic processing, they must be present as an intrinsic operation. Additionally, they may be used in two different modes: the first mode is as a phase shifter, shifting the phase of a single signal, and the second mode is as a differential phase shifter, imposing a phase shift with respect to another signal. This case is especially interesting as it can be used to implement complex quadrature modulation schemes. In @sec_examples, examples regarding coherent communication will be presented that makes use of this intrinsic operation to implement complex modulation schemes, as well as to implement a beamforming network.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
@@ -380,7 +380,7 @@ Using the aforementioned sections, one can categorise constraints into three dis
     #image(
         "../figures/drawio/constraint_hierarchy.svg",
         width: 40%,
-        alt: "Shows three ellipsis contained within one another, the center one is annotated as \"Synthesizable\", the middle one as \"Simulation\", and the outer one as \"Meta\".",
+        alt: "Shows three ellipsis contained within one another, the center one is annotated as \"Synthesisable\", the middle one as \"Simulation\", and the outer one as \"Meta\".",
     )
 ] <fig_constraint_hierarchy>
 
@@ -400,7 +400,7 @@ Using the aforementioned sections, one can categorise constraints into three dis
         smallcaps[Description],
         (),
 
-        rowspanx(2)[#rotate(-90deg)[#box(width: 200pt)[#smallcaps[Synthesizable]]]],
+        rowspanx(2)[#rotate(-90deg)[#box(width: 200pt)[#smallcaps[Synthesisable]]]],
 
         smallcaps[Power],
         align(left)[

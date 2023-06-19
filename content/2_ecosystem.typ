@@ -211,6 +211,7 @@ Finally, there also exist tools for physical simulation, such as _Ansys Lumerica
 }
 As previously mentioned, when writing @hdl code, it is desirable to simulate the code to check that it behaves correctly. Therefore, it may even be desirable to automatically simulate code in a similar way that unit tests are performed. This action of automatically testing through simulation is called _verification_, as verification is an integral part of the @hdl workflow and ecosystem. Any photonic programming solution must provide a way to perform verification. This would be done by providing both a simulator and a tester and then providing a way of interfacing both together to perform verification.
 
+#pagebreak(weak: true)
 === Package manager
 
 #info-box(kind: "definition", footer: [ Adapted from @package-manager ])[
@@ -354,6 +355,7 @@ Finally, @tab_ecosystem_compare compares the ecosystem of existing programming a
 
 One can also see from @tab_ecosystem_compare that simulation and hardware description ecosystems tend to be highly proprietary and incomplete. This problem can be solved by providing a common baseline for all tasks relating to photonic hardware description, where only the lowest level of the technology stack: the platform-support is vendored. Forcing platforms, through an open source license such as @gpl-3-0, to provide a standard interface for their hardware will allow a standardised ecosystem to be built on top of it. This is the approach that @phos will hopefully take.
 
+#pagebreak(weak: true)
 #figurex(
     caption: [
         This table compares the ecosystems of different programming and hardware description languages. It shows whether the components are first-party (#required_sml), third-party but well-supported (#desired_sml) or third-party but not well-supported or non-existent (#not_needed_sml). Each component also lists the name of the tool that is most commonly used for that purpose.
@@ -617,8 +619,6 @@ In the first example, in @lst_adder_vhdl, it can be seen that the @vhdl implemen
 
 The second example based on _MyHDL_, in @lst_adder_my_hdl, shows a combinatorial implementation of an adder. It shows that _MyHDL_ relies on decorators to perform code transformations, something that may be useful when designing custom languages based on _Python_ @ikarashi_exocompilation_2022. Despite using decorators, the code for the _Python_ example is very short, relying on the `@always_comb` annotation to denote the combinatorial logic. The `@block` annotation is used to denote a block of code that will be translated to a module. Overall, code in _MyHDL_ is generally easy to read and has a low barrier to entry for _Python_ developers. 
 
-#pagebreak(weak: true)
-
 #figurex(
     caption: [ Example of a $n$-bit adder in _MyHDL_. ],
 )[
@@ -711,16 +711,15 @@ Dataflow programming is another subset of functional programming, where the prog
 
 == Existing framework
 
-There currenrly exists a framework developed at the @prg, for the programming of photonic processors. However, its level of abstraction is low, it consists of manually setting the parameters of each photonic gate, and then manually connecting them together. This is a very low-level approach, and as such, it is not suitable for the programming of complex photonic processors. However, it is still useful for the programming of simpler photonic circuits, and as such has been used for demonstrations of routing, switching, and circuit designing.
+There currently exists a framework developed at the @prg for the programming of photonic processors. However, its level of abstraction is low. It consists of manually setting the parameters of each photonic gate and then manually connecting them together. This is a very low-level approach, and as such, it is not suitable for the programming of complex photonic processors. However, it is still useful for the programming of simpler photonic circuits, and as such has been used for demonstrations of routing, switching, and circuit designing.
 
 == Hardware-software codesign
 
 #info-box(kind: "definition", footer: [ Adapted from @darwish_trends_2005. ])[
-    *Hardware-software codesign* is the process of designing a system where both the hardware and software components are designed together, with the goal of interoperating hardware components and software systems more easily. And optimising the system as a whole rather than optimising the hardware and software components separately.
+    *Hardware-software codesign* is the process of designing a system where both the hardware and software components are designed together, with the goal of interoperating hardware components and software systems more easily. And optimise the system as a whole rather than the hardware and software components separately.
 ]
 
-#todo("here")
-
+Hardware-software codesign is difficult, requiring good communication and planning between the different parties. As such, some tools have been created to make this process easier. In @fpga development, this is usually done by having the synthesiser produce lists of registers which the software can configure. However, this is still error prone and limited in usefulness.
 
 == Summary <sec_language_summary>
 
@@ -728,6 +727,7 @@ From the aforementioned criteria, one may give a score for each of the discussed
 
 From @tbl_language_comparison, one can see that for creating a new language, the best languages to implement it are _Rust_ and _C_. And the best languages to inspire the syntax and semantics are _Python_ and #emph[@verilog-ams]. Additionally, _C_ is also a good inspiration due to its widespread use and the familiarity of its syntax. Finally, for the implementation of an @api, the best choice is _Python_ due to its maturity, simplicity and popularity in academic and engineering circles.
 
+#pagebreak(weak: true)
 #figurex(
     caption: [
         Comparison of the different languages based on the criteria discussed in @sec_language_summary.

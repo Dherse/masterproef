@@ -22,19 +22,12 @@
     #image("../figures/programming_paradigms.png", width: 71%)
 ]
 
-#set page(flipped: false)
-= PHÔS: a formal grammar <anx_phos_grammar>
-#counter(figure.where(kind: table)).update(0)
-#counter(figure.where(kind: image)).update(0)
-#counter(figure.where(kind: raw)).update(0)
-#set figure(numbering: (x) => [B.#x])
-
 #set page(flipped: true, columns: 1)
 = AST data structure: overview <anx_ast_overview>
 #counter(figure.where(kind: table)).update(0)
 #counter(figure.where(kind: image)).update(0)
 #counter(figure.where(kind: raw)).update(0)
-#set figure(numbering: (x) => [C.#x])
+#set figure(numbering: (x) => [B.#x])
 #figurex(
     title: [ UML diagram of parts of the @ast relevant for @sec_ast. ],
     caption: [
@@ -49,7 +42,7 @@
 #counter(figure.where(kind: table)).update(0)
 #counter(figure.where(kind: image)).update(0)
 #counter(figure.where(kind: raw)).update(0)
-#set figure(numbering: (x) => [D.#x])
+#set figure(numbering: (x) => [C.#x])
 #figurex(
     title: [
         Execution diagram of the stack of @sec_ex_bytecode_exec.
@@ -66,7 +59,7 @@
 #counter(figure.where(kind: table)).update(0)
 #counter(figure.where(kind: image)).update(0)
 #counter(figure.where(kind: raw)).update(0)
-#set figure(numbering: (x) => [E.#x])
+#set figure(numbering: (x) => [D.#x])
 
 #figurex(
     title: [ Graph representation of a mesh. ],
@@ -82,7 +75,7 @@
 #counter(figure.where(kind: table)).update(0)
 #counter(figure.where(kind: image)).update(0)
 #counter(figure.where(kind: raw)).update(0)
-#set figure(numbering: (x) => [F.#x])
+#set figure(numbering: (x) => [E.#x])
 
 #figurex(
     title: [ @phos example used in @lst_marshalling_comp.  ],
@@ -193,14 +186,14 @@ plt.show()
 #counter(figure.where(kind: table)).update(0)
 #counter(figure.where(kind: image)).update(0)
 #counter(figure.where(kind: raw)).update(0)
-#set figure(numbering: (x) => [G.#x])
+#set figure(numbering: (x) => [F.#x])
 
 #figurex(
-    title: [ Example in @phos of beam-forming system. ],
-    caption: [ Example in @phos of beam-forming system, parametric over the number of channels. ],
+    title: [ Example in @phos of beamforming system. ],
+    caption: [ Example in @phos of beamforming system, parametric over the number of channels. ],
 )[
 ```phos
-// Create a simple beam-forming system
+// Create a simple beamforming system
 // This system takes an input optical signal and a set of electrical signals
 //  1. It splits the input optical signal into N optical signals
 //  2. It ensures that the phase of each of the optical signals is the same
@@ -224,7 +217,7 @@ syn beam_forming(
 #counter(figure.where(kind: table)).update(0)
 #counter(figure.where(kind: image)).update(0)
 #counter(figure.where(kind: raw)).update(0)
-#set figure(numbering: (x) => [H.#x])
+#set figure(numbering: (x) => [G.#x])
 
 #figurex(
     title: [ Example in @phos of a 16-#gloss("qam", short: true) modulator. ],
@@ -257,7 +250,7 @@ syn coherent_transmitter(
 #counter(figure.where(kind: table)).update(0)
 #counter(figure.where(kind: image)).update(0)
 #counter(figure.where(kind: raw)).update(0)
-#set figure(numbering: (x) => [I.#x])
+#set figure(numbering: (x) => [H.#x])
 
 #figurex(
     title: [ Example in @phos of a parametric lattice filter. ],
@@ -309,7 +302,7 @@ syn lattice_filter(
 #counter(figure.where(kind: table)).update(0)
 #counter(figure.where(kind: image)).update(0)
 #counter(figure.where(kind: raw)).update(0)
-#set figure(numbering: (x) => [J.#x])
+#set figure(numbering: (x) => [I.#x])
 
 #figurex(
     title: [ Example in @phos of an analog matrix-vector multiplier. ],
