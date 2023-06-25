@@ -107,6 +107,13 @@
 
         let icon(icon) = text(font: "tabler-icons", size: 24pt, baseline: -4pt, fill: text-color, icon)
 
+        let added-content = ()
+
+        if "linkedin" in data {
+            added-content.push(icon("\u{ec8c}"))
+            added-content.push(link(data.linkedin, [ #data.authors.at(0) ]))
+        }
+
         let social = {
             set text(size: 24pt)
             table(
@@ -122,6 +129,7 @@
                 link("https://www.instagram.com/ugent/", [ \@ugent ]),
                 icon("\u{ec8c}"),
                 link("https://www.linkedin.com/school/ghent-university/", [ Ghent University ]),
+                ..added-content,
             )
         }
 
@@ -172,7 +180,7 @@
         
         let box_size = (width: 45.63cm / ratio, height: 18.07cm / ratio)
         let box_offset = (dx: 2.54cm / ratio, dy: 3.87cm / ratio)
-        let icon_box_size = (width: 20.16cm / ratio, height: 5.81cm / ratio)
+        let icon_box_size = (width: 20.16cm / ratio, height: 10cm / ratio)
         let icon_box_offset = (dx: 24.1cm / ratio, dy: 8.6cm / ratio)
         let icon_box_inset = (inset: (x: 0.25cm / ratio, y: 0.13cm / ratio))
         let body_box_size = (width: 20.6cm / ratio, height: 16.03cm / ratio)
@@ -287,7 +295,7 @@
     }
 
     let slide(slide-info, bodies, kind: "slide") = {
-        set text(font: "UGent Panno Text", size: 25pt)
+        set text(font: "UGent Panno Text", size: 22pt)
 
         let box_size = (height: 18.6cm / ratio, width: 43.61cm / ratio)
         let box_inset = (inset: (x: 0.25cm / ratio, y: 0.13cm / ratio))
@@ -316,7 +324,7 @@
             let text_inset = (inset: (x: text_inset.inset.x, y: 10pt))
             elems.push(
                 box(..text_box_size, ..text_inset, {
-                    set text(size: 54pt, weight: "light", fill: ugent-blue)
+                    set text(size: 50pt, weight: "light", fill: ugent-blue)
                     show text: smallcaps
                     show text: underline
 
