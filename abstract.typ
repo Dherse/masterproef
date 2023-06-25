@@ -1,4 +1,4 @@
-#import "ieee.typ": *
+#import "elems/ieee.typ": *
 #show: ieee.with(
   title: "A software language approach for describing and programming photonics hardware",
   abstract: [
