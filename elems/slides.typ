@@ -190,7 +190,7 @@
         }
     })
     logical-slide.step()
-    locate( loc => {
+    locate(loc => {
         subslide.update(1)
         repetitions.update(1)
 
@@ -334,6 +334,7 @@
     theme: slides-default-theme(),
     aspect-ratio: "16-9",
     handout: false,
+    ..args,
     body
 ) = {
 
@@ -346,15 +347,17 @@
         title: title,
         authors: if type(authors) == "array" {
             authors
-        } else if type(authors) in ("string", "content") {
+        } else if type(authors) in ("string", "content", "none") {
             (authors, )
         } else {
-            panic("authors must be an array, string, or content.")
+            panic("if not none, authors must be an array, string, or content.")
         },
         subtitle: subtitle,
         short-title: short-title,
         short-authors: short-authors,
         date: date,
+        handout: handout,
+        ..args.named(),
     )
     let the-theme = theme(data)
     global-theme.update(the-theme)

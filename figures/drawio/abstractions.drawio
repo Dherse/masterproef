@@ -1,0 +1,28 @@
+<mxfile host="Electron" modified="2023-06-23T17:30:33.903Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.4.0 Chrome/112.0.5615.204 Electron/24.5.1 Safari/537.36" etag="UXWgcjVdD1YPjPGjisHK" version="21.4.0" type="device">
+  <diagram name="Page-1" id="z6hT24lAIQ1Qt2mDOS5c">
+    <mxGraphModel dx="703" dy="408" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="TC1mq8rxLbuKtGXRgA2w-5" value="Physical level" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontFamily=UGent Panno Text;fontSize=22;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="220" y="250" width="240" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="TC1mq8rxLbuKtGXRgA2w-2" value="Circuit" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontFamily=UGent Panno Text;fontSize=22;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="240" y="220" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="TC1mq8rxLbuKtGXRgA2w-6" value="System" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontFamily=UGent Panno Text;fontSize=22;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="260" y="190" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="TC1mq8rxLbuKtGXRgA2w-7" value="Function" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fontFamily=UGent Panno Text;fontSize=22;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="280" y="160" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="TC1mq8rxLbuKtGXRgA2w-8" value="&lt;br&gt;Idea" style="triangle;whiteSpace=wrap;html=1;rotation=0;fontFamily=UGent Panno Text;fontSize=22;flipV=1;flipH=0;direction=south;labelPosition=center;verticalLabelPosition=middle;align=center;verticalAlign=middle;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="300" y="100" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="TC1mq8rxLbuKtGXRgA2w-27" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-128.png" vertex="1" parent="1">
+          <mxGeometry x="350" y="100" width="30" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
