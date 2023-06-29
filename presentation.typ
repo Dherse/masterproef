@@ -7,6 +7,7 @@
 #let date = datetime(year: 2023, month: 06, day: 29).display()
 
 #show: code-blocks
+#set page(numbering: "1", footer: [])
 
 #show: slides.with(
     authors: "Sébastien d'Herbais de Thun",
@@ -25,12 +26,11 @@
     research-group: "Photonics Research Group",
     linkedin: "https://www.linkedin.com/in/s%C3%A9bastien-d-herbais-de-thun-069913206/",
     theme: ugent-theme(),
-    handout: true,
+    handout: false,
 )
-
+#set text(font: "UGent Panno Text")
 #show strong: set text(fill: ugent-blue)
 
-#set figure(numbering: "1")
 #show figure: it =>  {
   let supplement = [
     #set text(fill: rgb(30,100,200))
@@ -68,51 +68,38 @@
   )
 }
 
+#let text_emoji(content, ..args) = text.with(font: "tabler-icons", fallback: false, weight: "regular", size: 100pt, ..args)(content)
+
+#let lightbulb = text_emoji(fill: earth-yellow, size: 70pt - 2.7pt)[\u{ea51}]
+#let lightning = text_emoji(fill: green, size: 70pt - 2.7pt)[\u{ea38}]
+#let value = text_emoji(fill: rgb(30,100,200), size: 70pt - 2.7pt)[\u{f61b}]
+
+#let required = text_emoji(fill: green)[\u{ea5e}]
+#let not_needed = text_emoji(fill: red)[\u{eb55}]
+#let desired = text_emoji(fill: rgb(30,100,200))[\u{f4a5}]
+
 // UGent logo
 #slide(theme-variant: "corporate logo")
 
 // Global title slide
 #slide(theme-variant: "title slide")
 
-#slide(title: "About this presentation")[
-  #one-by-one()[
-    - Introduction
-    - Elevator pitch
-    - Programmatic description: an overview
-    - Example: 16-QAM modulator
-    - Example: Lattice filter
-    - Conclusion
-    - Future work
-  ]
-]
-
-#slide(title: "To code, or not to code")[
-  - Not everybody is a programmer #show: pause(2); *and that's okay!*
-    - Code sections will be kept *short*
-    - The language is *familiar*
-    - Code will be *explained*
-    - Code is shown in *boxes*
-  #show: pause(3)
-  - Code is *non-exhaustive*
-  #show: pause(4)
-  - Code is *not optimized*
-  #show: pause(5)
-  - Code is *illustrative*
-][
-  #show: pause(2)
-  ```python
-  print('Hello, world!')
-  ```
-  ```phos
-  fn main() {
-      print("Hello, world!")
-  }
-  ```
-]
-
 // First section
 #new-section("The elevator pitch")
 #slide(theme-variant: "section slide")
+
+#slide(title: "Rising to the occasion", theme-variant: "image only", footer: [
+  Picture: _Bao Jueming, et al._ @bao_very-large-scale_2023
+])[
+  #line-by-line()[
+    - Photonic circuits are *complex*
+    - This complexity is *rising*
+    - How to *tame* complexity? #uncover(5)[_abstractions_]
+    - Can we learn from *VLSI*? #uncover(5)[_yes_]
+  ]
+][
+  #image("./figures/big_circuit.png", width: 100%)
+]
 
 #slide(title: "Levels of abstraction")[
   #line-by-line()[
@@ -123,37 +110,90 @@
       #line-by-line(start: 4)[
         - Components (parametric)
         - Signal flow graphs
+        - Black boxes
         - ???
       ]
   ]
 ][
-  #counter(figure.where(kind: image)).update(1)
-  #figure(caption: [ Levels of abstraction in photonic circuit design. ], kind: image)[
-    #image("./figures/drawio/abstractions.png", width: 100%)
-  ]
+  #only(1, image("./figures/drawio/abstractions_1.png", width: 100%))
+  #only((beginning: 2, until: 3), image("./figures/drawio/abstractions_2.png", width: 100%))
+  #only(4, image("./figures/drawio/abstractions_comp.png", width: 100%))
+  #only(5, image("./figures/drawio/abstractions_sfg.png", width: 100%))
+  #only(6, image("./figures/drawio/abstractions_bb.png", width: 100%))
+  #only((beginning: 7), image("./figures/drawio/abstractions_qm.png", width: 100%))
 ]
 
-#slide(title: "Introducing PHÔS")[
-  #line-by-line()[
-    - PHÔS is a *domain-specific language*
-    - PHÔS describes *photonic circuits*
-    - PHÔS is *declarative*
-    - PHÔS is *parametric*
-    - PHÔS is *expressive*
-    - PHÔS is *extensible*
+#slide(
+  title: "Introducing PHÔS",
+  footer: [
+    #only(9)[
+      Picture: _Brianne Christopher_ @christopher_calculating_nodate
+    ]
   ]
+)[
+  #only((1, 2, 3, 4, 5, 6, 7, 8))[
+    #line-by-line()[
+      - PHÔS is a *new language* and the result of this thesis
+      - PHÔS is a *domain-specific language*
+      - PHÔS describes *photonic circuits*
+      - PHÔS is *declarative*
+      - PHÔS is *parametric*
+      - PHÔS is *expressive*
+      - PHÔS is *extensible*
+      - PHÔS is *not finished* nor *perfect*
+        - We need *you* to make it better!
+    ]
+  ]
+  #only(9, layout(size => style(styles => [
+    #show: align.with(center + horizon)
+    #let img = image("./figures/ring_resonator_field.png", width: size.width)
+    #let dims = measure(img, styles)
+    #place(center + horizon)[
+      #box(..dims)[
+        #img
+      ]
+    ]
+    #place(bottom + right)[
+      #not_needed
+    ]
+  ])))
+  #only(10, layout(size => style(styles => [
+    #show: align.with(center + horizon)
+    #let img = image("./figures/ring_resonator_black_box.png", width: size.width)
+    #let dims = measure(img, styles)
+    #place(center + horizon)[
+      #box(..dims)[
+        #img
+      ]
+    ]
+    #place(bottom + right)[
+      #required
+    ]
+  ])))
 ][
-  #line-by-line(start: 5)[
-    - PHÔS is the *function* and *system* levels
-      - Filter synthesis
-      - Signal flow graph generation
-      - Component instantiation
-      - Reconfigurability & tunability
-      - Optimization
+  /*#only((beginning: 1, until: 7), align(center + horizon, image("./figures/drawio/responsibilities-vertical.png", height: 120%)))*/
+  #line-by-line(start: 8)[
     - PHÔS is *not* at the component level	
       - #strike[Component design]
       - #strike[Component simulation]
       - #strike[Component optimization]
+    - PHÔS is the *function* and *system* levels
+      - Filter synthesis
+      - Signal flow graph generation
+      - Component modeling & instantiation
+      - Reconfigurability & tunability
+      - Optimization
+  ]
+]
+
+#slide(title: "About this presentation")[
+  #one-by-one()[
+    - Elevator pitch
+    - Programmatic description: an overview
+    - Example: 16-QAM modulator
+    - Example: Lattice filter
+    - Conclusion
+    - Future work
   ]
 ]
 
@@ -161,23 +201,20 @@
 #slide(theme-variant: "section slide")
 
 #slide(title: "Translation of intent")[
-    - How do we tell the computer what we want? #uncover(2)[*Programming!*]
-    - What do we want the computer to do for us? #uncover(4)[*As much as possible!*]
-    - How does the computer do it? #uncover(5)[*Compilation, Evaluation, and Synthesis!*]
+    - How do we tell the computer what we want? #uncover((beginning: 2, until: 4))[*Programming!*]
+    - What do we want the computer to do for us? #uncover((beginning: 3, until: 4))[*As much as possible!*]
+    - How does the computer do it? #uncover((beginning: 4, until: 4))[*Compilation, Evaluation, and Synthesis!*]
 ]
 
-#slide(title: "Why programming?", colwidths: (50%, 50%))[
+#slide(title: "How do you describe photonic circuit?", colwidths: (50%, 50%))[
   #line-by-line()[
-    - Scaling circuits is *really* hard
-    - Circuits are *inflexible*
-    - Circuits are not *reusable*
-    - Circuits are not *expressive*
+    - Scaling graphical circuits is *really* hard
+    - Graphical circuits are *inflexible*
+    - Graphical circuits are not *reusable*
+    - Graphical circuits are not *expressive*
   ]
-  #counter(figure.where(kind: image)).update(0)
   #uncover(4, align(bottom)[
-    #figure(caption: [ A lattice filter circuit. ])[
-      #image("./figures/drawio/mzi_lattice.png", width: 80%)
-    ]
+    #align(center, image("./figures/drawio/mzi_lattice.png", width: 80%))
   ])
 ][
   #line-by-line()[
@@ -186,17 +223,15 @@
     - Code is easily *reusable*
     - Code is *expressive*
   ]
-  #counter(figure.where(kind: raw)).update(0)
   #uncover(4, align(bottom)[
-    #figure(caption: [ A lattice filter as code. ])[
-      ```phos
-      filter_kind_coefficients(filter_kind)
-        |> fold((a, b), |acc, (coeff, phase)| {
-          acc |> coupler(coeff)
-              |> constrain(d_phase = phase)
-        })
-      ```
-    ]
+    #set text(size: 18pt)
+    ```phos
+    filter_kind_coefficients(filter_kind)
+      |> fold((a, b), |acc, (coeff, phase)| {
+        acc |> coupler(coeff)
+            |> constrain(d_phase = phase)
+      })
+    ```
   ])
 ]
 
@@ -241,11 +276,7 @@
     }
   ```
 ][
-  #counter(figure.where(kind: image)).update(1)
-  #figure(
-    caption: [ Signal flow diagram of `my_circuit`, showing the tunable value impacting reconfigurability. ],
-    image("./figures/drawio/circuit_diagram.png", width: 90%)
-  )
+  #align(center, image("./figures/drawio/circuit_diagram.png", width: 90%))
 ]
 
 #slide(title: "Tying it all together")[
@@ -258,58 +289,127 @@
 ][
   #uncover(5,
   ```phos
-    syn amplifier(
-        @power(max(0 dBm - gain))
-        input: optical,
+  syn amplifier(
+      @power(max(0 dBm - gain))
+      input: optical,
 
-        @max(10 dB)
-        gain: Gain,
-    ) -> @power(input + gain) optical {
-        ...
-    }
+      @max(10 dB)
+      gain: Gain,
+  ) -> @power(input + gain) optical {
+      ...
+  }
   ```)
 ]
 
-#slide(title: "What is a circuit made of?")[
+#slide(title: "What is a circuit made of?", colwidths: (1fr, 1fr))[
   #line-by-line()[
     - *Filters*
     - *Gain* and *loss* elements
     - *Modulators* and *detectors*
-    - *Splitters*, *combiners*, and *couplers*
+    - *Splitters* and *combiners*
+    - *Couplers*
     - *Switches*
     - *Phase shifters* and *delay lines*
-    - *Sources*, *sinks*, and *empty* signal
+    - *Sources*
+    - *Sinks*, and *empty* signals
     - Together, these form the *intrinsic operations*
     - *Circuits* are made of *intrinsic operations*
   ]
 ][
-  #uncover(10, figure(
-    caption: [ A lattice filter circuit. ],
-    image("./figures/drawio/signal_proc.png", width: 80%),
-  ))
+  #layout(size => alternatives(rest: align(center + horizon, image("./figures/drawio/signal_proc.png", width: 100%)))[
+    #align(center + horizon)[
+      #image("./figures/drawio/intrinsics/filter.png", width: size.width)
+      *Wavelength* constraint
+    ]
+  ][
+    #align(center + horizon)[
+      #image("./figures/drawio/intrinsics/gain_loss.png", width: size.width)
+      *Power* constraint
+    ]
+  ][
+    #align(center + horizon)[
+      #image("./figures/drawio/intrinsics/modulator.png", width: size.width)
+      (no constraint)
+      #image("./figures/drawio/intrinsics/detector.png", width: size.width)
+      (no constraint)
+    ]
+  ][
+    #align(center + horizon)[
+      #image("./figures/drawio/intrinsics/splitter.png", width: size.width)
+      *Power* constraint
+      #image("./figures/drawio/intrinsics/merger.png", width: size.width)
+      *Power* constraint
+    ]
+  ][
+    #align(center + horizon)[
+      #image("./figures/drawio/intrinsics/coupler.png", width: size.width)
+      (no constraint)
+    ]
+  ][
+    #align(center + horizon)[
+      #image("./figures/drawio/intrinsics/switch.png", width: size.width)
+      (no constraint)
+    ]
+  ][
+    #align(center + horizon)[
+      #image("./figures/drawio/intrinsics/phase_shifter.png", width: size.width)
+      *Phase* constraint
+      #image("./figures/drawio/intrinsics/delay_line.png", width: size.width)
+      *Delay* constraint
+    ]
+  ][
+    #align(center + horizon)[
+      #align(right, image("./figures/drawio/intrinsics/source.png", width: size.width / 1.45))
+      *Power* and *Wavelength* constraint
+    ]
+  ][
+    #align(center + horizon)[
+      #align(left, image("./figures/drawio/intrinsics/sink.png", width: size.width / 1.45))
+      (no constraint)
+      #align(right, image("./figures/drawio/intrinsics/empty.png", width: size.width / 1.45))
+      *Power* and *Wavelength* constraint
+    ]
+  ][
+    #align(center + top, layout(size => {
+      if size.width > 1000000pt or size.height > 1000000pt {
+        return []
+      }
+      tablex(
+        columns: (size.width / 3, ) * 3,
+        inset: 10pt,
+        outset: 0pt,
+        align: center + horizon,
+        stroke: none,
+        image("./figures/drawio/intrinsics/filter.png", width: size.width / 3),
+        image("./figures/drawio/intrinsics/gain_loss.png", width: size.width / 3),
+        image("./figures/drawio/intrinsics/modulator.png", width: size.width / 3),
+        image("./figures/drawio/intrinsics/detector.png", width: size.width / 3),
+        image("./figures/drawio/intrinsics/splitter.png", width: size.width / 3),
+        image("./figures/drawio/intrinsics/merger.png", width: size.width / 3),
+        image("./figures/drawio/intrinsics/coupler.png", width: size.width / 3),
+        image("./figures/drawio/intrinsics/switch.png", width: size.width / 3),
+        image("./figures/drawio/intrinsics/phase_shifter.png", width: size.width / 3),
+        image("./figures/drawio/intrinsics/delay_line.png", width: size.width / 3),
+        align(right, image("./figures/drawio/intrinsics/source.png", width: size.width / (3 * 1.45))),
+        align(left, image("./figures/drawio/intrinsics/sink.png", width: size.width / (3 * 1.45))),
+        [],
+        align(right, image("./figures/drawio/intrinsics/empty.png", width: size.width / (3 * 1.45))),
+      )
+    }))
+  ][
+    #align(center + horizon, image("./figures/drawio/signal_proc.png", width: 100%))
+  ])
 ]
 
 #slide(title: "Overview")[
-  #counter(figure.where(kind: image)).update(2)
-  #figure(
-    caption: [
-      Synthesis stages in PHÔS: compilation, evaluation, and synthesis. Shows each step and the corresponding output. The colours describe the responsibility of maintaining each element.
-    ],
-    image("./figures/drawio/exec_model.png", width: 100%)
-  )
+  #align(center + horizon, image("./figures/drawio/exec_model.png", width: 100%))
 ]
 
 #new-section("Examples")
 #slide(theme-variant: "section slide")
 
 #slide(title: "16-QAM 400 Gb/s modulator")[
-  #counter(figure.where(kind: image)).update(3)
-  #figure(
-    caption: [
-      16-QAM modulator circuit diagram.
-    ],
-    image("./figures/drawio/qam_mod.png", width: 100%)
-  )
+  #align(center + horizon, image("./figures/drawio/qam_mod.png", width: 100%))
 ]
 
 #slide(title: "16-QAM 400 Gb/s modulator (cont.)")[
@@ -328,23 +428,16 @@
     }
   ```
 ][
-  #counter(figure.where(kind: image)).update(4)
-  #figure(
-    caption: [
-      QAM constellation diagram of the modulated output.
-    ],
-    image("./figures/qam_constellation_only.png", height: 85%)
+  #stack(
+    dir: ttb,
+    spacing: 1em,
+    align(center + horizon, image("./figures/drawio/qam_mod.png", width: 100%)),
+    align(center, image("./figures/qam_constellation_only.png", height: 70%)),
   )
 ]
 
 #slide(title: "Lattice filter")[
-  #counter(figure.where(kind: image)).update(5)
-  #figure(
-    caption: [
-      Lattice filter circuit diagram.
-    ],
-    image("./figures/drawio/mzi_lattice.png", height: 90%)
-  )
+  #align(center, image("./figures/drawio/mzi_lattice.png", height: 90%))
 ]
 
 #slide(title: "Lattice filter (cont.)")[
@@ -363,13 +456,8 @@
     }
   ```
 ][
-  #counter(figure.where(kind: image)).update(5)
-  #figure(
-    caption: [
-      Lattice filter frequency response.
-    ],
-    image("./figures/lattice_filter.png", width: 100%)
-  )
+  #align(center, image("./figures/drawio/mzi_lattice.png", width: 80%))
+  #align(center, image("./figures/lattice_filter.png", width: 90%))
 ]
 
 #new-section("Conclusion")
@@ -381,31 +469,53 @@
   - Place-and-route
   - Language improvements
   - Advanced constraint inference
+  - #smallcaps[*Test all the things!*]
 ]
 
 #slide(title: "Key takeaways")[
   #line-by-line()[
-    - Novel programmatic way of describing photonics:
-      - Expressive
-      - Flexible
-      - Reusable
-      - Programmable
-      - Opens the way to VLSI for photonics
-    - Novel constraint system for photonics:
-      - Optimization
-      - Verification
-      - Simulation
+    - Novel programmatic way of *describing photonics*:
+      - *Expressive*, *flexible*, *reusable*, and *programmable*
+      - Opens the way to *VLSI for photonics*
+    - Novel *constraint system* for photonics:
+      - *Optimization*, *verification*, *simulation*
+    - Now we need *you* to *improve* it!
   ]
 ]
 
 #new-section("Thank you for listening")
+
+#hide(heading(level: 99, "end"))
+#logical-slide.update(0)
+#set page(numbering: "I")
+
 #slide(theme-variant: "section slide")
+#hide(heading(level: 99, "end"))
+#logical-slide.update(0)
 
 #slide(theme-variant: "end")
+#hide(heading(level: 99, "end"))
+#logical-slide.update(0)
 
 #hide(bibliography("references.bib", style: "ieee"))
 
 #slide(title: "Sources", scale: false)[
   #set text(size: 12pt)
   #bibliography-outline(title: none)
+]
+#hide(heading(level: 99, "end"))
+#logical-slide.update(0)
+
+#new-section("Backup")
+#slide(theme-variant: "section slide")
+
+#slide(title: "Why a compiled language?")[
+  - Why not an intepreted language like Python?
+    - *Stack collection* for tunability, reconfigurability, and programmability
+    - *Static analysis* with a prover
+    - Good *separation of concerns*
+    - Dynamic languages are *error prone*
+]
+
+#slide(title: "")[
 ]

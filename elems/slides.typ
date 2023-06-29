@@ -136,16 +136,35 @@
     }
 }
 
-#let alternatives(start: 1, position: bottom + left, ..children) = {
+#let alternatives(start: 1, position: bottom + left, size: none, rest: none, ..children) = {
     style(styles => {
-        let sizes = children.pos().map(c => measure(c, styles))
+        let child_bis = children.pos()
+        if rest != none {
+            child_bis.push(rest)
+        }
+
+        let sizes = child_bis.map(c => measure(c, styles))
         let max-width = calc.max(..sizes.map(sz => sz.width))
         let max-height = calc.max(..sizes.map(sz => sz.height))
+
+        if size != none {
+            max-width = size.width
+            max-height = size.height
+        }
+        
         for (idx, child) in children.pos().enumerate() {
             only(start + idx, box(
                 width: max-width,
                 height: max-height,
                 align(position, child)
+            ))
+        }
+
+        if rest != none {
+            only((beginning: start + children.pos().len()), box(
+                width: max-width,
+                height: max-height,
+                align(position, rest)
             ))
         }
     })
