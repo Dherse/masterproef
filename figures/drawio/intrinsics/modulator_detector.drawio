@@ -1,0 +1,37 @@
+<mxfile host="Electron" modified="2023-06-28T14:29:23.090Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.4.0 Chrome/112.0.5615.204 Electron/24.5.1 Safari/537.36" etag="gX8U3fQy2UaUiP7OScc7" version="21.4.0" type="device">
+  <diagram name="Page-1" id="4I2zJMP6fPbmH2adfHKz">
+    <mxGraphModel dx="823" dy="475" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="FKcHfd0mp6ODW-J1cHPA-7" value="" style="rounded=0;whiteSpace=wrap;html=1;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;" parent="1" vertex="1">
+          <mxGeometry x="320" y="200" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="FKcHfd0mp6ODW-J1cHPA-8" value="" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" target="FKcHfd0mp6ODW-J1cHPA-7" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="280" y="240" as="sourcePoint" />
+            <mxPoint x="290" y="210" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FKcHfd0mp6ODW-J1cHPA-9" value="Detector" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=UGent Panno Text;fontSize=22;" parent="1" vertex="1">
+          <mxGeometry x="350" y="200" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FKcHfd0mp6ODW-J1cHPA-11" value="" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="440" y="239.86" as="sourcePoint" />
+            <mxPoint x="480" y="239.86" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FKcHfd0mp6ODW-J1cHPA-12" value="&lt;font color=&quot;#82b366&quot; face=&quot;tabler-icons&quot;&gt;&lt;/font&gt;demod" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=UGent Panno Text;fontSize=16;" parent="1" vertex="1">
+          <mxGeometry x="480" y="230" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="BL9k9xNMeVHJwDhoLj2y-1" value="&lt;font color=&quot;#e0a458&quot; face=&quot;tabler-icons&quot;&gt;&lt;/font&gt; input" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=UGent Panno Text;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="220" y="230" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="BL9k9xNMeVHJwDhoLj2y-13" value="" style="pointerEvents=1;fillColor=strokeColor;verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;shape=mxgraph.electrical.diodes.diode;rotation=-30;" vertex="1" parent="1">
+          <mxGeometry x="356.68" y="230.17999999999995" width="46.65" height="19.82" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -32,7 +32,13 @@
 ) = data => {
     let progress-bar() = place(bottom + left, locate(loc => {
         let top = logical-slide.at(loc).at(0)
-        let top_end = logical-slide.final(loc).at(0)
+        let end = query(heading.where(level: 99), loc)
+        let top_end = if end.len() == 0 {
+            logical-slide.final(loc).at(0)
+        } else {
+            logical-slide.at(end.at(0).location()).at(0)
+        }
+
         let progress = top / top_end * 100%
 
         box(width: progress, height: 2pt, fill: ugent-blue)
@@ -224,7 +230,7 @@
         progress-bar()
     }
 
-    let body_slide(slide-info, bodies, box-size, box-inset) = {
+    let body-slide(slide-info, bodies, box-size, box-inset) = {
         if bodies == none {
             panic("No bodies provided")
         } else if bodies.len() == 1 {
@@ -271,7 +277,7 @@
         }
     }
 
-    let content_image_slide(slide-info, bodies) = {
+    let content-image-slide(slide-info, bodies) = {
         if bodies == none {
             panic("missing bodies")
         }
@@ -294,6 +300,69 @@
         )
     }
 
+    let image-slide(slide-info, bodies) = {
+        if bodies == none {
+            panic("missing bodies")
+        }
+
+        if bodies.len() != 2 {
+            panic("content,image must have exactly two bodies")
+        }
+
+        let (content, picture) = bodies
+        let content_size = (width: 21.54cm / ratio, height: 19.19cm / ratio)
+        let content_offset = (dx: 2.54cm / ratio, dy: 2.81cm / ratio)
+        let content_inset = (inset: (x: 0.25cm / ratio, y: 0.3em))
+        let content_bg = rgb("#E9F0FA")
+        let image_size = (width: 45.62cm / ratio, height: 22cm / ratio - 0.5pt)
+        let image_offset = (dx: 2.54cm / ratio + 1pt, dy: 0cm / ratio)
+
+        place(top + left, box(fill: ugent-blue, ..image_size, clip: true, picture), ..image_offset)
+        place(top + left, box(fill: content_bg, ..content_size, ..content_inset, {
+            set text(fill: ugent-blue)
+            content
+        }), ..content_offset)
+
+        place(bottom + left, image(logo, width: 6.41cm / ratio))
+
+        if "footer" in slide-info {
+            let footer_size = (width: 22.21cm / ratio, height: 1.22cm / ratio)
+            let footer_offset = (dx: 18.92cm / ratio, dy: 24.99cm / ratio)
+            let footer_inset = (inset: (x: 0.25cm / ratio, y: 0.13cm / ratio))
+            place(top + left, ..footer_offset, box(..footer_size, ..footer_inset, {
+                set text(size: 17.1pt, fill: ugent-accent2, font: "UGent Panno Text")
+                show: align.with(center + horizon)
+                slide-info.footer
+            }))
+        }
+
+        if "date" in slide-info {
+            let date_size = (width: 6.38cm / ratio, height: 1.22cm / ratio)
+            let date_offset = (dx: 11.31cm / ratio, dy: 24.99cm / ratio)
+            let date_inset = (inset: (x: 0.25cm / ratio, y: 0.13cm / ratio))
+            place(top + left, ..date_offset, box(..date_size, ..date_inset, {
+                set text(size: 17.1pt, fill: ugent-accent2)
+                show text: set align(left + horizon)
+                slide-info.date
+            }))
+        }
+
+        // Show the slide number in the bottom right corner
+        {
+            set text(fill: ugent-blue, size: 17.1pt)
+            let numbering = locate(loc => {
+                let top = logical-slide.at(loc)
+                numbering(loc.page-numbering(), top.at(0))
+            })
+            let offset = (dx: 43.31cm / ratio, dy: 24.86cm / ratio)
+            let box_size = (width: 1.4 * 2.56cm / ratio, height: 1.44cm / ratio)
+
+            place(top + left, ..offset, box(..box_size, align(horizon + right, numbering)))
+        }
+
+        progress-bar()
+    }
+
     let slide(slide-info, bodies, kind: "slide") = {
         set text(font: "UGent Panno Text", size: 22pt)
 
@@ -301,15 +370,15 @@
         let box_inset = (inset: (x: 0.25cm / ratio, y: 0.13cm / ratio))
 
         let body = if kind == "slide" {
-            body_slide(slide-info, bodies, box_size, box_inset)
+            body-slide(slide-info, bodies, box_size, box_inset)
         } else if kind == "content,image" {
-            content_image_slide(slide-info, bodies)
+            content-image-slide(slide-info, bodies)
         } else if kind == "image" {
             if bodies == none or bodies.len() != 1 {
                 panic("image slide must have exactly one body")
             }
 
-            body_slide(slide-info, bodies, box_size, box_inset)
+            body-slide(slide-info, bodies, box_size, box_inset)
         } else if kind == "end" {
             content_end(slide-info, bodies)
         } else {
@@ -354,7 +423,7 @@
             let footer_inset = (inset: (x: 0.25cm / ratio, y: 0.13cm / ratio))
             place(top + left, ..footer_offset, box(..footer_size, ..footer_inset, {
                 set text(size: 17.1pt, fill: ugent-accent2)
-                show text: set align(center + horizon)
+                show: align.with(center + horizon)
                 slide-info.footer
             }))
         }
@@ -375,7 +444,7 @@
             set text(fill: ugent-blue, size: 17.1pt)
             let numbering = locate(loc => {
                 let top = logical-slide.at(loc)
-                numbering("1", top.at(0))
+                numbering(loc.page-numbering(), top.at(0))
             })
             let offset = (dx: 43.31cm / ratio, dy: 24.86cm / ratio)
             let box_size = (width: 1.4 * 2.56cm / ratio, height: 1.44cm / ratio)
@@ -396,6 +465,7 @@
         "section slide": section-slide,
         "image content": image-content,
         "image": image,
+        "image only": image-slide,
         "end": end,
         "default": default,
     )
