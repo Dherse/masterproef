@@ -1,0 +1,2559 @@
+%YAML 1.2
+---
+# VHDL Syntax Developed by Mark Norton (erzvyyneq@tznvy.pbz)
+# for Sublime Text 3.  Original syntax encoding by Brian
+# Padalino (ocnqnyvab@tznvy.pbz) for TextMate.
+# Goals for restructuring syntax:
+# 1. Better support for VHDL-2008
+# 2. Wider support for coding style
+# 3. Greater granularity on scope definitions.
+#
+# See http://www.sublimetext.com/docs/3/syntax.html
+file_extensions:
+  - vhd
+  - vhdl
+  - vho
+  - vht
+scope: source.vhdl
+
+variables:
+  ###########################################################################
+  # Identifier Definition
+  ###########################################################################
+  # 1) Case insensitive
+  # 2) Must begin with an alphabetic character.
+  # 3) Valid characters following are alphanumberic plus underscore.
+  # 4) May not end with an underscore.
+  # 5) May not have two successive underscores within.
+  # 6) Unicode not currently supported (and has been rejected for 20XX revision)
+  # 7) Including the dot (.) operator here as well because record structures use it.
+  # Two variations, both seem to work against test cases in Python console.
+  #identifier: '\b[a-zA-Z]([a-zA-Z0-9]|_(?!_))*[a-zA-Z0-9]*\b'
+  identifier: '\b[a-zA-Z](?:[a-zA-Z0-9\.]|_[a-zA-Z0-9])*\b'
+  # TODO: Extended Identifiers: \data bus\ \a:\\name\
+  hexchars: '[0-9a-fA-F]'
+  decchars: '[0-9]'
+  octchars: '[0-7]'
+  binchars: '[0-1]'
+  modes: '(?i:inout|in|out|buffer|linkage)'
+  operator_symbols: '\+|\-|\*|/|\*\*|&|<\=|\=>|<|>|\=|/\='
+
+contexts:
+  prototype:
+    - include: comments
+    - include: constants
+    - include: numbers
+    - include: strings
+    - include: types
+    - include: library-subprograms
+
+  main:
+    - include: library-unit-declarations
+    - include: reserved-words
+
+  ###########################################################################
+  # Big Block Structures - Most content exists inside the scope of these
+  # elements.
+  ###########################################################################
+  library-unit-declarations:
+    - include: libraries
+    - include: package-instantiation
+    - include: package-bodies
+    - include: package-declarations
+    - include: entities
+    - include: architecture-begin
+    - include: configurations
+    # TODO: Add context declarations
+
+  entities:
+    # Valid identifier variation
+    - match: |-
+        (?xi)
+          ((entity)\s*)
+          (({{identifier}})\s*)
+          (is)
+      captures:
+        2: storage.type.entity.vhdl
+        4: entity.name.entity.vhdl
+        5: keyword.other.block.is.vhdl
+      push:
+        - meta_scope: meta.block.entity.vhdl
+        # Passive block set
+        - match: (?i)\b(begin)\b
+          captures:
+            1: keyword.other.block.begin.vhdl
+          set: entity-passive-statements
+        # Matching identifier variation
+        - match: |-
+            (?xi)
+              ((end)\s*)
+              ((entity)\s*)?
+              ((\4)\s*)?
+              (;)
+          captures:
+            2: keyword.other.block.end.vhdl
+            4: storage.type.entity.vhdl
+            6: entity.name.entity.vhdl
+            7: punctuation.terminator.vhdl
+          scope: meta.group.terminal.vhdl
+          pop: true
+        # Non-matching identifier variation
+        - match: |-
+            (?xi)
+              ((end)\s*)
+              ((entity)\s*)?
+              ((\S+)\s*)?
+              (;)
+          captures:
+            2: keyword.other.block.end.vhdl
+            4: storage.type.entity.vhdl
+            6: invalid.illegal.non-matching-identifier.vhdl
+            7: punctuation.terminator.vhdl
+          pop: true
+          scope: meta.group.terminal.vhdl
+        - include: generic-interface
+        - include: port-interface
+    # Invalid identifier variation
+    - match: |-
+        (?xi)
+          ((entity)\s*)
+          ((\S+)\s*)
+          (is)
+      captures:
+        2: storage.type.entity.vhdl
+        4: invalid.illegal.identifier.vhdl
+        5: keyword.other.block.begin.vhdl
+      push:
+        - meta_scope: meta.block.entity.vhdl
+        # Non-matching identifier variation
+        # Passive block set
+        - match: (?i)\b(begin)\b
+          captures:
+            1: keyword.other.block.begin.vhdl
+          set: entity-passive-statements
+        - match: |-
+            (?xi)
+              ((end)\s*)
+              ((entity)\s*)?
+              ((\S+)\s*)?
+              (;)
+          captures:
+            2: keyword.other.block.end.vhdl
+            4: storage.type.entity.vhdl
+            6: invalid.illegal.non-matching-identifier.vhdl
+            7: punctuation.terminator.vhdl
+          scope: meta.group.terminal.vhdl
+          pop: true
+        - include: generic-interface
+        - include: port-interface
+
+  entity-passive-statements:
+    - meta_scope: meta.block.entity.passives.vhdl
+    # Valid identifier match.  Cannot match against the opening
+    # identifier as we've lost the capture after the set.
+    - match: |-
+        (?xi)
+          ((end)\s*)
+          ((entity)\s*)?
+          (({{identifier}})\s*)?
+          (;)
+      captures:
+        2: keyword.other.block.end.vhdl
+        4: storage.type.entity.vhdl
+        6: entity.name.entity.vhdl
+        7: punctuation.terminator.vhdl
+      pop: true
+      scope: meta.group.terminal.vhdl
+    # Invalid identifier match.
+    - match: |-
+        (?xi)
+          ((end)\s*)
+          ((entity)\s*)?
+          ((\S+)\s*)?
+          (;)
+      captures:
+        2: keyword.other.block.end.vhdl
+        4: storage.type.entity.vhdl
+        6: invalid.illegal.identifier.vhdl
+        7: punctuation.terminator.vhdl
+      pop: true
+      scope: meta.group.terminal.vhdl
+    - include: process-begin
+    - include: assertion-statement
+    # Must be last
+    - include: seq-subprogram-call
+
+  package-declarations:
+    # Valid identifier variation
+    - match: |-
+        (?xi)
+          ((package)\s*)
+          (({{identifier}})\s*)
+          (is)
+      captures:
+        2: storage.type.package.vhdl
+        4: entity.name.package.vhdl
+        5: keyword.other.block.is.vhdl
+      push:
+        - meta_scope: meta.block.package.declaration.vhdl
+        # Matching identifier variation
+        - match: |-
+            (?xi)
+              ((end)\s*)
+              ((package)\s*)?
+              ((\4)\s*)?
+              (;)
+          captures:
+            2: keyword.other.block.end.vhdl
+            4: storage.type.package.vhdl
+            6: entity.name.package.vhdl
+            7: punctuation.terminator.vhdl
+          scope: meta.group.terminal.vhdl
+          pop: true
+        # Non-matching identifier variation
+        - match: |-
+            (?xi)
+              ((end)\s*)
+              ((package)\s*)?
+              ((\S+)\s*)?
+              (;)
+          captures:
+            2: keyword.other.block.end.vhdl
+            4: storage.type.package.vhdl
+            6: invalid.illegal.non-matching-identifier.vhdl
+            7: punctuation.terminator.vhdl
+          scope: meta.group.terminal.vhdl
+          pop: true
+        - include: block-declarative-items
+        - include: generic-interface
+    # Invalid identifier variation
+    - match:
+        (?xi)
+          ((package)\s*)
+          ((\S+)\s*)
+          (is)
+      captures:
+        2: storage.type.package.vhdl
+        4: invalid.illegal.identifier.vhdl
+        5: keyword.other.block.is.vhdl
+      push:
+        - meta_scope: meta.block.package.declaration.vhdl
+        - match: |-
+            (?xi)
+              ((end)\s*)
+              ((package)\s*)?
+              ((\S+)\s*)?
+              (;)
+          captures:
+            2: keyword.other.block.end.vhdl
+            4: storage.type.package.vhdl
+            6: invalid.illegal.identifier.vhdl
+            7: punctuation.terminator.vhdl
+          scope: meta.group.terminal.vhdl
+          pop: true
+        - include: block-declarative-items
+        - include: generic-interface
+
+  package-bodies:
+    # Valid identifier variation
+    - match: |-
+        (?xi)
+          ((package)\s*)
+          ((body)\s*)
+          (({{identifier}})\s*)
+          (is)
+      captures:
+        2: storage.type.package.vhdl
+        4: keyword.other.body.vhdl
+        6: entity.name.package.vhdl
+        7: keyword.other.block.is.vhdl
+      push:
+        - meta_scope: meta.block.package.body.vhdl
+        # Matching identifier variation
+        - match: |-
+            (?xi)
+              ((end)\s*)
+              (((package)\s*)((body)\s*))?
+              ((\6)\s*)?
+              (;)
+          captures:
+            2: keyword.other.block.end.vhdl
+            5: storage.type.package.vhdl
+            7: keyword.other.body.vhdl
+            9: entity.name.package.vhdl
+            10: punctuation.terminator.vhdl
+          scope: meta.group.terminal.vhdl
+          pop: true
+        # Non-matching identifier variation
+        - match: |-
+            (?xi)
+              ((end)\s*)
+              (((package)\s*)((body)\s*))?
+              ((\S+)\s*)?
+              (;)
+          captures:
+            2: keyword.other.block.end.vhdl
+            5: storage.type.package.vhdl
+            7: keyword.other.body.vhdl
+            9: invalid.illegal.non-matching-identifier
+            10: punctuation.terminator.vhdl
+          scope: meta.group.terminal.vhdl
+          pop: true
+        - include: block-declarative-items
+    # Non-valid identifier variation
+    - match: |-
+        (?xi)
+          ((package)\s*)
+          ((body)\s*)
+          ((\S+)\s*)
+          (is)
+      captures:
+        2: storage.type.package.vhdl
+        4: keyword.other.body.vhdl
+        6: invalid.illegal.identifier.vhdl
+        7: keyword.other.block.is.vhdl
+      push:
+        - meta_scope: meta.block.package.body.vhdl
+        - match: |-
+            (?xi)
+              ((end)\s*)
+              (((package)\s*)((body)\s*))?
+              ((\S+)\s*)?
+              (;)
+          captures:
+            2: keyword.other.block.end.vhdl
+            5: storage.type.package.vhdl
+            7: keyword.other.body.vhdl
+            9: invalid.illegal.non-matching-identifier
+            10: punctuation.terminator.vhdl
+          scope: meta.group.terminal.vhdl
+          pop: true
+        - include: block-declarative-items
+
+  # New in VHDL-2008 Package Instantiation Declaration permits generic
+  # mapping associations made against a package.
+  package-instantiation:
+    - match: |-
+        (?xi)
+          ((package)\s*)
+          (({{identifier}})\s*)
+          ((is)\s*)
+          ((new)\s*)
+          (({{identifier}})\s*)
+      captures:
+        2: storage.type.package.vhdl
+        4: entity.name.package.vhdl
+        6: keyword.other.block.is.vhdl
+        8: keyword.other.new.vhdl
+        10: entity.name.package.vhdl
+      push:
+        - meta_scope: meta.block.package.instantiation.vhdl
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        - include: mappings
+
+  # The architecture needs to be 3 contexts to correctly get the scope correct
+  # for the various structures.  CAnnot match final identifier.
+  architecture-begin:
+    - match: |-
+        (?xi)
+          ((architecture)\s*)
+          (({{identifier}})\s*)
+          ((of)\s*)
+          (({{identifier}})\s*)
+          (is)
+      captures:
+        2: storage.type.architecture.vhdl
+        4: entity.name.architecture.vhdl
+        6: keyword.other.of.vhdl
+        8: entity.name.entity.vhdl
+        9: keyword.other.block.is.vhdl
+      push: architecture-declarations
+
+  # Note: 'set' is used because push will set us two into the stack and I
+  # cannot pop twice.  Destroys capture match though.
+  architecture-declarations:
+    - meta_scope: meta.block.architecture.declarations.vhdl
+    - include: block-declarative-items
+    - match: (?i)\b(begin)\b
+      captures:
+        1: keyword.other.block.begin.vhdl
+      set: architecture-statements
+
+  architecture-statements:
+    - meta_scope: meta.block.architecture.body.vhdl
+    - include: concurrent-statements
+    - match: |-
+        (?xi)
+          ((end)\s*)
+          ((architecture)\s*)?
+          (({{identifier}})\s*)?
+          (;)
+      captures:
+        2: keyword.other.block.end.vhdl
+        4: storage.type.architecture.vhdl
+        6: entity.name.architecture.vhdl
+        7: punctuation.terminator.vhdl
+      pop: true
+
+  # Combined library and use clause
+  libraries:
+    - match: (?i)\b(library)\b
+      captures:
+        1: keyword.other.library.vhdl
+      push:
+        - meta_scope: meta.statement.library.vhdl
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        - include: library-names
+    - match: (?i)\b(use)\b
+      captures:
+        1: keyword.control.import.use.vhdl
+      push:
+        - meta_scope: meta.statement.use.vhdl
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        - include: library-names
+        - match: (\.)
+          captures:
+            1: punctuation.separator.vhdl
+        - include: reserved-words
+
+  configurations:
+    - match: |-
+        (?xi)
+          ((configuration)\s*)
+          (({{identifier}})\s*)
+          ((of)\s*)
+          (({{identifier}})\s)
+          (is)
+      captures:
+        2: storage.type.configuration.vhdl
+        4: entity.name.configuration.vhdl
+        6: keyword.other.of.vhdl
+        8: entity.name.entity.vhdl
+        9: keyword.other.block.is.vhdl
+      push:
+        - meta_scope: meta.block.configuration.vhdl
+        - match: |-
+            (?xi)
+              ((end)\s*)
+              ((configuration)\s*)?
+              ((\4)\s*)?
+              (;)
+          captures:
+            2: keyword.other.block.end.vhdl
+            4: storage.type.configuration.vhdl
+            6: entity.name.configuration.vhdl
+            7: punctuation.terminator.vhdl
+          scope: meta.group.terminal.vhdl
+          pop: true
+        - match: |-
+            (?xi)
+              ((end)\s*)
+              ((configuration)\s*)?
+              ((\S+)\s*)?
+              (;)
+          captures:
+            2: keyword.other.block.end.vhdl
+            4: storage.type.configuration.vhdl
+            6: invalid.illegal.non-matching-identifier.vhdl
+            7: punctuation.terminator.vhdl
+          scope: meta.group.terminal.vhdl
+          pop: true
+        - include: libraries
+        - include: item-configurations
+
+  # Should work for block and component configurations.
+  item-configurations:
+    - match: (?i)(for)\s+({{identifier}})
+      captures:
+        1: keyword.control.flow.for.vhdl
+        2: entity.name.other.vhdl
+      push:
+        - meta_scope: meta.statement.configuration.for.vhdl
+        - match: (?i)(end)\s+(for)\s*(;)
+          captures:
+            1: keyword.other.block.end.vhdl
+            2: keyword.control.flow.for.vhdl
+            3: punctuation.terminator.vhdl
+          pop: true
+        - include: libraries
+        - include: item-configurations
+
+  ###########################################################################
+  # Interface Definition - This is used for entities and components, but then
+  # some parts also used for parameters in procedures and functions.
+  # TODO: Add interface mapping which is similar
+  ###########################################################################
+  # These are declarations of constants, signals, variables, etc as an *interface*
+  # which is a little different from the same as a regular declaration.
+  generic-interface:
+    - match: (?i)(generic)
+      captures:
+        1: keyword.other.generic.vhdl
+      push:
+        - meta_scope: meta.block.interface.generic.vhdl
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        - include: interface-list
+
+  port-interface:
+    - match: (?i)(port)
+      captures:
+        1: keyword.other.port.vhdl
+      push:
+        - meta_scope: meta.block.interface.port.vhdl
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        - include: interface-list
+
+  interface-list:
+    - match: (\()
+      captures:
+        1: punctuation.section.group.begin.vhdl
+      push:
+        - meta_scope: meta.group.interface.vhdl
+        - match: (\))
+          captures:
+            1: punctuation.section.group.end.vhdl
+          pop: true
+        - include: interface-declaration
+
+  interface-declaration:
+    # Constant declarations
+    - match: (?i)(constant)\s+({{identifier}}(\s*,\s*{{identifier}})*)\s*(\:)
+      captures:
+        1: storage.type.constant.vhdl
+        2: variable.parameter.constant.vhdl
+        4: punctuation.separator.vhdl
+      push:
+        - meta_scope: meta.statement.interface.constant.vhdl
+        - include: basic-paren-group
+        - include: assignment-operators
+        - include: arithmetic-operators
+        - include: range-type
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        # Also need to match on a lookahead for an unconsumed closing paren
+        - match: (?=\))
+          pop: true
+        - match: ({{modes}})
+          scope: keyword.other.mode.vhdl
+    # Signal declarations
+    - match: (?i)(signal)\s+({{identifier}}(\s*,\s*{{identifier}})*)\s*(\:)
+      captures:
+        1: storage.type.signal.vhdl
+        2: variable.parameter.signal.vhdl
+        4: punctuation.separator.vhdl
+      push:
+        - meta_scope: meta.statement.interface.signal.vhdl
+        - include: basic-paren-group
+        - include: assignment-operators
+        - include: arithmetic-operators
+        - include: range-type
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        # Also need to match on a lookahead for an unconsumed closing paren
+        - match: (?=\))
+          pop: true
+        - match: ({{modes}})
+          scope: keyword.other.mode.vhdl
+    # Variable declarations
+    - match: (?i)(variable)\s+({{identifier}}(\s*,\s*{{identifier}})*)\s*(\:)
+      captures:
+        1: storage.type.variable.vhdl
+        2: variable.parameter.variable.vhdl
+        4: punctuation.separator.vhdl
+      push:
+        - meta_scope: meta.statement.interface.variable.vhdl
+        - include: basic-paren-group
+        - include: assignment-operators
+        - include: arithmetic-operators
+        - include: range-type
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        # Also need to match on a lookahead for an unconsumed closing paren
+        - match: (?=\))
+          pop: true
+        - match: (\b{{modes}}\b)
+          scope: keyword.other.mode.vhdl
+    # File declaration
+    - match: (?i)(file)\s+({{identifier}}(\s*,\s*{{identifier}})*)\s*(\:)
+      captures:
+        1: storage.type.variable.vhdl
+        2: variable.parameter.variable.vhdl
+        4: punctuation.separator.vhdl
+      push:
+        - meta_scope: meta.statement.interface.file.vhdl
+        - include: basic-paren-group
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        # Also need to match on a lookahead for an unconsumed closing paren
+        - match: (?=\))
+          pop: true
+    # Type declaration
+    - match: (?i)((type)\s+)({{identifier}})
+      captures:
+        2: storage.type.type.vhdl
+        3: entity.name.type.vhdl
+      push:
+        - meta_scope: meta.statement.interface.type.vhdl
+        - include: basic-paren-group
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        # Also need to match on a lookahead for an unconsumed closing paren
+        - match: (?=\))
+          pop: true
+    # Default (usually a signal) declarations
+    - match: (?i)({{identifier}}(\s*,\s*{{identifier}})*)\s*(\:)
+      captures:
+        1: variable.parameter.signal.vhdl
+        3: punctuation.separator.vhdl
+      push:
+        - meta_scope: meta.statement.interface.default.vhdl
+        - include: basic-paren-group
+        - include: assignment-operators
+        - include: arithmetic-operators
+        - include: range-type
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        # Also need to match on a lookahead for an unconsumed closing paren
+        - match: (?=\))
+          pop: true
+        - match: ({{modes}})\s+
+          scope: keyword.other.mode.vhdl
+    # Invalid identifiers
+    - match: '(?i)(\S+(\s*,\s*\S+)*)'
+      captures:
+        1: invalid.illegal.identifier.vhdl
+
+  # This is used for a few cases like records which
+  # use similar block lists, but they aren't properly
+  # interfaces.
+  basic-identifier-decl:
+    - match: (?i)({{identifier}}(\s*,\s*{{identifier}})*)\s*(\:)
+      captures:
+        1: variable.other.signal.vhdl
+        3: punctuation.separator.vhdl
+      push:
+        - meta_scope: meta.statement.declaration.vhdl
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: assignment-operators
+        - include: arithmetic-operators
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+
+  ###########################################################################
+  # Block Declarative Items
+  ###########################################################################
+  block-declarative-items:
+    - include: components
+    - include: signal-decl
+    - include: constant-decl
+    - include: subtype-decl
+    - include: type-decl
+    - include: file-decl
+    - include: variable-decl
+    - include: attribute-decl
+    - include: attribute-spec
+    - include: alias-decl
+    - include: procedure-spec
+    - include: function-spec
+
+  components:
+    # Valid identifier variation
+    - match: |-
+        (?xi)
+          ((component)\s*)
+          (({{identifier}})\s*)
+          (is)?
+      captures:
+        2: storage.type.component.vhdl
+        4: entity.name.component.vhdl
+        5: keyword.other.block.is.vhdl
+      push:
+        - meta_scope: meta.block.component.vhdl
+        # Matching identifier variation
+        - match: |-
+            (?xi)
+              ((end)\s*)
+              ((component)\s*)
+              ((\4)\s*)?
+              (;)
+          captures:
+            2: keyword.other.block.end.vhdl
+            4: storage.type.component.vhdl
+            6: entity.name.component.vhdl
+            7: punctuation.terminator.vhdl
+          pop: true
+        # Non-matching identifier variation
+        - match: |-
+            (?xi)
+              ((end)\s*)
+              ((component)\s*)
+              ((\S+)\s*)?
+              (;)
+          captures:
+            2: keyword.other.block.end.vhdl
+            4: storage.type.component.vhdl
+            6: invalid.illegal.non-matching-identifier.vhdl
+            7: punctuation.terminator.vhdl
+          pop: true
+        - include: generic-interface
+        - include: port-interface
+    # Invalid identifier variation
+    - match: |-
+        (?xi)
+          ((component)\s*)
+          ((\S+)\s*)
+          (is)
+      captures:
+        2: storage.type.component.vhdl
+        4: invalid.illegal.identifier.vhdl
+        5: keyword.other.block.is.vhdl
+      push:
+        - meta_scope: meta.block.component.vhdl
+        # Non-matching identifier variation
+        - match: |-
+            (?xi)
+              ((end)\s*)
+              ((component)\s*)?
+              ((\S+)\s*)?
+              (;)
+          captures:
+            2: keyword.other.block.end.vhdl
+            4: storage.type.component.vhdl
+            6: invalid.illegal.identifier.vhdl
+            7: punctuation.terminator.vhdl
+          pop: true
+        - include: generic-interface
+        - include: port-interface
+
+  signal-decl:
+    - match: (?i)signal
+      scope: storage.type.signal.vhdl
+      push:
+        - meta_scope: meta.statement.signal.vhdl
+        - match: ({{identifier}})
+          scope: variable.other.vhdl
+        - match: (,)
+          scope: punctuation.separator.vhdl
+        - match: (:)
+          scope: punctuation.separator.vhdl
+          set:
+            - meta_scope: meta.statement.signal.vhdl
+            - match: (:=)
+              scope: punctuation.assignment.vhdl
+            - match: (;)
+              scope: punctuation.terminator.vhdl
+              pop: true
+            - include: basic-paren-group
+            - include: stray-parens
+            - include: reserved-words
+
+  constant-decl:
+    - match: (?i)constant
+      scope: storage.type.constant.vhdl
+      push:
+        - meta_scope: meta.statement.constant.vhdl
+        - match: ({{identifier}})
+          scope: variable.other.vhdl
+        - match: (,)
+          scope: punctuation.separator.vhdl
+        - match: (:)
+          scope: punctuation.separator.vhdl
+          set:
+            - meta_scope: meta.statement.constant.vhdl
+            - match: (:=)
+              scope: punctuation.assignment.vhdl
+            - match: (;)
+              scope: punctuation.terminator.vhdl
+              pop: true
+            - include: basic-paren-group
+            - include: stray-parens
+            - include: reserved-words
+            - include: expression-operators
+
+  type-decl:
+    - match: (?i)((type)\s*)({{identifier}})
+      captures:
+        2: storage.type.type.vhdl
+        3: entity.name.type.vhdl
+      push:
+        - meta_scope: meta.statement.type.vhdl
+        - match: (;)
+          scope: punctuation.terminator.vhdl
+          pop: true
+        - match: (?i)\b(is)\b
+          scope: keyword.other.is.vhdl
+          set:
+            - meta_scope: meta.statement.type.vhdl
+            - match: (;)
+              scope: punctuation.terminator.vhdl
+              pop: true
+            - include: record-type
+            - include: enumeration-type
+            - include: array-type
+            - include: range-type
+
+  file-decl:
+    - match: (?i)(file)\s+({{identifier}}(\s*,\s*{{identifier}})*)\s*(\:)
+      captures:
+        1: storage.type.variable.vhdl
+        2: variable.parameter.variable.vhdl
+        4: punctuation.separator.vhdl
+      push:
+        - meta_scope: meta.statement.interface.file.vhdl
+        - include: basic-paren-group
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+
+  subtype-decl:
+    - match: (?i)(subtype)\s+({{identifier}})\s+(is)
+      captures:
+        1: storage.type.subtype.vhdl
+        2: variable.other.vhdl
+        3: keyword.other.block.is.vhdl
+      push:
+        - meta_scope: meta.statement.subtype.vhdl
+        - match: '(;)'
+          scope: punctuation.terminator.vhdl
+          pop: true
+        - include: reserved-words
+
+  variable-decl:
+    - match: (?i)((shared)\s*)?(variable)
+      captures:
+        2: keyword.other.shared.vhdl
+        3: storage.type.variable.vhdl
+      push:
+        - meta_scope: meta.statement.variable.vhdl
+        - match: ({{identifier}})
+          scope: variable.other.vhdl
+        - match: (,)
+          scope: punctuation.separator.vhdl
+        - match: (:)
+          scope: punctuation.separator.vhdl
+          set:
+            - match: (;)
+              scope: punctuation.terminator.vhdl
+              pop: true
+            - include: basic-paren-group
+            - include: stray-parens
+            - include: reserved-words
+
+  attribute-decl:
+    - match: (?i)(attribute)\s+({{identifier}})\s*(:)
+      captures:
+        1: storage.type.attribute.vhdl
+        2: entity.name.attribute.vhdl
+        3: punctuation.separator.vhdl
+      push:
+        - meta_scope: meta.statement.attribute.declaration.vhdl
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+
+  attribute-spec:
+    - match: (?i)(attribute)\s+({{identifier}})\s+(of)\s+({{identifier}})\s*(:)
+      captures:
+        1: storage.type.attribute.vhdl
+        2: entity.name.attribute.vhdl
+        3: keyword.other.of.vhdl
+        4: variable.other.vhdl
+        5: punctuation.separator.vhdl
+      push:
+        - meta_scope: meta.statement.attribute.specification.vhdl
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        - include: reserved-words
+
+  # Simplified the alias declaration a bit.
+  alias-decl:
+    - match: (?i)\b(alias)\b
+      scope: storage.type.alias.vhdl
+      push:
+        - meta_scope: meta.statement.alias.vhdl
+        - match: (?i)\b(is)\b
+          scope: keyword.other.block.is.vhdl
+          set:
+            - match: (;)
+              scope: punctuation.terminator.vhdl
+              pop: true
+            - match: ({{identifier}})
+              scope: variable.other.vhdl
+        - match: (:)
+          scope: punctuation.separator.vhdl
+        - include: expression-operators
+        - include: character-literal
+        - match: ({{identifier}})
+          scope: variable.other.vhdl
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: reserved-words
+
+  procedure-spec:
+    - match: (?i)(procedure)\s+({{identifier}})
+      captures:
+        1: storage.type.procedure.vhdl
+        2: entity.name.function.procedure.vhdl
+      push:
+        - meta_scope: meta.block.procedure.specification.vhdl
+        - include: interface-list
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        - match: (?i)\b(is)\b
+          captures:
+            1: keyword.other.block.is.vhdl
+          set: procedure-body
+        - include: reserved-words
+
+  procedure-body:
+    - meta_scope: meta.block.procedure-decl.vhdl
+    - include: subprogram-declarative-item
+    - match: '(?i)\b(begin)\b'
+      captures:
+        1: keyword.other.block.begin.vhdl
+      set:
+        - meta_scope: meta.block.procedure.body.vhdl
+        - match: (?i)\b(end\s*)(procedure\s*)?(({{identifier}})\s*)?(;)
+          captures:
+            1: keyword.other.block.end.vhdl
+            2: storage.type.procedure.vhdl
+            3: entity.name.function.procedure.vhdl
+            5: punctuation.terminator.vhdl
+          pop: true
+        - include: sequential-statements
+
+  function-spec:
+    - match: (?i)((pure|impure)\s+)?(function)\s+({{identifier}})
+      captures:
+        2: keyword.other.purity.vhdl
+        3: storage.type.function.vhdl
+        4: entity.name.function.function.vhdl
+      push:
+        - meta_scope: meta.block.function.specification.vhdl
+        - include: interface-list
+        - match: (?i)\b(return)\b
+          scope: keyword.other.return.vhdl
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        - match: (?i)\b(is)\b
+          captures:
+            1: keyword.other.block.is.vhdl
+          set: function-body
+        - include: reserved-words
+    # Special case for operator overloading
+    - match: |-
+        (?xi)
+          ((pure|impure)\s+)?
+          (function)\s+
+          (\")
+          (\+|\-|\*|\/|\*\*|\&|\=|\/\=|\<|\<\=|\>|\>\=|\?\=|\?\/\=|
+           \?\<|\?\<\=|\?\>|\?\>\=|\?\?|abs|not|and|or|nand|nor|nor|
+           xor|xnor|mod|rem|sll|srl|rol|ror|sla|sra)
+          (\")
+      captures:
+        2: keyword.other.purity.vhdl
+        3: storage.type.function.vhdl
+        4: string.quoted.double.vhdl punctuation.definition.string.begin.vhdl
+        5: entity.name.function.operator.vhdl
+        6: string.quoted.double.vhdl punctuation.definition.string.end.vhdl
+      push:
+        - meta_scope: meta.block.function.specification.vhdl
+        - include: interface-list
+        - match: (?i)\b(return)\b
+          scope: keyword.declaration.vhdl
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        - match: (?i)\b(is)\b
+          captures:
+            1: keyword.declaration.vhdl
+          set: function-body
+        - include: reserved-words
+
+  function-body:
+    - meta_scope: meta.block.function.declaration.vhdl
+    - include: subprogram-declarative-item
+    - match: (?i)\b(begin)\b
+      captures:
+        1: keyword.other.block.begin.vhdl
+      set:
+        - meta_scope: meta.block.function.body.vhdl
+        - match: (?i)\b(return)\b
+          scope: keyword.other.return.vhdl
+        - match: (?i)\b(end\s*)(function\s*)?(({{identifier}})\s*)?(;)
+          captures:
+            1: keyword.other.block.end.vhdl
+            2: storage.type.procedure.vhdl
+            3: entity.name.function.function.vhdl
+            5: punctuation.terminator.vhdl
+          pop: true
+        - match: |-
+            (?xi)
+              \b(end\s*)
+              (function\s*)?
+              (\")
+              (\+|\-|\*|\/|\*\*|\&|\=|\/\=|\<|\<\=|\>|\>\=|\?\=|\?\/\=|
+               \?\<|\?\<\=|\?\>|\?\>\=|\?\?|abs|not|and|or|nand|nor|nor|
+               xor|xnor|mod|rem|sll|srl|rol|ror|sla|sra)
+              (\")
+              (;)
+          captures:
+            1: keyword.other.block.end.vhdl
+            2: storage.type.procedure.vhdl
+            3: string.quoted.double.vhdl punctuation.definition.string.begin.vhdl
+            4: entity.name.function.operator.vhdl
+            5: string.quoted.double.vhdl punctuation.definition.string.begin.vhdl
+            6: punctuation.terminator.vhdl
+          pop: true
+        - include: sequential-statements
+
+  subprogram-declarative-item:
+    - include: subtype-decl
+    - include: type-decl
+    - include: constant-decl
+    - include: variable-decl
+    - include: alias-decl
+    - include: attribute-decl
+    - include: attribute-spec
+
+  ###########################################################################
+  # Type Definitions.  There are a lot of variations on type.
+  ###########################################################################
+  record-type:
+    - match: (?i)\b(record)\b
+      scope: storage.type.record.vhdl
+      push:
+        - meta_scope: meta.block.record.vhdl
+        - match: (?i)\b(end)\s+(record)\b
+          captures:
+            1: keyword.other.block.end.vhdl
+            2: storage.type.record.vhdl
+          pop: true
+        - include: basic-identifier-decl
+
+  enumeration-type:
+    - match: \(
+      scope: punctuation.group.parens.begin.vhdl
+      push:
+        - meta_scope: meta.group.enumeration.vhdl
+        - match: \)
+          scope: punctuation.group.parens.end.vhdl
+          pop: true
+        - match: ({{identifier}})
+          scope: entity.name.enum.vhdl
+        - match: (,)
+          scope: punctuation.separator.vhdl
+
+  array-type:
+    - match: (?i)\b(array)\b\s*(\()
+      captures:
+        1: storage.type.array.vhdl
+        2: punctuation.group.parens.begin.vhdl
+      push:
+        - meta_scope: meta.block.array.vhdl
+        - match: (?i)(\))\s*(of)
+          captures:
+            1: punctuation.group.parens.end.vhdl
+            2: keyword.other.of.vhdl
+          pop: true
+        - include: reserved-words
+
+  # Numeric range is just "range <expr> to|downto <expr>" or
+  # "range <identifier>'<attribute>" so there's really not much I can
+  # do in the way of defining more scope here.  Physical range type
+  # has a block we can define
+  range-type:
+    - match: (?i)\b(range)\b
+      scope: storage.type.range.vhdl
+    - include: arithmetic-operators
+    - match: (?i)\b(units)\b
+      scope: storage.type.units.vhdl
+      push:
+        - meta_scope: meta.block.units.vhdl
+        - match: (?i)\b(end)\s*(units)\s*({{identifier}})?
+          captures:
+            1: keyword.other.block.end.vhdl
+            2: storage.type.units.vhdl
+            3: entity.name.type.vhdl
+          pop: true
+        - match: ({{identifier}})\s*(;)
+          captures:
+            1: entity.name.units.vhdl
+            2: punctuation.terminator.vhdl
+        - match: ({{identifier}})\s*(=)
+          captures:
+            1: entity.name.units.vhdl
+            2: keyword.operator.assignment.vhdl
+          push:
+            - match: (;)
+              scope: punctuation.terminator.vhdl
+              pop: true
+            - match: ({{identifier}})
+              scope: entity.name.units.vhdl
+    - include: reserved-words
+
+  ###########################################################################
+  # Concurrent statements
+  ###########################################################################
+  concurrent-statements:
+    - include: assertion-statement
+    - include: process-begin
+    - include: generate-statements
+    - include: block-statement-begin
+    # This one should also be close to last since it tends to match to
+    # lines with less than or equal to symbols in expressions.
+    - include: conc-signal-assignment
+    # This one should be last or late because it matches most anything.
+    - include: component-instantiation
+
+  conc-signal-assignment:
+    # Basic
+    - match: (?i)({{identifier}})\s*(<\=)
+      captures:
+        1: variable.other.vhdl
+        2: keyword.operator.assignment.vhdl
+      push:
+        - meta_scope: meta.statement.assignment.signal.vhdl
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        - match: (,)
+          captures:
+            1: punctuation.separator.vhdl
+        - include: expression-operators
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: reserved-words
+    # With bit index
+    - match: (?i)({{identifier}})(\()(({{decchars}})+)(\))\s*(<\=)
+      captures:
+        1: variable.other.vhdl
+        2: punctuation.group.parens.begin.vhdl
+        3: constant.numeric.integer.vhdl
+        5: punctuation.group.parens.end.vhdl
+        6: keyword.operator.assignment.vhdl
+      push:
+        - meta_scope: meta.statement.assignment.signal.vhdl
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        - match: (,)
+          captures:
+            1: punctuation.separator.vhdl
+        - include: expression-operators
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: reserved-words
+    # With slice
+    - match: (?i)({{identifier}})(\()(({{decchars}})+)\s*(to|downto)\s*(({{decchars}})+)(\))\s*(<\=)
+      captures:
+        1: variable.other.vhdl
+        2: punctuation.group.parens.begin.vhdl
+        3: constant.numeric.integer.vhdl
+        5: keyword.other.direction.vhdl
+        6: constant.numeric.integer.vhdl
+        8: punctuation.group.parens.end.vhdl
+        9: keyword.operator.assignment.vhdl
+      push:
+        - meta_scope: meta.statement.assignment.signal.vhdl
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        - match: (,)
+          captures:
+            1: punctuation.separator.vhdl
+        - include: expression-operators
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: reserved-words
+    # With attribute range/reverse_range
+    - match: '(?i)({{identifier}})(\()({{identifier}})''(range|reverse_range)(\))\s*(<\=)'
+      captures:
+        1: variable.other.vhdl
+        2: punctuation.group.parens.begin.vhdl
+        3: variable.other.vhdl
+        4: keyword.other.attribute.vhdl
+        5: punctuation.group.parens.end.vhdl
+        6: keyword.operator.assignment.vhdl
+      push:
+        - meta_scope: meta.statement.assignment.signal.vhdl
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        - match: (,)
+          captures:
+            1: punctuation.separator.vhdl
+        - include: expression-operators
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: reserved-words
+    # Aggregate assignment
+    - match: '(?i)(\()(.*?)(\))\s*(<\=)'
+      captures:
+        1: punctuation.group.parens.begin.vhdl
+        2: variable.other.vhdl
+        3: punctuation.group.parens.end.vhdl
+        4: keyword.operator.assignment.vhdl
+      push:
+        - meta_scope: meta.statement.assignment.signal.vhdl
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        - match: (,)
+          captures:
+            1: punctuation.separator.vhdl
+        - include: expression-operators
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: reserved-words
+    # Experimental variation -- This might replace everything above.
+    - match: (?i)\b({{identifier}})\b(?=.*<=)
+      scope: variable.other.vhdl
+      push:
+        - meta_scope: meta.statement.assignment.signal.vhdl
+        - match: <=
+          scope: keyword.operator.assignment.vhdl
+        - match: ;
+          scope: punctuation.terminator.vhdl
+          pop: true
+        - include: expression-operators
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: reserved-words
+    # Not exactly right for scoping but not too bad I suppose
+    - match: (?i)\b(with)\b
+      captures:
+        1: keyword.control.conditional.with.vhdl
+      push:
+        - meta_scope: meta.statement.with-select.vhdl
+        - match: (?i)\b(select)\b
+          captures:
+            1: keyword.control.conditional.select.vhdl
+          pop: true
+        - include: expression-operators
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: reserved-words
+
+  # Much like architecture (and eventually procedures and functions)
+  # process is going to be a 3 context situation and I will not be
+  # able to check the trailing identifier.
+  process-begin:
+    - match: |-
+        (?xi)
+          (({{identifier}})\s*(:)\s*)?
+          ((postponed)\s*)?
+          (process)
+      captures:
+        2: entity.name.label.process.vhdl
+        3: punctuation.separator.vhdl
+        5: keyword.other.postponed.vhdl
+        6: keyword.other.process.vhdl
+      push: process-decl
+
+  process-decl:
+    - meta_scope: meta.block.process.declaration.vhdl
+    - match: (?i)\b(begin)\b
+      captures:
+        1: keyword.other.block.begin.vhdl
+      set: process-statements
+    - match: '(?i)\b(is)\b'
+      # Optional word but ought to be caught.
+      captures:
+        1: keyword.other.block.is.vhdl
+    - include: process-sensitivity-list
+    - include: variable-decl
+    - include: type-decl
+    - include: subtype-decl
+    - include: constant-decl
+    - include: alias-decl
+    - include: attribute-decl
+    - include: attribute-spec
+    - include: procedure-spec
+    - include: function-spec
+
+  process-statements:
+    - meta_scope: meta.block.process.body.vhdl
+    - match: (?i)((end)\s+)((postponed)\s*)?((process)\s*)(({{identifier}})\s*)?(;)
+      captures:
+        2: keyword.other.block.end.vhdl
+        4: keyword.other.postponed.vhdl
+        6: keyword.other.process.vhdl
+        8: entity.name.label.process.vhdl
+        9: punctuation.terminator.vhdl
+      pop: true
+    - include: sequential-statements
+
+  process-sensitivity-list:
+    - match: '(\()'
+      captures:
+        1: punctuation.section.group.begin.vhdl
+      push:
+        - meta_scope: meta.group.sensitivity-list.vhdl
+        - match: '(\))'
+          captures:
+            1: punctuation.section.group.end.vhdl
+          pop: true
+        - include: sensitivity-items
+    - match: '(\))'
+      captures:
+        1: invalid.illegal.unmatched-parenthesis.vhdl
+
+  sensitivity-items:
+    - match: (all)
+      captures:
+        1: keyword.other.all.vhdl
+    - match: (?i)({{identifier}})
+      captures:
+        1: variable.parameter.vhdl
+    - match: '(,)'
+      captures:
+        1: punctuation.separator.vhdl
+
+  component-instantiation:
+    # Direct entity instantiation.  Using the multiline
+    # variation because it's kind of a complex regexp.
+    - match: |-
+        (?xi)
+          ({{identifier}})
+          \s*(:)\s*
+          (entity)\s+
+          (
+            ({{identifier}})(\.)
+          )?
+          ({{identifier}})
+      captures:
+        1: entity.name.label.vhdl
+        2: punctuation.separator.vhdl
+        3: storage.type.entity.vhdl
+        5: entity.name.library.vhdl
+        6: punctuation.separator.vhdl
+        7: entity.name.entity.vhdl
+      push:
+        - meta_scope: meta.block.instantiation.vhdl
+        - match: '(;)'
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        - include: mappings
+    # Component instantiation
+    - match: |-
+        (?xi)
+          ({{identifier}})
+          \s*(:)\s*
+          (component\s+)?
+          ({{identifier}})
+      captures:
+        1: entity.name.label.vhdl
+        2: punctuation.separator.vhdl
+        3: storage.type.component.vhdl
+        4: entity.name.component.vhdl
+      push:
+        - meta_scope: meta.block.instantiation.vhdl
+        - match: '(;)'
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        - include: mappings
+        - include: assignment-operators
+
+  mappings:
+    - match: '(?i)(generic)\s+(map)'
+      captures:
+        1: keyword.other.interface-type.vhdl
+        2: keyword.other.map.vhdl
+      push:
+        - meta_scope: meta.block.association-list.vhdl
+        - match: '(\()'
+          captures:
+            1: punctuation.group.parens.begin.vhdl
+        - match: '(\))'
+          captures:
+            1: punctuation.group.parens.end.vhdl
+          pop: true
+        - match: '(,)'
+          captures:
+            1: punctuation.separator.vhdl
+        - include: associations
+    - match: '(?i)(port)\s+(map)'
+      captures:
+        1: keyword.other.interface-type.vhdl
+        2: keyword.other.map.vhdl
+      push:
+        - meta_scope: meta.block.association-list.vhdl
+        - include: associations
+        - match: '(\()'
+          captures:
+            1: punctuation.group.parens.begin.vhdl
+        - match: '(\))(?=;)'
+          captures:
+            1: punctuation.group.parens.end.vhdl
+          pop: true
+        - match: '(,)'
+          captures:
+            1: punctuation.separator.vhdl
+
+  associations:
+    # Basic
+    - match: '({{identifier}})\s*(\=>)'
+      captures:
+        1: variable.parameter.vhdl
+        2: keyword.operator.assignment.vhdl
+      push:
+        - meta_scope: meta.statement.association.vhdl
+        - match: (?=,)|(?=\))
+          pop: true
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: reserved-words
+    # This special case is to catch an identifier wrapped in parens as in the
+    # case of a typecase on the left hand side of a mapping.
+    - match: '(\()({{identifier}})(\))\s*(\=>)'
+      captures:
+        1: punctuation.group.parens.begin.vhdl
+        2: variable.parameter.vhdl
+        3: punctuation.group.parens.end.vhdl
+        4: keyword.operator.assignment.vhdl
+      push:
+        - meta_scope: meta.statement.association.vhdl
+        - match: (?=,)|(?=\))
+          pop: true
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: reserved-words
+    - match: (?i)({{identifier}})(\()(({{decchars}})+)(\))\s*(\=>)
+      captures:
+        1: variable.parameter.vhdl
+        2: punctuation.group.parens.begin.vhdl
+        3: constant.numeric.integer.vhdl
+        5: punctuation.group.parens.end.vhdl
+        6: keyword.operator.assignment.vhdl
+      push:
+        - meta_scope: meta.statement.association.vhdl
+        - match: (?=,)|(?=\))
+          pop: true
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: reserved-words
+    - match: (?i)({{identifier}})(\()(({{decchars}})+)\s*(to|downto)\s*(({{decchars}})+)(\))\s*(\=>)
+      captures:
+        1: variable.parameter.vhdl
+        2: punctuation.group.parens.begin.vhdl
+        3: constant.numeric.integer.vhdl
+        5: keyword.other.direction.vhdl
+        6: constant.numeric.integer.vhdl
+        8: punctuation.group.parens.end.vhdl
+        9: keyword.operator.assignment.vhdl
+      push:
+        - meta_scope: meta.statement.association.vhdl
+        - match: (?=,)|(?=\))
+          pop: true
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: reserved-words
+    - match: '(?i)({{identifier}})(\()({{identifier}})''(range|reverse_range)(\))\s*(\=>)'
+      captures:
+        1: variable.parameter.vhdl
+        2: punctuation.group.parens.begin.vhdl
+        3: variable.other.vhdl
+        4: keyword.other.attribute.vhdl
+        5: punctuation.group.parens.end.vhdl
+        6: keyword.operator.assignment.vhdl
+      push:
+        - meta_scope: meta.statement.association.vhdl
+        - match: (?=,)|(?=\))
+          pop: true
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: reserved-words
+
+  generate-statements:
+    - include: for-generate-statement
+    - include: if-generate-statement
+    - include: case-generate-statement
+
+  for-generate-statement:
+    - match: |-
+        (?xi)
+          (({{identifier}})\s*(:)\s*)?
+          ((for)\s*)
+          (({{identifier}})\s*)
+          (in)
+      captures:
+        2: entity.name.label.vhdl
+        3: punctuation.separator.vhdl
+        5: keyword.control.flow.for.vhdl
+        7: variable.other.vhdl
+        8: keyword.other.in.vhdl
+      push:
+        - meta_scope: meta.block.generate.loop.vhdl
+        - match: (?i)\b(generate)\b
+          captures:
+            1: keyword.other.generate.vhdl
+          set:
+            - meta_scope: meta.block.generate.body.vhdl
+            - match: |-
+                (?xi)
+                  ((end)\s*)
+                  ((generate)\s*)
+                  (({{identifier}})\s*)?
+                  (;)
+              captures:
+                2: keyword.other.block.end.vhdl
+                4: keyword.other.generate.vhdl
+                6: entity.name.label.vhdl
+                7: punctuation.terminator.vhdl
+              pop: true
+            - include: block-declarative-items
+            - include: concurrent-statements
+            - include: reserved-words
+        - include: reserved-words
+        - include: discrete-range
+
+  if-generate-statement:
+    - match: |-
+        (?xi)
+          (({{identifier}})\s*(:)\s*)?
+          (\bif\b)
+      captures:
+        2: entity.name.label.vhdl
+        3: punctuation.separator.vhdl
+        4: keyword.control.conditional.if.vhdl
+      push:
+        - meta_scope: meta.block.generate.conditional.vhdl
+        - match: (?i)\b(generate)\b
+          captures:
+            1: keyword.other.vhdl
+          set: if-generate-body
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: expression-operators
+
+  if-generate-body:
+    - meta_scope: meta.block.generate.body.vhdl
+    - match: |-
+        (?xi)
+          ((end)\s*)
+          ((generate)\s*)
+          (({{identifier}})\s*)?
+          (;)
+      captures:
+        2: keyword.other.block.end.vhdl
+        4: keyword.other.generate.vhdl
+        6: entity.name.label.vhdl
+        7: punctuation.terminator.vhdl
+      pop: true
+    - match: (?i)\b(else)\s*(generate)\b
+      captures:
+        1: keyword.control.conditional.else.vhdl
+        2: keyword.other.generate.vhdl
+    - match: (?i)\b(elsif)\b
+      captures:
+        1: keyword.control.conditional.elsif.vhdl
+      set:
+        - meta_scope: meta.block.generate.conditional.vhdl
+        - match: \b(generate)\b
+          captures:
+            1: keyword.other.generate.vhdl
+          set: if-generate-body
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: expression-operators
+    - include: block-declarative-items
+    - include: concurrent-statements
+    - include: reserved-words
+
+  case-generate-statement:
+    - match: |-
+        (?xi)
+          (({{identifier}})\s*(:)\s*)?
+          ((case)\s*)
+      captures:
+        2: entity.name.label.vhdl
+        3: punctuation.separator.vhdl
+        5: keyword.control.flow.case.vhdl
+      push:
+        - meta_scope: meta.block.generate.case.vhdl
+        - include: arithmetic-operators
+        - match: '(?i)\b(generate)\b'
+          captures:
+            1: keyword.other.generate.vhdl
+          set:
+            - meta_scope: meta.block.generate.body.vhdl
+            - match: |-
+                (?xi)
+                  ((end)\s*)
+                  ((generate)\s*)
+                  (({{identifier}})\s*)?
+                  (;)
+              captures:
+                2: keyword.other.block.end.vhdl
+                4: keyword.other.generate.vhdl
+                6: entity.name.label.vhdl
+                7: punctuation.terminator.vhdl
+              pop: true
+            - match: (?i)\b(when)\b
+              captures:
+                1: keyword.control.flow.when.vhdl
+              push:
+                - meta_scope: meta.choice.vhdl
+                - match: '(\=>)'
+                  captures:
+                    1: keyword.operator.assignment.vhdl
+                  pop: true
+            - include: block-declarative-items
+            - include: concurrent-statements
+            - include: reserved-words
+
+  assertion-statement:
+    - match: |-
+        (?xi)
+          (({{identifier}})\s*(:)\s*)?
+          ((assert)\s*)
+      captures:
+        2: entity.name.label.vhdl
+        3: punctuation.separator.vhdl
+        5: keyword.other.assert.vhdl
+      push:
+        - meta_scope: meta.statement.assert.vhdl
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        - match: (?xi)\b(report|severity)\b
+          captures:
+            1: keyword.other.vhdl
+
+  # Well this little concurrent statement could be the most complicated
+  # one that exists.  It has pretty much the kitchen sink of capability.
+  block-statement-begin:
+    - match: |-
+        (?xi)
+          (({{identifier}})\s*(:)\s*)
+          ((block)\b\s*)
+      captures:
+        2: entity.name.label.vhdl
+        3: punctuation.separator.vhdl
+        5: keyword.other.block.block.vhdl
+      push:
+        - match: (?i)\b(is)\b
+          captures:
+            1: keyword.other.block.is.vhdl
+          set: block-statement-declarations
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: expression-operators
+
+  block-statement-declarations:
+    - meta_scope: meta.block.block.declarations.vhdl
+    - match: (?i)\b(begin)\b
+      captures:
+        1: keyword.other.block.begin.vhdl
+      set: block-statement-body
+    - include: block-mappings
+    - include: generic-interface
+    - include: port-interface
+    - include: block-declarative-items
+
+  block-statement-body:
+    - meta_scope: meta.block.block.body.vhdl
+    - match: (?i)(end)\s+(block)(\s+({{identifier}}))?\s*(;)
+      captures:
+        1: keyword.other.block.end.vhdl
+        2: keyword.other.block.block.vhdl
+        4: entity.name.label.vhdl
+        5: punctuation.terminator.vhdl
+      pop: true
+    - include: concurrent-statements
+
+  # This is a special version of "mappings" because inconsistency is
+  # key.  These map constructs require a semicolon terminator unlike
+  # instantiation generic and port mappings.
+  block-mappings:
+    - match: '(?i)(generic|port)\s+(map)'
+      captures:
+        1: keyword.other.interface-type.vhdl
+        2: keyword.other.map.vhdl
+      push:
+        - meta_scope: meta.block.association-list.vhdl
+        - match: '(\()'
+          captures:
+            1: punctuation.group.parens.begin.vhdl
+        - match: '(\))\s*(;)'
+          captures:
+            1: punctuation.group.parens.end.vhdl
+            2: punctuation.terminator.vhdl
+          pop: true
+        - match: '(,)'
+          captures:
+            1: punctuation.separator.vhdl
+        - include: associations
+
+  ###########################################################################
+  # Sequential statements
+  ###########################################################################
+  sequential-statements:
+    - include: seq-if
+    - include: seq-case
+    - include: assertion-statement
+    - include: seq-loops
+    - include: seq-shorties
+    - include: seq-variable-assignment
+    # The signal assignment should be next to last as the assignment
+    # operator is the same as less-than-or-equal.
+    - include: conc-signal-assignment
+    # This one must be last since subprograms look like most anything.
+    - include: seq-subprogram-call
+
+  seq-variable-assignment:
+    # Basic
+    - match: (?i)({{identifier}})\s*(:\=)
+      captures:
+        1: variable.other.vhdl
+        2: keyword.operator.assignment.vhdl
+      push:
+        - meta_scope: meta.statement.assignment.variable.vhdl
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        - include: expression-operators
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: reserved-words
+    # With bit index
+    - match: (?i)({{identifier}})(\()(({{decchars}})+)(\))\s*(:\=)
+      captures:
+        1: variable.other.vhdl
+        2: punctuation.group.parens.begin.vhdl
+        3: constant.numeric.integer.vhdl
+        5: punctuation.group.parens.end.vhdl
+        6: keyword.operator.assignment.vhdl
+      push:
+        - meta_scope: meta.statement.assignment.variable.vhdl
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        - include: expression-operators
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: reserved-words
+    # With slice
+    - match: (?i)({{identifier}})(\()(({{decchars}})+)\s*(to|downto)\s*(({{decchars}})+)(\))\s*(:\=)
+      captures:
+        1: variable.other.vhdl
+        2: punctuation.group.parens.begin.vhdl
+        3: constant.numeric.integer.vhdl
+        5: keyword.other.direction.vhdl
+        6: constant.numeric.integer.vhdl
+        8: punctuation.group.parens.end.vhdl
+        9: keyword.operator.assignment.vhdl
+      push:
+        - meta_scope: meta.statement.assignment.variable.vhdl
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        - include: expression-operators
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: reserved-words
+    # With attribute range/reverse_range
+    - match: '(?i)({{identifier}})(\()({{identifier}})''(range|reverse_range)(\))\s*(:\=)'
+      captures:
+        1: variable.other.vhdl
+        2: punctuation.group.parens.begin.vhdl
+        3: variable.other.vhdl
+        4: keyword.other.attribute.vhdl
+        5: punctuation.group.parens.end.vhdl
+        6: keyword.operator.assignment.vhdl
+      push:
+        - meta_scope: meta.statement.assignment.variable.vhdl
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        - include: expression-operators
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: reserved-words
+    # Aggregate assignment
+    - match: '(?i)(\()(.*?)(\))\s*(:\=)'
+      captures:
+        1: punctuation.group.parens.begin.vhdl
+        2: variable.other.vhdl
+        3: punctuation.group.parens.end.vhdl
+        4: keyword.operator.assignment.vhdl
+      push:
+        - meta_scope: meta.statement.assignment.variable.vhdl
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        - match: (,)
+          captures:
+            1: punctuation.separator.vhdl
+        - include: expression-operators
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: reserved-words
+    # Experimental variation -- This might replace everything above.
+    - match: (?i)\b({{identifier}})\b(?=.*:=)
+      scope: variable.other.vhdl
+      push:
+        - meta_scope: meta.statement.assignment.variable.vhdl
+        - match: :=
+          scope: keyword.operator.assignment.vhdl
+        - match: ;
+          scope: punctuation.terminator.vhdl
+          pop: true
+        - include: expression-operators
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: reserved-words
+
+  seq-if:
+    - match: (?i)(({{identifier}})\s*(:)\s*)?\b(if)\b
+      captures:
+        2: entity.name.label.vhdl
+        3: punctuation.separator.vhdl
+        4: keyword.control.conditional.if.vhdl
+      push:
+        - meta_scope: meta.block.if.conditional.vhdl
+        - match: '(?i)\b(then)\b'
+          captures:
+            1: keyword.control.conditional.then.vhdl
+          set: seq-if-statements
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: expression-operators
+
+  seq-if-statements:
+    - meta_scope: meta.block.if.body.vhdl
+    - match: (?i)\b(end)\s+(if)\s*;
+      captures:
+        1: keyword.control.conditional.end.vhdl
+        2: keyword.control.conditional.if.vhdl
+        3: punctuation.terminator.vhdl
+      pop: true
+    - match: '(?i)\b(else)\b'
+      captures:
+        1: keyword.control.conditional.else.vhdl
+    - match: '(?i)\b(elsif)\b'
+      captures:
+        1: keyword.control.conditional.elsif.vhdl
+      set:
+        - meta_scope: meta.block.if.conditional.vhdl
+        - match: '(?i)\b(then)\b'
+          captures:
+            1: keyword.control.conditional.then.vhdl
+          set: seq-if-statements
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: expression-operators
+    - include: sequential-statements
+
+  seq-case:
+    - match: (?i)(({{identifier}})\s*(:)\s*)?(case\?|case)
+      captures:
+        2: entity.name.label.vhdl
+        3: punctuation.separator.vhdl
+        4: keyword.control.flow.case.vhdl
+      push:
+        - meta_scope: meta.block.case.expression.vhdl
+        - include: arithmetic-operators
+        - match: '(?i)\b(is)\b'
+          captures:
+            1: keyword.other.block.is.vhdl
+          set:
+            - meta_scope: meta.block.case.body.vhdl
+            - match: (?i)(end)\s+(case\?|case)\s*({{identifier}}\s*)?(;)
+              captures:
+                1: keyword.control.flow.end.vhdl
+                2: keyword.control.flow.case.vhdl
+                3: entity.name.label.vhdl
+                4: punctuation.terminator.vhdl
+              pop: true
+            - match: '(?i)\b(when)\b'
+              captures:
+                1: keyword.control.flow.when.vhdl
+              push:
+                - meta_scope: meta.choice.vhdl
+                - match: (\=>)
+                  captures:
+                    1: keyword.operator.assignment.vhdl
+                  pop: true
+                - match: (\|)
+                  captures:
+                    1: keyword.operator.logical.vhdl
+            - include: sequential-statements
+
+  seq-loops:
+    # Basic loop
+    - match: |-
+        (?xi)
+          (({{identifier}})\s*(:)\s*)?
+          \b(loop)\b
+      captures:
+        2: entity.name.label.vhdl
+        3: punctuation.separator.vhdl
+        4: keyword.control.flow.loop.vhdl
+      push:
+        - meta_scope: meta.block.loop.body.vhdl
+        - match: |-
+            (?xi)
+              ((end)\s*)
+              ((loop)\s*)
+              (({{identifier}})\s*)?
+              (;)
+          captures:
+            2: keyword.control.flow.end.vhdl
+            4: keyword.control.flow.loop.vhdl
+            6: entity.name.label.vhdl
+            7: punctuation.terminator.vhdl
+          pop: true
+        - include: sequential-statements
+    # While loop
+    - match: |-
+        (?xi)
+          (({{identifier}})\s*(:)\s*)?
+          \b(while)\b
+      captures:
+        2: entity.name.label.vhdl
+        3: punctuation.separator.vhdl
+        4: keyword.control.flow.while.vhdl
+      push:
+        - meta_scope: meta.block.loop.conditional.vhdl
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: expression-operators
+        - match: (?xi)\b(loop)\b
+          captures:
+            1: keyword.control.flow.loop.vhdl
+          set:
+            - meta_scope: meta.block.loop.body.vhdl
+            - match: |-
+                (?xi)
+                  ((end)\s*)
+                  ((loop)\s*)
+                  (({{identifier}})\s*)?
+                  (;)
+              captures:
+                2: keyword.control.flow.end.vhdl
+                4: keyword.control.flow.loop.vhdl
+                6: entity.name.label.vhdl
+                7: punctuation.terminator.vhdl
+              pop: true
+            - include: sequential-statements
+    # For loop
+    - match: |-
+        (?xi)
+          (({{identifier}})\s*(:)\s*)?
+          \b(for)\b
+      captures:
+        2: entity.name.label.vhdl
+        3: punctuation.separator.vhdl
+        4: keyword.control.flow.for.vhdl
+      push:
+        - meta_scope: meta.block.loop.range.vhdl
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: expression-operators
+        - match: '(?i)\b(loop)\b'
+          captures:
+            1: keyword.control.flow.loop.vhdl
+          set:
+            - meta_scope: meta.block.loop.body.vhdl
+            - match: |-
+                (?xi)
+                  ((end)\s*)
+                  ((loop)\s*)
+                  (({{identifier}})\s*)?
+                  (;)
+              captures:
+                2: keyword.control.flow.end.vhdl
+                4: keyword.control.flow.loop.vhdl
+                6: entity.name.label.vhdl
+                7: punctuation.terminator.vhdl
+              pop: true
+            - include: sequential-statements
+        # Needs to be last
+        - include: reserved-words
+        - include: discrete-range
+
+  # Some basic one-liners
+  seq-shorties:
+    # Wait statements
+    - match: (?i)\b(wait)\b
+      captures:
+        1: keyword.other.wait.vhdl
+      push:
+        - meta_scope: meta.statement.wait.vhdl
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        - include: expression-operators
+        - include: reserved-words
+        - include: basic-paren-group
+        - include: stray-parens
+    # Next statements.
+    - match: '(?i)\b(next)\b'
+      captures:
+        1: keyword.other.next.vhdl
+      push:
+        - meta_scope: meta.statement.next.vhdl
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: reserved-words
+    # Exit statements
+    - match: '(?i)\b(exit)\b'
+      captures:
+        1: keyword.other.exit.vhdl
+      push:
+        - meta_scope: meta.statement.exit.vhdl
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        - include: basic-paren-group
+        - include: stray-parens
+        - include: reserved-words
+    # Null statements
+    - match: '(?i)\b(null)\b'
+      captures:
+        1: keyword.other.null.vhdl
+      push:
+        - meta_scope: meta.statement.null.vhdl
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+
+  # This match should pretty much be lowest priority because it's going to
+  # match any valid identifier much like concurrent instantiations.
+  seq-subprogram-call:
+    - match: |-
+        (?xi)
+          (({{identifier}})\s*(:)\s*)?
+          (({{identifier}})\s*)
+      captures:
+        2: entity.name.label.vhdl
+        3: punctuation.separator.vhdl
+        5: variable.function.vhdl
+      push:
+        - meta_scope: meta.function-call.procedure.vhdl
+        - match: (;)
+          captures:
+            1: punctuation.terminator.vhdl
+          pop: true
+        - include: basic-paren-group
+        - include: stray-parens
+
+  ###########################################################################
+  # Utility matches
+  ###########################################################################
+  basic-paren-group:
+    # This is just something to keep track of matching parenthesis in
+    # section where there is no other context.
+    - match: '(\()'
+      captures:
+        1: punctuation.group.parens.begin.vhdl
+      push:
+        - meta_scope: meta.group.parens.vhdl
+        - match: ','
+          scope: punctuation.separator.vhdl
+        - match: '(\))'
+          captures:
+            1: punctuation.group.parens.end.vhdl
+          pop: true
+        - include: prototype
+        - include: expression-operators
+        - include: reserved-words
+        - include: basic-paren-group
+
+  stray-parens:
+    # Should always be included after the basic paren consumer
+    # and only when there are no other contexts that use parens
+    # for grouping (because they might be looking for the stray)
+    - match: '(\))'
+      captures:
+        1: invalid.illegal.unmatched-parenthesis.vhdl
+
+  # Used in some constructs like for loops.  Must be careful because
+  # of the final match will match nearly ANYTHING.
+  discrete-range:
+    - match: ({{identifier}})(\')(range|reverse_range)
+      captures:
+        1: variable.other.vhdl
+        2: punctuation.separator.vhdl
+        3: keyword.other.attribute.vhdl
+    - match: ({{decchars}})
+      captures:
+        constant.numeric.decimal.vhdl
+    - match: \b(to|downto)\b
+      captures:
+        1: keyword.other.direction.vhdl
+
+  ###########################################################################
+  # Comment Definitions
+  ###########################################################################
+  line-comment:
+    # Line comment begin with double dash and continue to the end of the line.
+    - match: '--'
+      scope: punctuation.definition.comment.line.vhdl
+      push:
+        - meta_scope: comment.line.vhdl
+        - match: \n
+          pop: true
+
+  block-comment:
+    # Block comment (new in VHDL-2008) begins with C-style /* and ends with
+    # another */
+    - match: '/\*'
+      scope: punctuation.definition.comment.block.vhdl
+      push:
+        - meta_scope: comment.block.vhdl
+        - match: '\*/'
+          pop: true
+    - match: \*/(?!\*)
+      scope: invalid.illegal.stray-comment-end.vhdl
+
+  comments:
+    - include: line-comment
+    - include: block-comment
+
+  ###########################################################################
+  # Strings Definitions
+  ###########################################################################
+  escaped-char:
+    - match: '(\\[\\"''abfnrtv])'
+      captures:
+        1: constant.character.escape.vhdl
+
+  character-literal:
+    # Any of the printable characters in the standard character set can be
+    # used.  Used the non-word character element to protect against
+    # single quote used for attributes (e.g. a'range)
+    - match: '('')(?=.'')'
+      captures:
+        1: punctuation.definition.string.begin.vhdl
+      push:
+        - meta_scope: string.quoted.single.vhdl
+        - match: '(.)('')'
+          captures:
+            1: constant.character.vhdl
+            2: punctuation.definition.string.end.vhdl
+          pop: true
+        - match: '(.*)'
+          captures:
+            1: invalid.illegal.unclosed-string.vhdl
+          pop: true
+
+  binary-bit-string-literal:
+    - match: '([bB])(")'
+      captures:
+        1: storage.type.binary.vhdl
+        2: punctuation.definition.string.begin.vhdl
+      push:
+        - meta_include_prototype: false
+        - meta_scope: string.bit.binary.vhdl
+        - match: '"'
+          scope: punctuation.definition.string.end.vhdl
+          pop: true
+        - match: \n
+          scope: invalid.illegal.unclosed-string.vhdl
+          pop: true
+        - match: '[0-1zZxX\-_]'
+          scope: valid.character.binary.vhdl
+        - match: .
+          scope: invalid.illegal.unknown-char.vhdl
+
+  octal-bit-string-literal:
+    - match: '({{decchars}}*)?([oO])(")'
+      captures:
+        1: storage.type.length.vhdl
+        2: storage.type.octal.vhdl
+        3: punctuation.definition.string.begin.vhdl
+      push:
+        - meta_include_prototype: false
+        - meta_scope: string.bit.octal.vhdl
+        - match: '"'
+          scope: punctuation.definition.string.end.vhdl
+          pop: true
+        - match: \n
+          scope: invalid.illegal.unclosed-string.vhdl
+          pop: true
+        - match: '[0-7zZxX\-_]'
+          scope: valid.character.octal.vhdl
+        - match: .
+          scope: invalid.illegal.unknown-char.vhdl
+
+  hex-bit-string-literal:
+    - match: '({{decchars}}*)?([xX])(")'
+      captures:
+        1: storage.type.length.vhdl
+        2: storage.type.hex.vhdl
+        3: punctuation.definition.string.begin.vhdl
+      push:
+        - meta_include_prototype: false
+        - meta_scope: string.bit.hex.vhdl
+        - match: '"'
+          scope: punctuation.definition.string.end.vhdl
+          pop: true
+        - match: \n
+          scope: invalid.illegal.unclosed-string.vhdl
+          pop: true
+        - match: '[0-9a-fA-FzZxX\-_]'
+          scope: valid.character.hex.vhdl
+        - match: .
+          scope: invalid.illegal.unknown-char.vhdl
+
+  string-literal:
+    # A sequence of characters enclosed in double quotation marks.  Must
+    # fit entirely on one line.
+    - match: '(")'
+      captures:
+        1: punctuation.definition.string.begin.vhdl
+      push:
+        - meta_include_prototype: false
+        - meta_scope: string.quoted.double.vhdl
+        - match: '(")'
+          scope: punctuation.definition.string.end.vhdl
+          pop: true
+        - match: \n
+          scope: invalid.illegal.unclosed-string.vhdl
+          pop: true
+        - include: escaped-char
+
+  strings:
+    - include: character-literal
+    - include: binary-bit-string-literal
+    - include: octal-bit-string-literal
+    - include: hex-bit-string-literal
+    - include: string-literal
+
+  ###########################################################################
+  # Numbers / Operators / Constants Definitions
+  # The 'based' variations assume that the user knows what they're doing as
+  # it's very hard to flag something so variable as which letters are
+  # valid for bases 10-16.  Support added for underscore separators.
+  ###########################################################################
+  numbers:
+    - match: '\b{{decchars}}+#{{hexchars}}(?:{{hexchars}}|_{{hexchars}})*\.{{hexchars}}(?:{{hexchars}}|_{{hexchars}})*#[eE][+\-]?{{decchars}}+'
+      scope: constant.numeric.real.based.exponent.vhdl
+    - match: '\b{{decchars}}+#{{hexchars}}(?:{{hexchars}}|_{{hexchars}})*\.{{hexchars}}(?:{{hexchars}}|_{{hexchars}})*#'
+      scope: constant.numeric.real.based.vhdl
+    - match: '\b{{decchars}}(?:{{decchars}}|_{{decchars}})*\.{{decchars}}(?:{{decchars}}|_{{decchars}})*[eE][+\-]?{{decchars}}+'
+      scope: constant.numeric.real.exponent.vhdl
+    - match: '\b{{decchars}}(?:{{decchars}}|_{{decchars}})*\.{{decchars}}(?:{{decchars}}|_{{decchars}})*'
+      scope: constant.numeric.real.vhdl
+    - match: '\b{{decchars}}+#{{hexchars}}(?:{{hexchars}}|_{{hexchars}})*#[eE][+\-]?{{decchars}}+'
+      scope: constant.numeric.integer.based.exponent.vhdl
+    - match: '\b{{decchars}}+#{{hexchars}}(?:{{hexchars}}|_{{hexchars}})*#'
+      scope: constant.numeric.integer.based.vhdl
+    - match: '\b{{decchars}}(?:{{decchars}}|_{{decchars}})*[eE][+\-]?{{decchars}}+'
+      scope: constant.numeric.integer.exponent.vhdl
+    - match: '\b{{decchars}}(?:{{decchars}}|_{{decchars}})*'
+      scope: constant.numeric.integer.vhdl
+
+  assignment-operators:
+    - match: \:\=|\=>|<\=
+      scope: keyword.operator.assignment.vhdl
+
+  comparison-operators:
+    - match: <\=|>\=|\=|/\=|<|>
+      scope: keyword.operator.comparison.vhdl
+    - match: \?<\=|\?>\=|\?\=|\?/\=|\?<|\?>|\?\?
+      comment: New 2008 matching comparison operators
+      scope: keyword.operator.comparison.vhdl
+
+  arithmetic-operators:
+    - match: \+|\-|\*|\*\*|/|&|\babs\b
+      scope: keyword.operator.arithmetic.vhdl
+
+  logical-operators:
+    - match: (?i)\b(not|and|or|nand|nor|xor|xnor|mod|rem|sll|srl|rol|ror|sla|sra)\b
+      scope: keyword.operator.logical.vhdl
+
+  expression-operators:
+    - include: comparison-operators
+    - include: arithmetic-operators
+    - include: logical-operators
+
+  constants:
+    - match: (?i)\b(true|false)\b
+      scope: constant.language.vhdl
+    - match: (?i)\b(note|warning|error|failure)\b
+      scope: support.constant.std.vhdl
+    - match: |-
+        (?xi)\b(
+          math_e|math_1_over_e|math_pi|math_2_pi|math_1_over_pi|
+          math_pi_over_2|math_pi_over_3|math_pi_over_4|
+          math_3_pi_over_2|math_log_of_2|math_log_of_10|
+          math_log2_of_e|math_log10_of_e|math_sqrt_2|
+          math_1_over_sqrt_2|math_sqrt_pi|math_deg_to_rad|
+          math_rad_to_deg
+        )\b
+      scope: support.constant.math-real.vhdl
+    - match: (?i)\b(math_cbase_1|math_cbase_j|math_czero)\b
+      scope: support.constant.math-complex.vhdl
+
+  # In textio, the type 'width' is not marked.  Very minor and
+  # is a commonly used identifier name as well.
+  types:
+    - match: |-
+        (?xi)\b(
+          boolean|bit|character|severity_level|integer|natural|positive|
+          real|time|delay_length|string|boolean_vector|bit_vector|
+          integer_vector|real_vector|time_vector|file_open_kind|
+          file_open_status
+        )\b(')?
+      captures:
+        1: support.type.std.vhdl
+        2: punctuation.definition.typecast.vhdl
+    - match: |-
+        (?xi)\b(
+          line|text|side
+        )\b(')?
+      captures:
+        1: support.type.std.vhdl
+        2: punctuation.definition.typecast.vhdl
+    - match: (?i)\b(complex|positive_real|principal_value|complex_polar)\b(')?
+      captures:
+        1: support.type.std.vhdl
+        2: punctuation.definition.typecast.vhdl
+    - match: |-
+        (?xi)\b(
+          std_ulogic|std_ulogic_vector|std_logic|std_logic_vector|
+          X01|X01Z|UX01|UX01Z
+        )\b(')?
+      captures:
+        1: support.type.std.vhdl
+        2: punctuation.definition.typecast.vhdl
+    # Overlaps numeric_bit but numeric_std is more common.
+    - match: |-
+        (?xi)\b(
+          unresolved_unsigned|unresolved_signed|u_unsigned|u_signed|
+          unsigned|signed
+        )\b(')?
+      captures:
+        1: support.type.std.vhdl
+        2: punctuation.definition.typecast.vhdl
+
+  # Some of these are functions, and some are procedures.  They differ in how
+  # they close.  Note for color schemes, the comment term is 'support.function'
+  # regardless of how they actually behave in the language.
+  library-subprograms:
+    # Actually built-in function, not just predefined.
+    - match: |-
+        (?xi)\b(
+          to_string
+        )\b\s*(\()
+      captures:
+        1: support.function.predefined.vhdl
+        2: punctuation.group.parens.begin.vhdl
+      push: library-function-parameters
+    # Predefined Package env
+    - match: |-
+        (?xi)((std\.env\.)?\b(
+          resolution_limit
+        ))\b\s*(\()
+      captures:
+        1: support.function.env.vhdl
+        4: punctuation.group.parens.begin.vhdl
+      push: library-function-parameters
+    - match: |-
+        (?xi)((std\.env\.)?\b(
+          stop|finish
+        ))\b\s*(\()
+      captures:
+        1: support.function.env.vhdl
+        4: punctuation.group.parens.begin.vhdl
+      push: library-procedure-parameters
+    # Predefined Package textio
+    - match: |-
+        (?xi)\b(
+          readline|read|sread|string_read|bread|binary_read|oread|
+          octal_read|hread|hex_read|writeline|tee|write|
+          swrite|string_write|bwrite|binary_write|owrite|octal_write|
+          hwrite|hex_write
+        )\b\s*(\()
+      captures:
+        1: support.function.textio.vhdl
+        2: punctuation.group.parens.begin.vhdl
+      push: library-procedure-parameters
+    - match: |-
+        (?xi)\b(
+          justify
+        )\b\s*(\()
+      captures:
+        1: support.function.textio.vhdl
+        2: punctuation.group.parens.begin.vhdl
+      push: library-function-parameters
+    # Predefined Package math_real
+    - match: |-
+        (?xi)\b(
+          sign|ceil|floor|round|trunc|realmax|realmin|"mod"|
+          uniform|sqrt|cbrt|exp|log2|log10|log|sin|cos|tan|
+          arcsin|arccos|arctan|sinh|cosh|tanh|arcsinh|arccosh|
+          arctanh
+        )\b\s*(\()
+      captures:
+        1: support.function.math-real.vhdl
+        2: punctuation.group.parens.begin.vhdl
+      push: library-function-parameters
+    - match: |-
+        (?xi)\b(
+          uniform
+        )\b\s*(\()
+      captures:
+        1: support.function.math-real.vhdl
+        2: punctuation.group.parens.begin.vhdl
+      push: library-procedure-parameters
+    # Predefined Package math_complex
+    - match: |-
+        (?xi)\b(
+          cmplx|get_principal_value|complex_to_polar|polar_to_complex|
+          arg|conj
+        )\b\s*(\()
+      captures:
+        1: support.function.math-complex.vhdl
+        2: punctuation.group.parens.begin.vhdl
+      push: library-function-parameters
+    # The std_logic_1164 Package
+    - match: |-
+        (?xi)\b(
+          resolved|to_bit|to_bitvector|to_stdulogic|to_stdlogicvector|
+          to_stdulogicvector|to_bit_vector|to_bv|to_std_logic_vector|
+          to_slv|to_std_ulogic_vector|to_01|to_x01|to_x01z|to_ux01|
+          rising_edge|falling_edge|is_x|to_bstring|to_binary_string|
+          to_ostring|to_octal_string|to_hstring|to_hex_string
+        )\b\s*(\()
+      captures:
+        1: support.function.std-logic-1164.vhdl
+        2: punctuation.group.parens.begin.vhdl
+      push: library-function-parameters
+    # The numeric_std Package
+    - match: |-
+        (?xi)\b(
+          std_match|resize|minimum|maximum|shift_left|shift_right|
+          rotate_left|rotate_right|to_unsigned|to_signed|to_integer
+        )\b\s*(\()
+      captures:
+        1: support.function.numeric-std.vhdl
+        2: punctuation.group.parens.begin.vhdl
+      push: library-function-parameters
+
+  library-function-parameters:
+    - meta_scope: meta.function-call.function.vhdl
+    - include: basic-paren-group
+    - include: prototype
+    - include: reserved-words
+    - match: ','
+      scope: punctuation.separator.vhdl
+    - match: (\))
+      captures:
+        1: punctuation.group.parens.end.vhdl
+      pop: true
+    - include: stray-parens
+
+  library-procedure-parameters:
+    - meta_scope: meta.function-call.procedure.vhdl
+    - include: basic-paren-group
+    - include: prototype
+    - include: reserved-words
+    - match: (\))\s*(;)
+      captures:
+        1: punctuation.group.parens.end.vhdl
+        2: punctuation.terminator.vhdl
+      pop: true
+    - include: stray-parens
+
+  ###########################################################################
+  # Keywords - The gigantic list.  This is for matching when there's no other
+  # overriding context that should be indicating scope.
+  ###########################################################################
+  reserved-words:
+    - match: |-
+        (?xi)\b(
+          abs|access|after|alias-decl|all|and|architecture|array|assert|assume|
+          assume_guarantee|attribute|begin|block|body|buffer|bus|case|
+          component|configuration|constant|context|cover|default|disconnect|
+          downto|else|elsif|end|entity|exit|fairness|file|for|force|function|
+          generate|generic|group|guarded|if|impure|in|inertial|inout|is|
+          label|library|linkage|literal|loop|map|mod|nand|new|next|nor|not|
+          null|of|on|open|or|others|out|package|parameter|port|postponed|
+          procedure|process|property|protected|pure|range|record|register|
+          reject|release|rem|report|restrict|restrict_guarantee|return|rol|
+          ror|select|sequence|severity|shared|signal|sla|sll|sra|srl|strong|
+          subtype|then|to|transport|type|unaffected|units|until|use|variable|
+          vmode|vprop|vunit|wait|when|while|with|xnor|xor
+        )\b
+      scope: keyword.other.reserved.vhdl
+    - match: |-
+        (?xi)\b(
+          left|right|low|high|range|reverse_range|length|ascending|
+          element
+        )\b
+      scope: keyword.other.attribute.vhdl
+
+  library-names:
+    - match: |-
+        (?xi)\b(
+          std_logic_1164|numeric_bit|numeric_std|numeric_bit_unsigned|
+          numeric_std_unsigned|fixed_float_types|fixed_generic_pkg|fixed_pkg|
+          float_generic_pkg|float_pkg|std_logic_textio|std|work|ieee|
+          standard|env|textio|math_real|math_complex
+        )
+      scope: support.name.std-libraries.vhdl
+

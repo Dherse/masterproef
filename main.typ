@@ -8,6 +8,12 @@
   ),
 )
 
+#set raw(syntaxes: (
+  "./assets/Phos.sublime-syntax",
+  "./assets/SystemVerilog.sublime-syntax",
+  "./assets/VHDL.sublime-syntax",
+))
+
 #show: preface.with()
 
 = Remark on the master's dissertation and the oral presentation
