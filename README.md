@@ -15,7 +15,7 @@ If however, it so happens that I could not publish these files, I ask that the u
 There are names in this thesis, the people mentioned are aware that they are present in my acknowledgement, and I asked them **specifically** for their permission. However, if they wish to be removed from the public file, they can let me know and I'll remove their name and do my best to remove it from the GIT history.
 
 ## Compilation
-This thesis cannot be easily compiled using typst main as it requires some custom syntax highlighting that is not available on main. Once custom syntaxes can be loaded into typst, I'll make sure to go back and edit the files to be compiled on main.
+This document will be easily compiled on typst once v0.7.0 lands :)
 
 [typst]: https://github.com/typst/typst
 [open access policy]: https://www.kcgg.ugent.be/en/publishing/copyright/copyright-for-researchers/
