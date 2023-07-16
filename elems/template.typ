@@ -293,7 +293,7 @@
                                 )
                             }
                             #set par(justify: false)
-                            #place(x.index, dx: -width_numbers)
+                            #place(top + left, x.index, dx: -width_numbers)
                             #x.content
                         ]
                     })
