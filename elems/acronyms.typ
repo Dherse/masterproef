@@ -1,37 +1,39 @@
 #import "./template.typ": todo, section
 
-#let disabled = true
-
 #let glossary_entries = state("glossary_entries", (:))
+
+#let query_labels_with_key(loc, key, before: false) = {
+    if before {
+        query(selector(label("glossary:" + key)).before(loc, inclusive: false), loc)
+    } else {
+        query(selector(label("glossary:" + key)), loc)
+    }
+}
 
 #let gloss(key, suffix: none, short: auto, long: auto) = {
     locate(loc => {
-        if glossary_entries.at(loc).keys().contains(key) {
-            let entry = glossary_entries.at(loc).at(key)
+        let glossary_entries = glossary_entries.final(loc);
+        if key in glossary_entries {
+            let entry = glossary_entries.at(key)
+
+            let gloss = query_labels_with_key(loc, key, before: true)
 
             let in_preface(l) = section.at(l) == "preface";
-            let is_first_in_preface = entry.locations.find((x) => in_preface(x)) == none;
-            let is_first = entry.locations.find((x) => not in_preface(x)) == none;
+            let is_first_in_preface = gloss.map((x) => x.location()).find((x) => in_preface(x)) == none;
+            let is_first = gloss.map((x) => x.location()).find((x) => not in_preface(x)) == none;
 
-            let long = if ((not disabled) and (in_preface(loc) and is_first_in_preface)) or long == true {
+            let long = if ((in_preface(loc) and is_first_in_preface)) or long == true {
                 [ (#emph(entry.long))]
-            } else if ((not disabled) and not in_preface(loc) and (is_first and short != true)) or long == true {
+            } else if (not in_preface(loc) and (is_first and short != true)) or long == true {
                 [ (#emph(entry.long))]
             } else {
                 none
             }
 
-            link(label(entry.key))[#entry.short#suffix#long]
-
-            if not disabled {
-                glossary_entries.update((x) => {
-                    if x.keys().contains(key) and not x.at(key).pages.contains(numbering(loc.page-numbering(), ..counter(page).at(loc))) {
-                        x.at(key).pages.push(numbering(loc.page-numbering(), ..counter(page).at(loc)))
-                        x.at(key).locations.push(loc)
-                    }
-                    x
-                })
-            }
+            [
+              #link(label(entry.key))[#entry.short#suffix#long]
+              #label("glossary:" + entry.key)
+            ]
         } else {
             todo("Glossary entry not found: " + key)
         }
@@ -43,14 +45,9 @@
         #heading(title) <glossary>
     ]
 
-    if disabled {
-        set text(size: 32pt)
-        todo("YOU FORGOT THE GLOSSARY")
-    }
-
     glossary_entries.update((x) => {
         for entry in entries {
-            x.insert(entry.key, (key: entry.key, short: entry.short, long: entry.long, locations: (), pages: ()))
+            x.insert(entry.key, (key: entry.key, short: entry.short, long: entry.long))
         }
 
         x
@@ -65,17 +62,21 @@
         elems.push[
             #emph(entry.long)
             #box(width: 1fr, repeat[.])
-            #if not disabled {
-                locate(loc => {
-                    glossary_entries
-                        .final(loc)
-                        .at(entry.key)
-                        .locations
-                        .sorted(key: (x) => x.page())
-                        .map((x) => link(x)[#numbering(x.page-numbering(), ..counter(page).at(x))])
-                        .join(", ")
-                })
-            }
+            #locate(loc => {
+                query_labels_with_key(loc, entry.key)
+                    .map((x) => x.location())
+                    .sorted(key: (x) => x.page())
+                    .fold((values: (), pages: ()), ((values, pages), x) => if pages.contains(x.page()) {
+                        (values: values, pages: pages)
+                    } else {
+                        values.push(x)
+                        pages.push(x.page())
+                        (values: values, pages: pages)
+                    })
+                    .values
+                    .map((x) => link(x)[#numbering(x.page-numbering(), ..counter(page).at(x))])
+                    .join(", ")
+            })
         ]
     }
 
