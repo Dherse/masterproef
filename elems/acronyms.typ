@@ -65,15 +65,8 @@
             #locate(loc => {
                 query_labels_with_key(loc, entry.key)
                     .map((x) => x.location())
+                    .dedup(by: (x) => x.page())
                     .sorted(key: (x) => x.page())
-                    .fold((values: (), pages: ()), ((values, pages), x) => if pages.contains(x.page()) {
-                        (values: values, pages: pages)
-                    } else {
-                        values.push(x)
-                        pages.push(x.page())
-                        (values: values, pages: pages)
-                    })
-                    .values
                     .map((x) => link(x)[#numbering(x.page-numbering(), ..counter(page).at(x))])
                     .join(", ")
             })
