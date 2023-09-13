@@ -65,7 +65,7 @@
             #locate(loc => {
                 query_labels_with_key(loc, entry.key)
                     .map((x) => x.location())
-                    .dedup(by: (x) => x.page())
+                    .dedup(key: (x) => x.page())
                     .sorted(key: (x) => x.page())
                     .map((x) => link(x)[#numbering(x.page-numbering(), ..counter(page).at(x))])
                     .join(", ")
