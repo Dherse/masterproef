@@ -7,9 +7,6 @@
 
 #let font_size = 11pt
 #let section = state("section", "preface")
-#let raw_offset(offset) = {
-    state("raw_offset", 0).update(offset)
-}
 // The project function defines how your document looks.
 // It takes your content and some metadata and formats it.
 #let project(title: "", authors: (), body) = {
@@ -86,7 +83,6 @@
 
 #let content(body) = {
     set heading(numbering: "1.1.a", outlined: true)
-    set cite(brackets: true, style: "numerical")
     set par(linebreaks: "optimized", justify: true)
     set enum(indent: 0.5cm)
     set list(indent: 0.5cm)
@@ -300,8 +296,6 @@
                 )
             ]
         ]
-
-        raw_offset(0)
     }
 
     set page(numbering: "1 of 1")
