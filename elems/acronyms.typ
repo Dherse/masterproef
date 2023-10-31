@@ -35,7 +35,7 @@
               #label("glossary:" + entry.key)
             ]
         } else {
-            todo("Glossary entry not found: " + key)
+            panic("Glossary entry not found: " + key)
         }
     })
 }
@@ -45,13 +45,12 @@
         #heading(title) <glossary>
     ]
 
-    glossary_entries.update((x) => {
-        for entry in entries {
-            x.insert(entry.key, (key: entry.key, short: entry.short, long: entry.long))
-        }
+    let glossaries = (:)
+    for entry in entries {
+        glossaries.insert(entry.key, (key: entry.key, short: entry.short, long: entry.long))
+    }
 
-        x
-    })
+    glossary_entries.update(glossaries)
 
     let elems = ();
     for entry in entries.sorted(key: (x) => x.key) {

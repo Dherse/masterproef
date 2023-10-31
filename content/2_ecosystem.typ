@@ -33,7 +33,7 @@ As such, programming languages can be seen, in a more generic way, as tools that
 
 All languages have a type system; it provides the basis for the language to reason about values. It can be of two types: static or dynamic. Static typing allows the compiler to know ahead of executing the code what each value is and means. This allows the compiler to provide features such as type verification that a value has the correct type for an operation and to optimise the code to improve performance. On the contrary, dynamic typing does not determine the type of values ahead of time, instead forcing the burden of type verification on the user. This practice makes development easier at the cost of increased overhead during execution and the loss of some optimisations @dot_analysis_2015. Additionally, dynamic typing is a common source of runtime errors for programs written in a dynamically typed language, something that is caught during the compilation process in statically typed languages.
 
-Therefore, static typing is generally preferred for applications where speed is a concern, as is the case in _C_ and _Rust_. However, dynamic typing is preferred for applications where iteration speed is more important, such as in _Python_. However, some languages exist at the intersection of these two paradigms, such as _Rust_, which can infer parts of the type system at compile time, allowing the user to write their code with fewer type annotations while still providing the benefits of static typing. This is achieved through a process called type inference, where the compiler generally uses the de facto standard algorithm called _Hindley-Milner_ algorithm #cite("milner_theory_1978", "rust_compiler"), which will be discussed further in @sec_phos.
+Therefore, static typing is generally preferred for applications where speed is a concern, as is the case in _C_ and _Rust_. However, dynamic typing is preferred for applications where iteration speed is more important, such as in _Python_. However, some languages exist at the intersection of these two paradigms, such as _Rust_, which can infer parts of the type system at compile time, allowing the user to write their code with fewer type annotations while still providing the benefits of static typing. This is achieved through a process called type inference, where the compiler generally uses the de facto standard algorithm called _Hindley-Milner_ algorithm @milner_theory_1978 @rust_compiler, which will be discussed further in @sec_phos.
 
 #info-box(kind: "definition", footer: [ Adapted from @cardelli_understanding_1985 ])[
     *Polymorphism* refers to the ability of a language to allow the same code to be used with different types.
@@ -141,7 +141,7 @@ The typical features of debuggers include the ability to place break-points -- p
 
 Some of the functions of a debugging interface are hard to apply to analog circuitry such as in the case of photonic processors. And it is evident that traditional step-by-step debugging is not possible due to the real-time, continuous nature of analog circuitry. However, it may be possible to provide mechanisms for inspecting the state of the processor by sampling the analog signals present within the device.
 
-Due to the aforementioned limitations of existing digital debuggers, no existing tool can work for photonic processors. Instead, traditional analog electronic debugging techniques, such as the use of an oscilloscope are preferable. However, traditional tools only allow the user to inspect the state at the edge of the device, therefore, inspecting issues inside of the device require routing signals to the outside of the chip, which may not always be possible. However, it is interesting to note that this is an active area of research #cite("szczesny_hdl_based_2017", "Felgueiras2007ABD", "Motel2014SimulationAD"), for analog electronics at least, and it would be interesting to see what future research yields and how much introspection will be possible with "analog debuggers".
+Due to the aforementioned limitations of existing digital debuggers, no existing tool can work for photonic processors. Instead, traditional analog electronic debugging techniques, such as the use of an oscilloscope are preferable. However, traditional tools only allow the user to inspect the state at the edge of the device, therefore, inspecting issues inside of the device require routing signals to the outside of the chip, which may not always be possible. However, it is interesting to note that this is an active area of research @szczesny_hdl_based_2017, @Felgueiras2007ABD @Motel2014SimulationAD, for analog electronics at least, and it would be interesting to see what future research yields and how much introspection will be possible with "analog debuggers".
 
 === Code formatter
 
@@ -181,7 +181,7 @@ When creating a new language, effort should not go towards creating a new editor
 
 === Testing & simulation
 
-#info-box(kind: "definition", footer: [ Adapted from #cite("unit-test", "simulation")])[
+#info-box(kind: "definition", footer: [ Adapted from @unit-test, "simulation")])[
     *Testing* is the process of checking that a program produces the correct output for a given input. It is generally done by writing a separate program that runs parts -- or the entirety -- of the tested program and checks that it produces an output and that the produced output is correct.
 ]
 
@@ -195,7 +195,7 @@ Most modern programming languages, such as _Rust_ provide a testing framework as
 
 Therefore, when developing an @api, it is important to consider how the @api itself will be tested and how the user is expected to test their usage of the @api. Additionally, when creating a language, it is important to consider how the language will be tested and what facilities will be provided to the user to test their code.
 
-#info-box(kind: "definition", footer: [ Adapted from #cite("unit-test", "simulation")])[
+#info-box(kind: "definition", footer: [ Adapted from @unit-test @simulation)])[
     *Simulation* is the process of running a program that simulates the behaviour of a physical device. It is used to test that @hdl[s] produce the correct state for a given input and starting state while also checking that the program does so in the correct timing or power consumption limits.
 ]
 
@@ -203,7 +203,7 @@ Simulation is more specific to @hdl[s] and embedded development than traditional
 
 There are many simulation tools, such as _Vivado Simulator_, which allows users to test their FPGA code, other tools, such as _QEMU_ which allow users to test embedded platforms. Additionally, many analog simulation tools exist, most notably the @spice family of tools, which allow the simulation of analog electronics. There is also work being done to simulate photonic circuits using @spice @ye_spice-compatible_2022.
 
-Finally, there also exist tools for physical simulation, such as _Ansys Lumerical_ which are physical simulation tools that simulate the physical interactions of light with matter. These tools are used during the creation of photonic components used when creating @pic[s]. However, they are generally slow and require large amounts of computation power #cite("bogaerts_silicon_2018", "alerstam_parallel_2008"). Therefore, when creating an @api or a language for photonic processor development, it is desirable to consider how simulations will be performed and the level of details that this simulator will provide. The higher the amount of details, the higher the computational needs.
+Finally, there also exist tools for physical simulation, such as _Ansys Lumerical_ which are physical simulation tools that simulate the physical interactions of light with matter. These tools are used during the creation of photonic components used when creating @pic[s]. However, they are generally slow and require large amounts of computation power @bogaerts_silicon_2018 @alerstam_parallel_2008. Therefore, when creating an @api or a language for photonic processor development, it is desirable to consider how simulations will be performed and the level of details that this simulator will provide. The higher the amount of details, the higher the computational needs.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))
@@ -503,7 +503,7 @@ Following the analysis of programming ecosystem components, this section will an
 The first analysis, which looks at traditional programming languages, will look at the syntaxes of the following languages: _C_, _Rust_, and _Python_. These languages have been chosen as they are some of the most popular languages in the world, but also because they each bring different strengths and weaknesses with regards to the following aspects:
 - _C_ is a low-level language that is used as the building block for other non-traditional computation types such as @fpga[s] by being used for @hls @schafer_high_level_2020, but is also being used for novel use cases such as quantum programming @mccaskey_extending_2021.
 - _Rust_ is another low-level language, it has not seen wide use in @hls or other non-traditional computation types, but it has modern features that make it a good candidate for @api development. However, _Rust_ has a very steep learning curve, making it unsuitable for non-programmers @rust_learning_curve.
-- _Python_ is a common language that is used by a vast proportion of researchers and engineers #cite("stackoverflow_survey", "python_research"), which makes it a great candidate as the starting point of any language development. It is also used for some @hdl development @villar_python_2011 and is used for the development of the existing photonic processor @api[s], as well as for other non-traditional computation types such as quantum computing. However, it is a high-level, generally slow language with a syntax generally unsuitable for hardware description, as will be further discussed later.
+- _Python_ is a common language that is used by a vast proportion of researchers and engineers @stackoverflow_survey @python_research, which makes it a great candidate as the starting point of any language development. It is also used for some @hdl development @villar_python_2011 and is used for the development of the existing photonic processor @api[s], as well as for other non-traditional computation types such as quantum computing. However, it is a high-level, generally slow language with a syntax generally unsuitable for hardware description, as will be further discussed later.
 
 The second analysis will focus on different forms of #gloss("hdl", long: true, suffix: [s]) and simulation languages. Most notably, the following languages will be analysed:
 - _SytemC_ is a language that has seen increased use in @hls for @fpga[s].
@@ -585,7 +585,7 @@ This low-level of abstraction can be better understood by understanding three fa
 
 ==== High-level synthesis
 
-#info-box(kind: "definition", footer: [ Adapted from #cite("schafer_high_level_2020", "meeus_overview_2012")])[
+#info-box(kind: "definition", footer: [ Adapted from @schafer_high_level_2020, @meeus_overview_2012])[
     *High-level Synthesis (HLS)* is the process of translating high-level abstractions in a programming language into #gloss("rtl", long: true) level descriptions. This process is generally done by a compiler that takes as input the high-level language and translates the code into a lower-level form. 
 ]
 
@@ -643,7 +643,7 @@ Finally, none of the aforementioned @hdl[s] provide any facilities for analog ha
 
 === Analog simulation languages
 
-There are several analog simulation languages. However, there are very few analog hardware description languages, and they mostly seem to be research languages #cite("murayama_top-down_1996", "mitra_study_2010"). Due to this overall unavailability of analog @hdl[s], this comparison will instead rely on analog simulation languages, namely @spice and @verilog-ams. These two languages are very different, designed for different purposes and at different times. However, they are both actively used. Their uses differ significantly as @spice aims to provide a netlist description of analog electrical circuitry to be simulated, whereas @verilog-ams aims to provide models of analog systems compatible with mixed-signal simulations of digital and analog electronics.
+There are several analog simulation languages. However, there are very few analog hardware description languages, and they mostly seem to be research languages @murayama_top-down_1996 @mitra_study_2010. Due to this overall unavailability of analog @hdl[s], this comparison will instead rely on analog simulation languages, namely @spice and @verilog-ams. These two languages are very different, designed for different purposes and at different times. However, they are both actively used. Their uses differ significantly as @spice aims to provide a netlist description of analog electrical circuitry to be simulated, whereas @verilog-ams aims to provide models of analog systems compatible with mixed-signal simulations of digital and analog electronics.
 
 #{
     set text(size: 12pt, fill: rgb(30, 100, 200))

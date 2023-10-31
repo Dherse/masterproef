@@ -1,9 +1,3 @@
-#let code_width_state = state("code_width", 100%)
-
-#let set-code-width(width) = {
-    code_width_state.update(width)
-}
-
 #let code-blocks(body) = {
     let languages = (
         "rust": ("Rust", "\u{fa53}", rgb("#CE412B")),
