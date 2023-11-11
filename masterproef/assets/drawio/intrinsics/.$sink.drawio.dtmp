@@ -1,0 +1,28 @@
+<mxfile host="Electron" modified="2023-06-28T16:19:12.352Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.4.0 Chrome/112.0.5615.204 Electron/24.5.1 Safari/537.36" etag="vikDK-aHIrTSPvfc2wOJ" version="21.4.0" type="device">
+  <diagram name="Page-1" id="4I2zJMP6fPbmH2adfHKz">
+    <mxGraphModel dx="396" dy="228" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="tfoxWXDdU5jyKTtbno_l-1" value="" style="rounded=0;whiteSpace=wrap;html=1;movable=0;resizable=0;rotatable=0;deletable=0;editable=0;locked=1;connectable=0;" parent="1" vertex="1">
+          <mxGeometry x="320" y="80" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tfoxWXDdU5jyKTtbno_l-2" value="" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" target="tfoxWXDdU5jyKTtbno_l-1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="280" y="120" as="sourcePoint" />
+            <mxPoint x="290" y="90" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tfoxWXDdU5jyKTtbno_l-7" value="Sink" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=UGent Panno Text;fontSize=22;" parent="1" vertex="1">
+          <mxGeometry x="350" y="80" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GLrABeQMUucm_qGmX2vQ-3" value="&lt;font color=&quot;#e0a458&quot; face=&quot;tabler-icons&quot;&gt;&lt;/font&gt; input" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=UGent Panno Text;fontSize=16;" parent="1" vertex="1">
+          <mxGeometry x="220" y="110" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="eypQ-OfGwXSVqw-LOozI-1" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=data:image/svg+xml,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBkPSJNMzIsNDE2YTk2LDk2LDAsMCwwLDk2LDk2SDM4NGE5Niw5NiwwLDAsMCw5Ni05NlYzODRIMzJaTTQ5NiwyODhINDAwVjI1Nmg2NGExNiwxNiwwLDAsMCwxNi0xNlYyMjRhMTYsMTYsMCwwLDAtMTYtMTZIMzg0YTMyLDMyLDAsMCwwLTMyLDMydjQ4SDI4OFY5NmEzMiwzMiwwLDAsMSw2NCwwdjE2YTE2LDE2LDAsMCwwLDE2LDE2aDMyYTE2LDE2LDAsMCwwLDE2LTE2Vjk2QTk2LjE2LDk2LjE2LDAsMCwwLDMwMC44NywxLjg2QzI1NS4yOSwxMC43MSwyMjQsNTMuMzYsMjI0LDk5Ljc5VjI4OEgxNjBWMjQwYTMyLDMyLDAsMCwwLTMyLTMySDQ4YTE2LDE2LDAsMCwwLTE2LDE2djE2YTE2LDE2LDAsMCwwLDE2LDE2aDY0djMySDE2QTE2LDE2LDAsMCwwLDAsMzA0djMyYTE2LDE2LDAsMCwwLDE2LDE2SDQ5NmExNiwxNiwwLDAsMCwxNi0xNlYzMDRBMTYsMTYsMCwwLDAsNDk2LDI4OFoiLz48L3N2Zz4=;" vertex="1" parent="1">
+          <mxGeometry x="360" y="110" width="40" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

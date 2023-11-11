@@ -1,0 +1,204 @@
+prg:
+  short: PRG
+  long: Photonics Research Group
+fpga:
+  short: FPGA
+  long: Field Programmable Gate Array
+asic:
+  short: ASIC
+  long: Application Specific Integrated Circuit
+fppga:
+  short: FPPGA
+  long: Field Programmable Photonic Gate Array
+cpld:
+  short: CPLD
+  long: Complex Programmable Logic Device
+spice:
+  short: _SPICE_
+  long: Simulation Program with Integrated Circuit Emphasis
+phos:
+  short: _PHÔS_
+  long: Photonic Hardware Description Language
+pic:
+  short: PIC
+  long: Photonic Integrated Circuit
+rf:
+  short: RF
+  long: Radio Frequency
+verilog-ams:
+  short: _Verilog-AMS_
+  long: Verilog for Analog and Mixed Signal
+verilog-a:
+  short: _Verilog-A_
+  long: "A continuous-time subset of @verilog-ams"
+fir:
+  short: FIR
+  long: Finite Impulse Response
+iir:
+  short: IIR
+  long: Infinite Impulse Response
+2x2:
+  short: 2x2 tunable coupler
+  long: A tunable coupler with two inputs and two outputs
+mems:
+  short: MEMS
+  long: Micro-Electro-Mechanical Systems
+hdl:
+  short: HDL
+  long: Hardware Description Language
+rtl:
+  short: RTL
+  long: Register Transfer Level
+hdl:
+  short: HDL
+  long: Hardware Description Language
+dsl:
+  short: DSL
+  long: Domain Specific Language
+api:
+  short: API
+  long: Application Programming Interface
+jtag:
+  short: JTAG
+  long: Joint Test Action Group
+sql:
+  short: SQL
+  long: Structured Query Language
+ide:
+  short: IDE
+  long: Integrated Development Environment
+http:
+  short: HTTP
+  long: HyperText Transfer Protocol
+ip:
+  short: IP
+  long: Intellectual Property
+dry:
+  short: DRY
+  long: Don't Repeat Yourself
+hls:
+  short: HLS
+  long: High Level Synthesis
+vhsic:
+  short: VHSIC
+  long: Very High Speed Integrated Circuit
+vhdl:
+  short: VHDL
+  long: "@vhsic Hardware Description Language"
+gpl-3-0:
+  short: _GPL-3.0_
+  long: GNU General Public License version 3.0
+ic:
+  short: IC
+  long: Integrated Circuit
+gpu:
+  short: GPU
+  long: Graphics Processing Unit
+cpu:
+  short: CPU
+  long: Central Processing Unit
+llvm:
+  short: _LLVM_
+  long: Low Level Virtual Machine
+fsr:
+  short: FSR
+  long: Free Spectral Range
+hpc:
+  short: HPC
+  long: High Performance Computing
+hal:
+  short: HAL
+  long: Hardware Abstraction Layer
+eda:
+  short: EDA
+  long: Electronic Design Automation
+lut:
+  short: LUT
+  long: Look-Up Table
+mzi:
+  short: MZI
+  long: Mach-Zehnder Interferometer
+io:
+  short: I/O
+  long: Input/Output
+ppa:
+  short: PPA
+  long: Power, Performance, Area
+ecs:
+  short: ECS
+  long: Entity-Component-System
+adt:
+  short: ADT
+  long: Abstract Data Type
+si:
+  short: SI
+  long: Système International d'Unités -- the International System of Units
+ast:
+  short: AST
+  long: Abstract Syntax Tree
+vm:
+  short: VM
+  long: Virtual Machine
+cst:
+  short: CST
+  long: Concrete Syntax Tree
+hir:
+  short: HIR
+  long: High-level Intermediate Representation
+mir:
+  short: MIR
+  long: Mid-level Intermediate Representation
+gadt:
+  short: GADT
+  long: Generalized Abstract Data Type
+mit:
+  short: MIT
+  long: "#link(\"https://opensource.org/license/mit/\")[The _MIT_ license]"
+bc:
+  short: BC
+  long: Bitcode
+ffi:
+  short: FFI
+  long: Foreign Function Interface
+smt:
+  short: SMT
+  long: Satisfiability Modulo Theories
+prbs:
+  short: PRBS
+  long: Pseudo-Random Binary Sequence
+adc:
+  short: ADC
+  long: Analog-to-Digital Converter
+dac:
+  short: DAC
+  long: Digital-to-Analog Converter
+soa:
+  short: SOA
+  long: Semiconductor Optical Amplifier
+qam:
+  short: QAM
+  long: Quadrature Amplitude Modulation
+awgn:
+  short: AWGN
+  long: Additive White Gaussian Noise
+snr:
+  short: SNR
+  long: Signal-to-Noise Ratio
+ber:
+  short: BER
+  long: Bit Error Rate
+evm:
+  short: EVM
+  long: Error Vector Magnitude
+mvm:
+  short: MVM
+  long: Matrix-Vector Multiplication
+lsp:
+  short: LSP
+  long: Language Server Protocol
+cfg:
+  short: CFG
+  long: Control Flow Graph
+tdd:
+  short: TDD
+  long: Test-Driven Development
