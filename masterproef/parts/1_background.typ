@@ -22,8 +22,7 @@ Therefore, looking at @pic_hierarchy, one can build four large categories of @pi
   caption: [
     Shows a hierarchy of programmable #gloss("pic", long: true, suffix: "s"), starting at the non-programmable single function @pic (a), moving then to the tunable @pic (b), the feedforward architecture (c) and finally to the photonic processor (d).
   ],
-)[
-  #table(
+  table(
     columns: (auto, auto),
     stroke: none,
     align: center + horizon,
@@ -52,7 +51,7 @@ Therefore, looking at @pic_hierarchy, one can build four large categories of @pi
     "(c)",
     "(d)",
   )
-]<pic_hierarchy>
+) <pic_hierarchy>
 
 In this work, the focus will be on the fourth kind of tunability, the most generic. However, the work can also apply to photonic circuit design in general and is not limited to photonic processors. As discussed in @sec_meshes, the recirculating mesh is the most general kind of programmable @pic but also the most difficult to represent with a logic flow of operation because the light can travel in either direction. Therefore, the following question may be asked:
 

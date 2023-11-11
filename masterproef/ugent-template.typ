@@ -128,6 +128,8 @@
   show: codly-init
   codly(languages: languages)
 
+  show raw.where(block: true): set align(left)
+
   // Style code blocks.
   show raw.where(block: false): box.with(
     fill: luma(240),
