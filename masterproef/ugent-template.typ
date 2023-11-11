@@ -64,100 +64,96 @@
   // The body of your thesis.
   body,
 ) = {
-  let content = {
-    // Set the basic text properties.
-    set text(
-      font: ugent-font,
-      lang: "en",
-      size: font-size,
-      fallback: true,
-      hyphenate: true,
-    )
-
-    // Set the basic page properties.
-    set page(
-      number-align: right,
-      margin: 2.5cm
-    )
-
-    // Set the basic paragraph properties.
-    set par(leading: 1em, justify: true, linebreaks: "optimized")
-
-    // Additionally styling for list.
-    set enum(indent: 0.5cm)
-    set list(indent: 0.5cm)
-
-    // Set paragraph spacing.
-    show par: set block(spacing: 16pt)
-
-    // Number equations.
-    set math.equation(numbering: "(1)")
-
-    // Global show rules for links:
-    //  - Show links to websites in blue
-    //  - Underline links to websites
-    //  - Show other links as-is
-    show link: it => if type(it.dest) == str {
-      set text(fill: ugent-blue)
-      underline(it)
-    } else {
-      it
-    }
-
-    // Set caption styling.
-    show figure.caption: ugent-caption
-
-    // Make figure breakable.
-    show figure: set block(breakable: true)
-
-    // Set figure styling: aligned at the center.
-    show figure: align.with(center)
-
-    // Setup the styling of the outline entries.
-    show outline.entry: it => {
-      if it.element.func() != figure {
-        return it
-      }
-
-      let loc = it.element.location()
-      if state("section").at(loc) == "annex" {
-        let sup = it.element.supplement
-
-        // The annex index
-        let idx = numbering("A", ..counter(heading).at(loc))
-        let numbers = numbering("1", ..it.element.counter.at(loc))
-        let body = it.element.caption.body
-        [
-          #link(loc)[
-            #it.element.supplement\u{a0}#idx.#numbers: #body
-          ]#box(width: 1fr, it.fill) #it.page
-        ]
-      } else {
-        it
-      }
-    }
-
-    // Setting code blocks.
-    show: codly-init
-    codly(languages: languages)
-
-    // Style code blocks.
-    show raw.where(block: false): box.with(
-      fill: luma(240),
-      inset: (x: 3pt, y: 0pt),
-      outset: (y: 3pt),
-      radius: 2pt
-    )
-
-    show: gloss-init
-
-    body
-  }
-
   // Set the properties of the main PDF file.
   set document(author: authors, title: title)
 
-  content
+  // Set the basic text properties.
+  set text(
+    font: ugent-font,
+    lang: "en",
+    size: font-size,
+    fallback: true,
+    hyphenate: true,
+  )
+
+  // Set the basic page properties.
+  set page(
+    number-align: right,
+    margin: 2.5cm
+  )
+
+  // Set the basic paragraph properties.
+  set par(leading: 1em, justify: true, linebreaks: "optimized")
+
+  // Additionally styling for list.
+  set enum(indent: 0.5cm)
+  set list(indent: 0.5cm)
+
+  // Set paragraph spacing.
+  show par: set block(spacing: 16pt)
+
+  // Number equations.
+  set math.equation(numbering: "(1)")
+
+  // Global show rules for links:
+  //  - Show links to websites in blue
+  //  - Underline links to websites
+  //  - Show other links as-is
+  show link: it => if type(it.dest) == str {
+    set text(fill: ugent-blue)
+    underline(it)
+  } else {
+    it
+  }
+
+  // Set caption styling.
+  show figure.caption: ugent-caption
+
+  // Make figure breakable.
+  show figure: set block(breakable: true)
+
+  // Set figure styling: aligned at the center.
+  show figure: align.with(center)
+
+  // Setup the styling of the outline entries.
+  show outline.entry: it => {
+    if it.element.func() != figure {
+      return it
+    }
+
+    let loc = it.element.location()
+    if state("section").at(loc) == "annex" {
+      let sup = it.element.supplement
+
+      // The annex index
+      let idx = numbering("A", ..counter(heading).at(loc))
+      let numbers = numbering("1", ..it.element.counter.at(loc))
+      let body = it.element.caption.body
+      [
+        #link(loc)[
+          #it.element.supplement\u{a0}#idx.#numbers: #body
+        ]#box(width: 1fr, it.fill) #it.page
+      ]
+    } else {
+      it
+    }
+  }
+
+  // Setting code blocks.
+  show: codly-init
+  codly(languages: languages)
+
+  // Style code blocks.
+  show raw.where(block: false): box.with(
+    fill: luma(240),
+    inset: (x: 3pt, y: 0pt),
+    outset: (y: 3pt),
+    radius: 2pt
+  )
+
+  show: gloss-init
+
+  body
 }
 
 // Formatting function for a UGent heading
