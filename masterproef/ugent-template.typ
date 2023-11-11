@@ -73,7 +73,7 @@
     lang: "en",
     size: font-size,
     fallback: true,
-    hyphenate: true,
+    hyphenate: false,
   )
 
   // Set the basic page properties.
@@ -83,17 +83,11 @@
   )
 
   // Set the basic paragraph properties.
-  set par(leading: 1em, justify: true, linebreaks: "optimized")
+  set par(leading: 1em, justify: true)
 
   // Additionally styling for list.
   set enum(indent: 0.5cm)
   set list(indent: 0.5cm)
-
-  // Set paragraph spacing.
-  show par: set block(spacing: 16pt)
-
-  // Number equations.
-  set math.equation(numbering: "(1)")
 
   // Global show rules for links:
   //  - Show links to websites in blue
@@ -105,15 +99,6 @@
   } else {
     it
   }
-
-  // Set caption styling.
-  show figure.caption: ugent-caption
-
-  // Make figure breakable.
-  show figure: set block(breakable: true)
-
-  // Set figure styling: aligned at the center.
-  show figure: align.with(center)
 
   // Setup the styling of the outline entries.
   show outline.entry: it => {
@@ -330,8 +315,9 @@
 
 // Sets up the styling of the main body of your thesis.
 #let ugent-body(body) = {
-  // Pages in the body are numbered using arabic numerals.
-  set page(numbering: "1")
+  // Set the pages to show as "# of #" and reset page counter.
+  set page(numbering: "1 of 1")
+  counter(page).update(1)
 
   // Titles in the preface are not numbered and are not outlined.
   set heading(numbering: "1.1.a", outlined: true)
@@ -339,9 +325,23 @@
   // Show titled without numbering
   show heading: ugent-heading.with(number: true, big: true)
 
-  // Set the pages to show as "# of #" and reset page counter.
-  set page(numbering: "1 of 1")
-  counter(page).update(1)
+  // Set the basic paragraph properties.
+  set par(leading: 1em, justify: true, linebreaks: "optimized")
+
+  // Set paragraph spacing.
+  show par: set block(spacing: 16pt)
+
+  // Number equations.
+  set math.equation(numbering: "(1)")
+
+  // Set caption styling.
+  show figure.caption: ugent-caption
+
+  // Make figure breakable.
+  show figure: set block(breakable: true)
+
+  // Set figure styling: aligned at the center.
+  show figure: align.with(center)
 
   // Set that we're in the body
   state("section").update("body")

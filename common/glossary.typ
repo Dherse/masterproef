@@ -37,15 +37,10 @@
   let entry = entries.at(key)
   locate(loc => {
     let gloss = __query_labels_with_key(loc, key, before: true)
-    let in_preface(loc) = state("section").at(loc) == "preface";
 
     // Find whether this is the first glossary entry.
     let is_long = if long == auto {
-      if in_preface(loc) {
-        true
-      } else {
-        gloss.map((x) => x.location()).find((x) => not in_preface(x)) == none
-      }
+      gloss.map((x) => x.location()) == none
     } else {
       long
     }
@@ -90,12 +85,10 @@
     columns: (auto, 1fr),
     inset: 5pt,
     stroke: none,
-    fill: (_, row) => {
-      if calc.odd(row) {
-        luma(240)
-      } else {
-        white
-      }
+    fill: (_, row) => if calc.odd(row) {
+      luma(240)
+    } else {
+      white
     },
     align: horizon,
     ..elems
