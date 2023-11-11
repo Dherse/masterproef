@@ -4,13 +4,8 @@
 
 As previously mentioned in @motivation, the primary goal of this thesis is to find which paradigms and languages are best suited for the programming of photonic @fpga[s]. However, before discussing these topics in detail, it is necessary to start discussing the basics of photonic processors. This chapter will discuss photonic processors, their niche, and how they work. From this, the chapter will discuss the different types of photonic processors and how they differ. Finally, this chapter will conclude with the first and most important assumption made in all subsequent design decisions.
 
-<<<<<<< HEAD:masterproef/parts/1_background.typ
 #uinfo[
   This document uses the names photonic @fpga and photonic processor interchangeably. They both refer to the same thing: a programmable photonic device. The difference is that the former predates the latter in its use. Sometimes, they are also called #gloss("fppga", long: true) #cite(<perez-lopez_multipurpose_2020>).
-=======
-#info-box(kind: "info")[
-    This document uses the names photonic @fpga and photonic processor interchangeably. They both refer to the same thing: a programmable photonic device. The difference is that the former predates the latter in its use. Sometimes, they are also called #gloss("fppga", long: true) #cite(<perez-lopez_multipurpose_2020>).
->>>>>>> 23d41711030ce1e4f49dfed0d7d6f53fee581942:content/1_background.typ
 ]
 
 == Photonic processors <photonic_processor>
@@ -201,14 +196,7 @@ In some cases, such as machine learning, it has been shown that processing can b
 ==== RF processing
 @rf processing refers to the concept of processing radio signals using photonic technologies by modulating the @rf signals of interest onto optical signals and then benefiting from the low-energy, very high bandwidth of photonic components to efficiently process signals in the analog domain. This has interest for RADAR applications, but also mm-Wave communications and 5G @perez-lopez_silicon_2021.
 
-<<<<<<< HEAD:masterproef/parts/1_background.typ
 ==== Sensing
-=======
-#{
-    set text(size: 12pt, fill: rgb(30, 100, 200))
-    smallcaps[*Sensing*]
-}
->>>>>>> 23d41711030ce1e4f49dfed0d7d6f53fee581942:content/1_background.typ
 Sensing can take many forms, such as LiDAR, which is used in self-driving cars, or even in the medical field, such as in the case of sensing for the detection of cancerous cells, where a photonic processor could be used to process the signals produced by a sensor @bogaerts_programmable_2020-1 @daher_design_2022. In recent years, fiber sensing has been used in many applications, such as aviation, oil, gas, and more @trutzel_smart_2000 @ashry_review_2022. The advantages of photonic processors for these use cases allow the reduction of weight, overall system complexity, and design cost. Therefore, photonic processors are interesting for sensing applications, as they may significantly reduce system design costs.
 
 === Embedding a photonic processor in a larger system <photonic_processors_in_systems>

@@ -178,11 +178,7 @@ When creating a new language, effort should not go towards creating a new editor
 
 === Testing & simulation
 
-<<<<<<< HEAD:masterproef/parts/2_ecosystem.typ
 #udefinition(footer: [ Adapted from @unit-test, "simulation")])[
-=======
-#info-box(kind: "definition", footer: [ Adapted from @unit-test, "simulation")])[
->>>>>>> 23d41711030ce1e4f49dfed0d7d6f53fee581942:content/2_ecosystem.typ
     *Testing* is the process of checking that a program produces the correct output for a given input. It is generally done by writing a separate program that runs parts -- or the entirety -- of the tested program and checks that it produces an output and that the produced output is correct.
 ]
 
@@ -196,12 +192,8 @@ Most modern programming languages, such as _Rust_ provide a testing framework as
 
 Therefore, when developing an @api, it is important to consider how the @api itself will be tested and how the user is expected to test their usage of the @api. Additionally, when creating a language, it is important to consider how the language will be tested and what facilities will be provided to the user to test their code.
 
-<<<<<<< HEAD:masterproef/parts/2_ecosystem.typ
 #udefinition(footer: [ Adapted from @unit-test @simulation)])[
-=======
-#info-box(kind: "definition", footer: [ Adapted from @unit-test @simulation)])[
->>>>>>> 23d41711030ce1e4f49dfed0d7d6f53fee581942:content/2_ecosystem.typ
-    *Simulation* is the process of running a program that simulates the behaviour of a physical device. It is used to test that @hdl[s] produce the correct state for a given input and starting state while also checking that the program does so in the correct timing or power consumption limits.
+  *Simulation* is the process of running a program that simulates the behaviour of a physical device. It is used to test that @hdl[s] produce the correct state for a given input and starting state while also checking that the program does so in the correct timing or power consumption limits.
 ]
 
 Simulation is more specific to @hdl[s] and embedded development than traditional computer development, where the user might want to programmatically test their code on the target platform without needing the physical device to be attached to a computer. For this reason, the hardware providers make simulators available to their users. These simulators run the user's code as if it was running on real hardware, providing the user with tools for introspection of the device and checking that the program behaves as expected. As an example, _Xilinx_ provides a simulator for their @fpga[s] called _Vivado Simulator_. This simulator allows the user to run their code on a simulated @fpga and check that the output is correct. This is an essential tool for the users of @hdl[s] as it allows them to test their code without needed access to physical devices. Furthermore, it allows programmers working on @asic[s] to simulate their code and design before manufacturing a prototype.
@@ -268,93 +260,92 @@ As has been shown, many components are necessary or desirable to build a complet
 In @tab_ecosystem_components, there is a distinction made on the type of design that is pursued, as will be discussed in @sec_phos, this thesis will create a new hardware description language, but the possibility of creating an @api was also discussed. And while an @api is not the retained solution, one can use this information for the choice of the language in which this new language, called @phos, will be implemented. Indeed, the same components that make @api designing easy also make language implementation easier. As will be discussed in @sec_language_summary, @phos will be implemented in _Rust_. The language meets all requirements by having first-party support for all of the required and desired components for an @api design. Its high performance and safety features make it a good candidate for a reliable implementation of the @phos ecosystem.
 
 #ufigure(
-    caption: [
-        This table shows the different components that are needed (#required_sml), desired (#desired_sml) or not needed (#not_needed_sml) for an ecosystem. It compares their importance for different scenarios, namely whether developing an API that is used to program photonic processors or whether creating a new language for photonic processor development.
-        + Interpreted languages are languages that are not compiled to machine code, but rather interpreted at runtime. This means that they do not require a compiler per se, but rather an interpreter.
-        + A code editor is provided as an external tool, however, support for the language must be provided by the ecosystem. That being said, it is not a requirement and is desired rather than required.
-    ],
-    outline: [
-        Comparison of programming ecosystem components and their importance.
-    ],
-    kind: table,
-)[
-    #tablex(
-        columns: (auto, 1fr, 0.25fr, 0.25fr),
-        align: center + horizon,
-        auto-vlines: false,
-        repeat-header: true,
-        rowspanx(2)[#smallcaps[ *Component* ]], rowspanx(2)[#smallcaps[ *Description* ]], colspanx(2)[#smallcaps[ *Importance* ]], (), (),
-        (), (), smallcaps[ *@api design* ], smallcaps[ *language #linebreak() design* ],
+  caption: [
+    This table shows the different components that are needed (#required_sml), desired (#desired_sml) or not needed (#not_needed_sml) for an ecosystem. It compares their importance for different scenarios, namely whether developing an API that is used to program photonic processors or whether creating a new language for photonic processor development.
+      + Interpreted languages are languages that are not compiled to machine code, but rather interpreted at runtime. This means that they do not require a compiler per se, but rather an interpreter.
+      + A code editor is provided as an external tool, however, support for the language must be provided by the ecosystem. That being said, it is not a requirement and is desired rather than required.
+  ],
+  outline: [
+    Comparison of programming ecosystem components and their importance.
+  ],
+  kind: table,
+  tablex(
+    columns: (auto, 1fr, 0.25fr, 0.25fr),
+    align: center + horizon,
+    auto-vlines: false,
+    repeat-header: true,
+    rowspanx(2)[#smallcaps[ *Component* ]], rowspanx(2)[#smallcaps[ *Description* ]], colspanx(2)[#smallcaps[ *Importance* ]], (), (),
+    (), (), smallcaps[ *@api design* ], smallcaps[ *language #linebreak() design* ],
 
-        // Language specification
-        smallcaps[ *Language specification* ], 
-        align(left)[Defines the syntax and semantics of the language.], 
-        desired, 
-        desired,
+    // Language specification
+    smallcaps[ *Language specification* ], 
+    align(left)[Defines the syntax and semantics of the language.], 
+    desired, 
+    desired,
 
-        // Compiler
-        smallcaps[ *Compiler* ], 
-        align(left)[Converts code written in a high-level language to a low-level language.], 
-        required, 
-        [ #desired #linebreak() (interpreted#super[1]) ],
+    // Compiler
+    smallcaps[ *Compiler* ], 
+    align(left)[Converts code written in a high-level language to a low-level language.], 
+    required, 
+    [ #desired #linebreak() (interpreted#super[1]) ],
 
-        // Hardware programmer & runtime
-        smallcaps[ *Hardware-programmer#linebreak()& runtime* ], 
-        align(left)[ Allows the execution of code on the hardware.], 
-        required, 
-        required,
+    // Hardware programmer & runtime
+    smallcaps[ *Hardware-programmer#linebreak()& runtime* ], 
+    align(left)[ Allows the execution of code on the hardware.], 
+    required, 
+    required,
 
-        // Debugger
-        smallcaps[ *Debugger* ],
-        align(left)[Allows the user to inspect the state of the program at runtime.],
-        desired,
-        desired,
+    // Debugger
+    smallcaps[ *Debugger* ],
+    align(left)[Allows the user to inspect the state of the program at runtime.],
+    desired,
+    desired,
 
-        // Code formatter
-        smallcaps[ *Code formatter* ],
-        align(left)[Allows the user to format their code in a consistent way.],
-        desired,
-        desired,
+    // Code formatter
+    smallcaps[ *Code formatter* ],
+    align(left)[Allows the user to format their code in a consistent way.],
+    desired,
+    desired,
 
-        // Linter
-        smallcaps[ *Linter* ],
-        align(left)[Allows the user to check their code for common mistakes.],
-        not_needed,
-        desired,
-        
-        // Code editor
-        rowspanx(2)[#smallcaps[ *Code editor* ]],
-        rowspanx(2)[#align(left)[Allows the user to write code in a user-friendly way.]],
-        not_needed,
-        not_needed,
-        hlinex(start: 2, end: 3, stroke: 0pt),
-        (), (), cellx(colspan: 2)[(provided by the#linebreak()ecosystem#super[2])], (),
+    // Linter
+    smallcaps[ *Linter* ],
+    align(left)[Allows the user to check their code for common mistakes.],
+    not_needed,
+    desired,
+    
+    // Code editor
+    rowspanx(2)[#smallcaps[ *Code editor* ]],
+    rowspanx(2)[#align(left)[Allows the user to write code in a user-friendly way.]],
+    not_needed,
+    not_needed,
+    hlinex(start: 2, end: 3, stroke: 0pt),
+    (), (), cellx(colspan: 2)[(provided by the#linebreak()ecosystem#super[2])], (),
 
-        // Testing & simulation
-        smallcaps[ *Testing#linebreak()& simulation* ],
-        align(left)[Allows the user to test their code.],
-        required,
-        required,
+    // Testing & simulation
+    smallcaps[ *Testing#linebreak()& simulation* ],
+    align(left)[Allows the user to test their code.],
+    required,
+    required,
 
-        // Package management
-        smallcaps[ *Package management* ],
-        align(left)[Allows the user to install and manage dependencies.],
-        desired,
-        desired,
+    // Package management
+    smallcaps[ *Package management* ],
+    align(left)[Allows the user to install and manage dependencies.],
+    desired,
+    desired,
 
-        // Documentation generator
-        smallcaps[ *Documentation generator* ],
-        align(left)[Allows the user to generate documentation for their code.],
-        required,
-        desired,
+    // Documentation generator
+    smallcaps[ *Documentation generator* ],
+    align(left)[Allows the user to generate documentation for their code.],
+    required,
+    desired,
 
-        // Build system
-        smallcaps[ *Build system* ],
-        align(left)[Allows the user to more easily build their codebase.],
-        desired,
-        desired,
-    )
-] <tab_ecosystem_components>
+    // Build system
+    smallcaps[ *Build system* ],
+    align(left)[Allows the user to more easily build their codebase.],
+    desired,
+    desired,
+  )
+) <tab_ecosystem_components>
 
 Finally, @tab_ecosystem_compare compares the ecosystem of existing programming and hardware description languages and their components. It shows that some ecosystems, like _Python_'s, have many components but that not all of them are first-party, nor is there always an agreement within the community on the best tool. However _Rust_ is a particularly interesting candidate in this regard, as it has first-party support for all of the required components except hardware-programming and debugging tools. However, as noted in @tab_ecosystem_compare, most other languages do not come with first-party support for these tools either. However, as will be discussed in @sec_overview_of_syntax, it is not easy to learn, has not seen use in hardware synthesis and is, therefore not a good fit for regular users. But its robust ecosystem makes it a good candidate for a language implementation, something for which it has a thriving ecosystem of many libraries, colloquially called _crates_, fit for this purpose.
 
@@ -590,11 +581,7 @@ This low-level of abstraction can be better understood by understanding three fa
 
 ==== High-level synthesis
 
-<<<<<<< HEAD:masterproef/parts/2_ecosystem.typ
 #udefinition(footer: [ Adapted from @schafer_high_level_2020, @meeus_overview_2012])[
-=======
-#info-box(kind: "definition", footer: [ Adapted from @schafer_high_level_2020, @meeus_overview_2012])[
->>>>>>> 23d41711030ce1e4f49dfed0d7d6f53fee581942:content/2_ecosystem.typ
     *High-level Synthesis (HLS)* is the process of translating high-level abstractions in a programming language into #gloss("rtl", long: true) level descriptions. This process is generally done by a compiler that takes as input the high-level language and translates the code into a lower-level form. 
 ]
 
