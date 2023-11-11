@@ -178,7 +178,11 @@ When creating a new language, effort should not go towards creating a new editor
 
 === Testing & simulation
 
+<<<<<<< HEAD:masterproef/parts/2_ecosystem.typ
 #udefinition(footer: [ Adapted from @unit-test, "simulation")])[
+=======
+#info-box(kind: "definition", footer: [ Adapted from @unit-test, "simulation")])[
+>>>>>>> 23d41711030ce1e4f49dfed0d7d6f53fee581942:content/2_ecosystem.typ
     *Testing* is the process of checking that a program produces the correct output for a given input. It is generally done by writing a separate program that runs parts -- or the entirety -- of the tested program and checks that it produces an output and that the produced output is correct.
 ]
 
@@ -192,7 +196,11 @@ Most modern programming languages, such as _Rust_ provide a testing framework as
 
 Therefore, when developing an @api, it is important to consider how the @api itself will be tested and how the user is expected to test their usage of the @api. Additionally, when creating a language, it is important to consider how the language will be tested and what facilities will be provided to the user to test their code.
 
+<<<<<<< HEAD:masterproef/parts/2_ecosystem.typ
 #udefinition(footer: [ Adapted from @unit-test @simulation)])[
+=======
+#info-box(kind: "definition", footer: [ Adapted from @unit-test @simulation)])[
+>>>>>>> 23d41711030ce1e4f49dfed0d7d6f53fee581942:content/2_ecosystem.typ
     *Simulation* is the process of running a program that simulates the behaviour of a physical device. It is used to test that @hdl[s] produce the correct state for a given input and starting state while also checking that the program does so in the correct timing or power consumption limits.
 ]
 
@@ -582,7 +590,11 @@ This low-level of abstraction can be better understood by understanding three fa
 
 ==== High-level synthesis
 
+<<<<<<< HEAD:masterproef/parts/2_ecosystem.typ
 #udefinition(footer: [ Adapted from @schafer_high_level_2020, @meeus_overview_2012])[
+=======
+#info-box(kind: "definition", footer: [ Adapted from @schafer_high_level_2020, @meeus_overview_2012])[
+>>>>>>> 23d41711030ce1e4f49dfed0d7d6f53fee581942:content/2_ecosystem.typ
     *High-level Synthesis (HLS)* is the process of translating high-level abstractions in a programming language into #gloss("rtl", long: true) level descriptions. This process is generally done by a compiler that takes as input the high-level language and translates the code into a lower-level form. 
 ]
 

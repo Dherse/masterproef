@@ -4,5 +4,9 @@
 #let federal-blue = rgb(31, 28, 92)
 #let earth-yellow = rgb(224, 164, 88)
 #let atomic-tangerine = rgb(222, 143, 110)
+<<<<<<< HEAD:common/colors.typ
+=======
+
+>>>>>>> 23d41711030ce1e4f49dfed0d7d6f53fee581942:elems/colors.typ
 #let ugent-accent1 = rgb(139, 190, 232)
 #let ugent-accent2 = rgb(137, 137, 137)
