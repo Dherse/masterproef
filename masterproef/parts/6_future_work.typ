@@ -11,11 +11,11 @@ As of writing this thesis, @phos is still very much in its infancy. While the fi
 == Dependent types & refinement types <sec_refinement_types>
 
 #udefinition[
-    *Dependent types* are types that depend on values. For example, in the case of @phos, they could depend on an argument such as the centre wavelength of a filter.
+  *Dependent types* are types that depend on values. For example, in the case of @phos, they could depend on an argument such as the centre wavelength of a filter.
 ]
 
 #udefinition[
-    *Refinement types* are types that are refined by predicates. In the case of @phos, they could be used to refine the types using constraints.
+  *Refinement types* are types that are refined by predicates. In the case of @phos, they could be used to refine the types using constraints.
 ]
 
 One potential improvement to the @phos language is the use of dependent and refinement types. Together, this would allow the typing of different synthesisable blocks to be stronger and have stronger guarantees over the validity of the design. While @phos already implements those partly in its current architecture, they are not integrated as part of the types, instead being additional values carried by the types. In its current design iteration, this means that the compiler is limited on the complexity of the constraint it can properly verify. This limitation can be lifted by integrating dependent and refinement types as part of the type system, where constraints would be part of the type definition, and the compiler could fully verify them at compile time, further verifying the user's design. However, refinement types, in particular, are not trivial to implement and would require a lot of work and research to be appropriately integrated into the language.
