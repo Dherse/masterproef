@@ -6,8 +6,9 @@
 = Programming paradigm poster <anx_paradigms>
 #ufigure(
   outline: [ Programming paradigms poster. ],
-  caption: [ Programming paradigms poster, showing the different programming paradigms and their relationships. Created by _Peter Van Roy_ @van_roy_classification_nodate. ],
-  image("../assets/programming_paradigms.png", width: 71%)
+  caption: [ Programming paradigms poster, showing the different programming paradigms and
+    their relationships. Created by _Peter Van Roy_ @van_roy_classification_nodate. ],
+  image("../assets/programming_paradigms.png", width: 71%),
 )
 
 #set page(flipped: true)
@@ -15,9 +16,10 @@
 #ufigure(
   outline: [ UML diagram of parts of the @ast relevant for @sec_ast. ],
   caption: [
-    UML diagram of parts of the @ast relevant for @sec_ast. It is incomplete since phos contains 120 data structures to fully represent the @ast.
+    UML diagram of parts of the @ast relevant for @sec_ast. It is incomplete since
+    phos contains 120 data structures to fully represent the @ast.
   ],
-  image("../assets/drawio/ex_ast.png", width: 85%)
+  image("../assets/drawio/ex_ast.png", width: 85%),
 )
 
 #set page(flipped: true)
@@ -27,9 +29,10 @@
     Execution diagram of the stack of @sec_ex_bytecode_exec.
   ],
   caption: [
-    Execution diagram of the stack of @sec_ex_bytecode_exec, showing the stack before and after the execution of each of the bytecode instructions.
+    Execution diagram of the stack of @sec_ex_bytecode_exec, showing the stack
+    before and after the execution of each of the bytecode instructions.
   ],
-  image("../assets/drawio/execution.png", width: 85%)
+  image("../assets/drawio/execution.png", width: 85%),
 ) <fig_annex_execution>
 
 #set page(flipped: true)
@@ -37,18 +40,21 @@
 #ufigure(
   outline: [ Graph representation of a mesh. ],
   caption: [
-    Graph representation of a mesh, showing the direction that light is travelling in, and all of the possible connections. Based on the work of Xiangfeng Chen, et al. @chen_graph_2020. This visualisation was created with the collaboration of Léo Masson, as mentioned in #link(<sec_ack>)[the acknowledgements].
+    Graph representation of a mesh, showing the direction that light is travelling
+    in, and all of the possible connections. Based on the work of Xiangfeng Chen, et
+    al. @chen_graph_2020. This visualisation was created with the collaboration of
+    Léo Masson, as mentioned in #link(<sec_ack>)[the acknowledgements].
   ],
-  hexagonal_interconnect(side: 13cm, hex-side: 1.5cm, 10, 14)
+  hexagonal_interconnect(side: 13cm, hex-side: 1.5cm, 10, 14),
 )<fig_graph_representation_mesh>
 
 #set page(flipped: false)
 = Marshalling library example <anx_marshalling_library_example>
 #ufigure(
-  outline: [ @phos example used in @lst_marshalling_comp.  ],
+  outline: [ @phos example used in @lst_marshalling_comp. ],
   caption: [ @phos code performing splitting and modulation, used in @lst_marshalling_comp. ],
 )[
-  ```phos
+```phos
   syn main(input: optical, modulated: electrical) -> (optical, optical) {
       input |> split((0.5, 0.5))
             |> (modulator(modulated, type_: ModulationType::Amplitude), _)
@@ -59,10 +65,11 @@
 #ufigure(
   outline: [ Example of the marshalling library. ],
   caption: [
-    Example of the marshalling library, showing the configuration of the different components of the synthesis toolchain.
+    Example of the marshalling library, showing the configuration of the different
+    components of the synthesis toolchain.
   ],
 )[
-  ```python
+```python
   # Import the marshalling library
   import phos as ph
 
@@ -99,9 +106,10 @@
 #pagebreak(weak: true)
 #ufigure(
   outline: [ Example of the marshalling library for simulation. ],
-  caption: [ Example of the marshalling library for simulation, showing the simulation of a module. ],
+  caption: [ Example of the marshalling library for simulation, showing the simulation of a
+    module. ],
 )[
-  ```python
+```python
   # Import numpy
   import numpy as np
 
@@ -138,15 +146,18 @@
 
 #set page(flipped: true)
 #ufigure(
-  outline: [ Layout of the circuit in the marshalling library example.],
+  outline: [ Layout of the circuit in the marshalling library example. ],
   caption: [
-    Layout of the circuit in the marshalling library example, showing the path that the light takes inside of the photonic processor, as well as the state of each photonic gate. It also shows the path of the modulated light in red, and highlight the splitter.
+    Layout of the circuit in the marshalling library example, showing the path that
+    the light takes inside of the photonic processor, as well as the state of each
+    photonic gate. It also shows the path of the modulated light in red, and
+    highlight the splitter.
   ],
   image(
     "../assets/drawio/chip_marshalling_ex.png",
     height: 90%,
-    alt: "Shows a photonic chip made of a rather large hexagonal mesh, with modulators on the bottom, detectors on the top, and optical I/O on either remaining sides."
-  )
+    alt: "Shows a photonic chip made of a rather large hexagonal mesh, with modulators on the bottom, detectors on the top, and optical I/O on either remaining sides.",
+  ),
 ) <fig_marshalling_circ>
 
 #set page(flipped: false)
@@ -155,7 +166,7 @@
   outline: [ Example in @phos of beamforming system. ],
   caption: [ Example in @phos of beamforming system, parametric over the number of channels. ],
 )[
-  ```phos
+```phos
     // Create a simple beamforming system
     // This system takes an input optical signal and a set of electrical signals
     //  1. It splits the input optical signal into N optical signals
@@ -181,10 +192,11 @@
 #ufigure(
   outline: [ Example in @phos of a 16-#gloss("qam", short: true) modulator. ],
   caption: [
-    Example in @phos of a 16-#gloss("qam", short: true) modulator. The four binary sources are modulated on a common laser source, and then interfered together.
+    Example in @phos of a 16-#gloss("qam", short: true) modulator. The four binary
+    sources are modulated on a common laser source, and then interfered together.
   ],
 )[
-  ```phos
+```phos
     // Coherent transmitter, modulates four binary signals into a 16-QAM signal.
     // 1. the signal is split into four, each signal is a fraction of the input signal
     // 2. each signal is zipped with its corresponding electrical signal
@@ -214,7 +226,7 @@
   outline: [ Example in @phos of a parametric lattice filter. ],
   caption: [ Example in @phos of a parametric lattice filter. ],
 )[
-  ```phos
+```phos
     // The kinds of filter that can be used.
     // For this example, we only support Chebyshev and Butterworth.
     enum FilterKind {
@@ -259,10 +271,10 @@
 = Example: MVM <anx_matrix_vector>
 
 #ufigure(
-    outline: [ Example in @phos of an analog matrix-vector multiplier. ],
-    caption: [ Example in @phos of an analog matrix-vector multiplier. ],
+  outline: [ Example in @phos of an analog matrix-vector multiplier. ],
+  caption: [ Example in @phos of an analog matrix-vector multiplier. ],
 )[
-  ```phos
+```phos
     // A single Mach-Zehnder interferometer based gate
     syn mzi_gate(
         a: optical,

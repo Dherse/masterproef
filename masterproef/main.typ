@@ -1,29 +1,41 @@
 #import "ugent-template.typ": *
 
 #let code-icon(icon) = text(
-  font: "tabler-icons", 
-  fallback: false, 
-  weight: "regular", 
+  font: "tabler-icons",
+  fallback: false,
+  weight: "regular",
   size: 8pt,
-  icon
+  icon,
 )
 
 // Instantiate the template
 #show: ugent-template.with(
-  authors: ( "Sébastien d'Herbais de Thun", ),
+  authors: ("Sébastien d'Herbais de Thun",),
   title: "A software language approach for describing and programming photonics hardware",
   languages: (
     rust: (name: "Rust", icon: code-icon("\u{fa53}"), color: rgb("#CE412B")),
     c: (name: "C", icon: none, color: rgb("#283593")),
     python: (name: "Python", icon: code-icon("\u{ed01}"), color: rgb("#FFD43B")),
-    verilog-ams: (name: "Verilog-AMS", icon: none, color: rgb(30,100,200)),
+    verilog-ams: (name: "Verilog-AMS", icon: none, color: rgb(30, 100, 200)),
     vhdl: (name: "VHDL", icon: text(font: "UGent Panno Text")[</>], color: gray),
     spice: (name: "SPICE", icon: none, color: rgb("#283593")),
-    phos: (name: ref(label("phos")), icon: code-icon("\u{ed8a}"), color: rgb("#de8f6e")),
+    phos: (
+      name: ref(label("phos")),
+      icon: code-icon("\u{ed8a}"),
+      color: rgb("#de8f6e"),
+    ),
     js: (name: "Tokens", icon: code-icon("\u{ecd7}"), color: rgb("#656255")),
-    typ: (name: ref(label("bc")), icon: code-icon("\u{f7ff}"), color: rgb("#6f006f")),
-    typc: (name: ref(label("bc")), icon: code-icon("\u{f7ff}"), color: rgb("#6f006f")),
-  )
+    typ: (
+      name: ref(label("bc")),
+      icon: code-icon("\u{f7ff}"),
+      color: rgb("#6f006f"),
+    ),
+    typc: (
+      name: ref(label("bc")),
+      icon: code-icon("\u{f7ff}"),
+      color: rgb("#6f006f"),
+    ),
+  ),
 )
 
 // Load additional syntax definitions.
