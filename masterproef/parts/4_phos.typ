@@ -795,7 +795,7 @@ enable reconfigurability.
 #ufigure(caption: [ 
   Example in @phos of branching.
 ])[
-```phos
+  ```phos
     // Simple branching
     if a == 1 {
         print("a is 1")
@@ -818,7 +818,7 @@ enable reconfigurability.
         (1, 3) => print("a is 1 and b is 3")
         _ => print("a is not 1 or b is not 2 or 3")
     }
-    ```
+  ```
 ] <lst_ex_branching>
 ]
 
@@ -840,7 +840,7 @@ of variable declaration can be seen in @lst_ex_variable_declaration.
 #ufigure(caption: [ 
   Example in @phos of variable declaration, assignment, and update.
 ])[
-```phos
+  ```phos
     // Simple declaration
     let a = 5
 
@@ -856,7 +856,7 @@ of variable declaration can be seen in @lst_ex_variable_declaration.
     // Updating of a value
     let a = 6
     let a = a + 5
-    ```
+  ```
 ] <lst_ex_variable_declaration>
 ]
 
@@ -876,7 +876,7 @@ cases is provided in @lst_ex_tunability.
 #ufigure(caption: [ 
   Example in @phos of tunability.
 ])[
-```phos
+  ```phos
     // Tunable function
     fn add(a: uint, b: uint) -> uint {
         return a + b
@@ -886,7 +886,7 @@ cases is provided in @lst_ex_tunability.
     fn add(a: static uint, b: static uint) -> uint {
         return a + b
     }
-    ```
+  ```
 ] <lst_ex_tunability>
 ]
 
@@ -907,7 +907,7 @@ can be seen in @lst_ex_piping_operator.
 #ufigure(caption: [ 
   Example in @phos of the piping operator.
 ])[
-```phos
+  ```phos
     // Function that performs the addition of two numbers using piping
     fn add_with_pipe(a: uint, b: uint) -> uint {
         return (a, b) |> add
@@ -917,8 +917,7 @@ can be seen in @lst_ex_piping_operator.
     fn add(a: uint, b: uint) -> uint {
         return a + b
     }
-
-    ```
+  ```
 ] <lst_ex_piping_operator>
 ]
 
@@ -942,12 +941,12 @@ operations can be seen in @lst_ex_iterator_operations.
 #ufigure(caption: [ 
   Example in @phos of the piping operator on iterable values.
 ])[
-```phos
+  ```phos
     // Function that performs the addition of two numbers using piping
     fn add_with_pipe(a: uint, b: uint) -> uint {
         return (a, b) |> fold(0, |acc, x| acc + x)
     }
-    ```
+  ```
 ] <lst_ex_iterator_operations>
 ]
 
@@ -978,12 +977,12 @@ function can be seen in @lst_ex_function.
 #ufigure(caption: [ 
   Example in @phos of a function.
 ])[
-```phos
+  ```phos
     // Function that performs the sum of $n$ numbers
     fn sum(a: (uint...)) -> uint {
         a |> fold(0, |acc, x| acc + x)
     }
-    ```
+  ```
 ] <lst_ex_function>
 ]
 
@@ -995,6 +994,7 @@ used to create a synthesisable block that can be tuned or reconfigured at
 runtime. An example of a synthesisable block can be seen in
 @lst_ex_synthesisable_block.
 
+#pagebreak(weak: true)
 #block(
   breakable: true,
 )[
@@ -1005,7 +1005,7 @@ runtime. An example of a synthesisable block can be seen in
   using the `split`, `constrain` and `merge` functions.
   ],
 )[
-```phos
+  ```phos
     // Synthesisable block that performs the filtering of an input signal using an MZI
     // The MZI is built using the following actions:
     //  1. The `input` signal is split into two signals using a 50/50 splitter
@@ -1015,7 +1015,7 @@ runtime. An example of a synthesisable block can be seen in
     syn filter(input: optical) -> optical {
         input |> split((0.5, 0.5)) |> constrain(d_phase: 30 deg) |> merge()
     }
-    ```
+  ```
 ] <lst_ex_synthesisable_block>
 ]
 
@@ -1047,7 +1047,7 @@ that they can avoid conflicting names. An example of an import can be seen in
     Example in @phos of an import.
   ],
 )[
-```phos
+  ```phos
     // Importing the module `std::intrinsic` and renaming it to `intrinsic`
     import std::intrinsic as intrinsic;
 
@@ -1059,7 +1059,7 @@ that they can avoid conflicting names. An example of an import can be seen in
 
     // Importing the syn `filter` and `gain` from the module `std::intrinsic`
     import std::intrinsic::syn::{filter, gain};
-    ```
+  ```
 ] <lst_ex_import>
 ]
 
@@ -1085,12 +1085,12 @@ closure can be seen in @lst_ex_closure.
 
 #block(breakable: false)[
 #ufigure(caption: [ Example in @phos of a closure. ])[
-```phos
+  ```phos
     // Closure that performs the sum of $n$ numbers
     let sum = |a: (uint...)| -> uint {
         a |> fold(0, |acc, x| acc + x)
     };
-    ```
+  ```
 ] <lst_ex_closure>
 ]
 
@@ -1114,7 +1114,7 @@ as other signals. The difference between the three kinds can be seen in
   closure (c).
   ],
 )[
-```phos
+  ```phos
     // (a) `Fn` closure
     let c = 1;
     let fn_closure = |a: uint| -> uint {
@@ -1131,7 +1131,7 @@ as other signals. The difference between the three kinds can be seen in
     let syn_once_closure = || -> (optical...) {
         a |> split((0.5, 0.5))
     };
-    ```
+  ```
 ] <lst_ex_closure_kind>
 
 #udefinition(
@@ -1154,15 +1154,15 @@ referring to them by name. An example of a partial function can be seen in
   kind: raw,
   caption: [ Example in @phos of partial function in @phos. ],
 )[
-```phos
-  fn add(a: uint, b: uint) -> uint {
-      a + b
-  }
-  
-  let add_1 = set add(1);
-  
-  print(add_1(2)); // prints 3
-  ```,
+  ```phos
+    fn add(a: uint, b: uint) -> uint {
+        a + b
+    }
+    
+    let add_1 = set add(1);
+    
+    print(add_1(2)); // prints 3
+  ```
 ] <lst_ex_partial>
 
 === Loops, recursion, and turing completeness
@@ -1193,12 +1193,13 @@ iterative loops that iterate over an input value. This limits the risk of the
 user falling into the iteration limit, as the number of iterations is known. An
 example of a loop can be seen in @lst_ex_loop.
 
+#pagebreak(weak: true)
 #figure(kind: raw, caption: [ Example in @phos of a loop. ])[
-```phos
-  for i in 0..5 {
-      print(i);
-  }
-  ```,
+  ```phos
+    for i in 0..5 {
+        print(i);
+    }
+  ```
 ] <lst_ex_loop>
 
 
@@ -1222,18 +1223,18 @@ addressed in future iterations. An example of a constraint can be seen in
 #figure(kind: raw, caption: [ 
   Example in @phos of a constrained synthesisable block.
 ])[
-```phos
-  // Performs an optical gain on an input signal,
-  // the maximum input power is `10dBm - gain`,
-  // the gain is constrained to be between 0 and 10dB.
-  syn gain(
-      @max_power(10dBm - gain)
-      input: optical,
-      @range(0dB, 10dB)
-      gain: Gain,
-  ) -> @gain(gain) optical {
-      ...
-  }
+  ```phos
+    // Performs an optical gain on an input signal,
+    // the maximum input power is `10dBm - gain`,
+    // the gain is constrained to be between 0 and 10dB.
+    syn gain(
+        @max_power(10dBm - gain)
+        input: optical,
+        @range(0dB, 10dB)
+        gain: Gain,
+    ) -> @gain(gain) optical {
+        ...
+    }
   ```
 ] <lst_ex_constraint>
 
@@ -1254,42 +1255,43 @@ without needing to use a source intrinsic. This semantic is useful for creating
 recirculating elements in the photonic processor, as it allows the user to
 create temporary variables containing signals.
 
+#pagebreak(weak: true)
 #figure(
   kind: raw,
   caption: [ 
     Example in @phos of an unconstrained synthesisable block.
   ],
 )[
-```phos
-  // A ring resonator implemented using an unconstrained block
-  unconstrained syn ring_resonator(
-      input: optical,
+  ```phos
+    // A ring resonator implemented using an unconstrained block
+    unconstrained syn ring_resonator(
+        input: optical,
 
-      @range(0.0, 1.0)
-      coupling: float,
+        @range(0.0, 1.0)
+        coupling: float,
 
-      @min(6)
-      length: Length,
-  ) -> @frequency_response(response(coupling, length)) optical {
-      // Create a new internal signal
-      let ring: optical;
+        @min(6)
+        length: Length,
+    ) -> @frequency_response(response(coupling, length)) optical {
+        // Create a new internal signal
+        let ring: optical;
 
-      // Create the output signal
-      let output: optical;
+        // Create the output signal
+        let output: optical;
 
-      // Use an intrinsic coupler
-      (input, ring)
-          |> std::intrinsic::coupler(coupling)
-          |> constrain(dlen = length)
-          |> (output, ring);
+        // Use an intrinsic coupler
+        (input, ring)
+            |> std::intrinsic::coupler(coupling)
+            |> constrain(dlen = length)
+            |> (output, ring);
 
-      output
-  }
+        output
+    }
 
-  // Returns the frequency response of a ring resonator given its arguments.
-  fn response(coupling: float, length: Length) -> FrequencyResponse {
-      ...
-  }
+    // Returns the frequency response of a ring resonator given its arguments.
+    fn response(coupling: float, length: Length) -> FrequencyResponse {
+        ...
+    }
   ```
 ] <lst_ex_unconstrained>
 
@@ -1374,15 +1376,18 @@ short example.
     align(center)[#required],
     align(left)[ Imports a module into the current module. ],
     ```phos
-        import std::intrinsic as intrinsic;
+        import std::intrinsic
+            as intrinsic;
         ```,
     align(center)[#smallcaps[*Function*]],
     align(center)[#required],
     align(center)[#required],
     align(left)[ Declares a function. ],
     ```phos
-        fn sum(a: (uint...)) -> uint {
-            a |> fold(0, |acc, x| acc + x)
+        fn sum(
+            a: (uint...)
+        ) -> uint {
+            ...
         }
         ```,
     align(center)[#smallcaps[*Synthesisable*]],
@@ -1390,8 +1395,10 @@ short example.
     align(center)[#not_needed],
     align(left)[ Declares a synthesisable function. ],
     ```phos
-        syn gain(input: optical) -> optical {
-            input |> std::intrinsic::gain(10 dB)
+        syn gain(
+            input: optical
+        ) -> optical {
+            ...
         }
         ```,
     align(center)[#smallcaps[*Type alias*]],
@@ -1493,10 +1500,11 @@ in @tab_exprs.
     align(center)[#smallcaps[*If/Else/Elif*]],
     align(left)[ A conditional statement for branching. ],
     ```phos
-        if a > b { a } else { b }   
+        if a > b { a }
+          else { b }   
         ```,
     align(center)[#smallcaps[*Match*]],
-    align(left)[ A conditional statement for branching. ],
+    align(left)[ A pattern matching statement. ],
     ```phos
         match a {
             1 => "one",
@@ -1922,7 +1930,8 @@ This is done by associating the said span with each token produced by the lexer.
     and is not part of the output of the lexer.
   ],
   table(columns: (0.8fr, 1fr), stroke: none, ```phos
-      // Adds two numbers together.
+      // Adds two numbers
+      // together.
       fn add(a: int, b: int) -> int {
           a + b
       }
