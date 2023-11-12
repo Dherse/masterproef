@@ -703,8 +703,8 @@ Additionally, build systems can provide advanced features that are of particular
 interest to hardware description languages. Features such as _feature flags_ are
 particularly useful. A feature flag is a property that can be enabled during
 building that is additive. It adds additional features to the program. As a
-simple example, consider the program in @prog_hello: it will print `"Hello,
-world!"` when it is called. A feature flag called `custom_hello` may be used to
+simple example, consider the program in @prog_hello: it will print `"Hello, world!"`
+when it is called. A feature flag called `custom_hello` may be used to
 add the function in @prog_hello_custom, which allows the user to specify a name
 to greet. It is purely additive: adding functionality to the previous library
 and using the `custom_hello` feature flag to enable the additional feature
@@ -1254,8 +1254,8 @@ circuit occupies. These performance definitions are often referred to be the
 acronym @ppa. As such, the design is generally done at a lower-level of
 abstraction to try and meet performance targets.
 
+#pagebreak(weak: true)
 ==== High-level synthesis
-
 #udefinition(
   footer: [ Adapted from @schafer_high_level_2020, @meeus_overview_2012 ],
 )[
@@ -1448,7 +1448,8 @@ hardware. This means it is a very low-level representation of a circuit, which
 goes against the goal of using a high-level language, as discussed in
 @initial_requirements.
 
-==== Verilog-AMS @verilog-ams is a modern mixed-signal simulation. It suffers from the same issues as @spice, namely that it cannot be used for hardware description but rather hardware modelling. While @verilog-ams has been used for photonic modelling, it is not a suitable candidate for use as a photonic @hdl.
+==== Verilog-AMS
+@verilog-ams is a modern mixed-signal simulation. It suffers from the same issues as @spice, namely that it cannot be used for hardware description but rather hardware modelling. While @verilog-ams has been used for photonic modelling, it is not a suitable candidate for use as a photonic @hdl.
 
 #uconclusion[
   Existing analog modelling languages are unsuitable for photonic hardware
@@ -1497,12 +1498,13 @@ shown in @lst_oop_example, it shows a super class `Student` being inherited by a
 subclass `Sebastien`. This allows the subclass to override methods on the super
 class and share its initialisation function and state.
 
+#pagebreak(weak: true)
 #ufigure(
   outline: [ Example of object-oriented programming in _Python_. ],
   caption: [ Example of object-oriented programming in _Python_, showing inheritance and
     method overriding. ],
 )[
-```python
+  ```python
     class Student:
         def __init__(self, name):
             self.name = name

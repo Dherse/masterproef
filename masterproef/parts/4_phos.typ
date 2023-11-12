@@ -591,11 +591,15 @@ to be used as expressions, which is generally a useful feature.
   ],
 )[
 #table(columns: (1fr, 1fr), stroke: none, align: center + horizon, ```phos
-      fn add(a: int, b: int) -> int {
+      fn add(
+          a: int, b: int
+      ) -> int {
           a + b
       }
       ```, ```phos
-      fn add(a: int, b: int) -> int {
+      fn add(
+          a: int, b: int
+      ) -> int {
           return a + b;
       }
       ```, [ (a) ], [ (b) ])
@@ -737,6 +741,7 @@ are used in many statements, such as the `match` statement, the `let` variable
 assignment statement, the `for` loop statement, and function argument
 declarations. The general form of the pattern can be seen in @lst_ex_pattern.
 
+#pagebreak(weak: true)
 #ufigure(
   caption: [ 
     Example in @phos of patterns.
@@ -2501,22 +2506,22 @@ reducing the complexity of the code.
   outline: [ Code example in @phos, showing constant inlining and evaluation. ],
   kind: raw,
   block(table(columns: 3, stroke: none, ```phos
-      const MY_CONST: int
+      const CST: int
           = 32;
   
-      fn add_my_const(
+      fn my_func(
           a: int
       ) -> int {
-          a + 2 * MY_CONST + 5
+          a + 2 * CST + 5
       }
       ```, ```phos
-      fn add_my_const(
+      fn my_func(
           a: int
       ) -> int {
           a + 2 * 32 + 5
       }
       ```, ```phos
-      fn add_my_const(
+      fn my_func(
           a: int
       ) -> int {
           a + 69
@@ -2552,18 +2557,25 @@ this simplification is more complex.
   outline: [ Code example in @phos, showing pipe desugaring. ],
   kind: raw,
   table(columns: 2, stroke: none, ```phos
-      // Returns the sum of all inputs,
-      // also returns true if the sum is even
+      // Returns the sum of all
+      // inputs.
       fn sum(inputs: (int...)) -> (int, bool) {
           inputs
               |> fold(0, |acc, x| acc + x)
               |> map(|x| (x, x % 2 == 0))
       }
       ```, ```phos
-      // Returns the sum of all inputs,
-      // also returns true if the sum is even
+      // Returns the sum of all
+      // inputs.
       fn sum(inputs: (int...)) -> (int, bool)  {
-          map(fold(inputs, 0, |acc, x| acc + x), |x| (x, x % 2 == 0))
+          map(
+              fold(
+                  inputs,
+                  0,
+                  |acc, x| acc + x
+              ),
+              |x| (x, x % 2 == 0)
+          )
       }
       ```, [ (a) ], [ (b) ]),
 ) <lst_pipe_desugaring>
