@@ -123,7 +123,6 @@ photonic processor and how they work, as well as some of the more advanced
 components that can also be included as part of a photonic processor.
 
 ==== Waveguides
-
 The most basic photonic component that is used in #gloss("pic", suffix: "s") is
 the waveguide. It is a structure that confines light within a specific area,
 allowing it to travel, following a pre-determined path from one place on the
@@ -135,7 +134,6 @@ signals to be transmitted without distortion, which is essential for high-speed
 communication.
 
 ==== Tunable 2x2 couplers
-
 A @2x2 is a structure that allows two waveguides to interact pre-determinedly.
 It is composed of two waveguides whose coupling, the amount of light "going"
 from one waveguide to the other, can be controlled. There are numerous ways of
