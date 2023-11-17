@@ -42,7 +42,7 @@
     // Find whether this is the first glossary entry.
     let is_long = if long == auto {
       if in_preface(loc) {
-        true
+        false
       } else {
         gloss.map((x) => x.location()).find((x) => not in_preface(x)) == none
       }
