@@ -15,20 +15,20 @@ assumption made in all subsequent design decisions.
   This document uses the names photonic @fpga and photonic processor
   interchangeably. They both refer to the same thing: a programmable photonic
   device. The difference is that the former predates the latter in its use.
-  Sometimes, they are also called #gloss("fppga", long: true) #cite(<perez-lopez_multipurpose_2020>).
+  Sometimes, they are also called #gloss("fppga", long: true) @perez-lopez_multipurpose_2020.
 ]
 
 == Photonic processors <photonic_processor>
 
 A photonic @fpga or photonic processor is the optical analogue to the
 traditional digital @fpga. It comprises gates connected using waveguides, which
-can be programmed to perform some function #cite(<capmany_programmable_2016>).
+can be programmed to perform some function @capmany_programmable_2016.
 However, whereas traditional @fpga[s] use electrical current to carry
 information, photonic processors use light confined within waveguides to perform
 analog processing tasks.
 
 However, it is interesting to note that, just like traditional @fpga[s], some
-devices are more general forms of programmable #gloss("pic", long: true, suffix: "s")#cite(<bogaerts_programmable_2020-1>) than
+devices are more general forms of programmable #gloss("pic", long: true, suffix: "s")@bogaerts_programmable_2020-1 than
 others, just like @cpld[s] are less general forms of @fpga[s]. As any @pic with
 configurable elements could be considered a programmable @pic, it is reasonable
 to construct a hierarchy of programmability, where the most general device is
@@ -271,7 +271,7 @@ capable kind of meshes @bogaerts_programmable_2020-1.
 
 #pagebreak(weak: true)
 
-All of the architectures rely on the same components #cite(<bogaerts_programmable_2020-1>),
+All of the architectures rely on the same components @bogaerts_programmable_2020-1,
 those being #gloss("2x2", suffix: "s", long: true), optical phase shifters and
 optical waveguides. These elements are combined in all-optical gates, which can
 be configured to achieve the user's intent. Additionally, to provide more
@@ -281,14 +281,14 @@ high-speed modulators, amplifiers, and detectors @bogaerts_programmable_2020-1
 
 The primary difference between the feedforward architecture and the
 recirculating architecture is the ability of the designer to make light travel
-both ways in one waveguide. As is known #cite(<ghatak_introduction_1998>), light
+both ways in one waveguide. As is known @ghatak_introduction_1998, light
 can travel in two directions in a waveguide with little to no interactions. This
 means that, without additional waveguides or hardware complexity, a photonic
 circuit can support two guiding modes, one in each direction. This property can
 be used for more efficient routing and creating more complex and varied
-structures #cite(<bogaerts_programmable_2020-1>).
+structures @bogaerts_programmable_2020-1.
 
-As it has been shown in #cite(<perez_programmable_2019>), recirculating meshes
+As it has been shown in @perez_programmable_2019, recirculating meshes
 can create more advanced structures, such as @iir elements, whereas feedforward
 architectures are limited to @fir components. This is due to the inability of
 the feedforward architecture to express feedback loops, limiting them to @fir

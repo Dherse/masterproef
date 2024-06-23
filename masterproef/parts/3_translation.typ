@@ -62,15 +62,16 @@ the following sections.
   caption: [ Functional requirements for intent translation ],
   kind: table,
 )[
-  #tablex(
+  #table(
     columns: (2em, 0.1fr, 0.5fr, 0.1fr),
     align: center + horizon,
-    auto-vlines: false,
-    repeat-header: true,
-    colspanx(2)[#smallcaps[Requirement]],
-    smallcaps[Description],
-    smallcaps[Discussion],
-    colspanx(2)[#smallcaps[Ideal behaviour]],
+    stroke: (x: none),
+    table.header(
+      table.cell(colspan: 2, smallcaps[Requirement]),
+      smallcaps[Description],
+      smallcaps[Discussion],
+    ),
+    table.cell(colspan: 2, smallcaps[Ideal behaviour]),
     align(
       left,
     )[
@@ -79,7 +80,7 @@ the following sections.
       having to worry about these variations.
     ],
     [ @sec_calibration_and_variation_mitigations ],
-    rowspanx(3)[#rotate(-90deg)[#box(width: 200pt)[#smallcaps[Realtime feedback]]]],
+    table.cell(rowspan: 3, rotate(-90deg, box(width: 200pt)[#smallcaps[Realtime feedback]])),
     smallcaps[Reconfigurability],
     align(
       left,
@@ -89,7 +90,6 @@ the following sections.
       to change behaviour based on configurations or inputs.
     ],
     [ @sec_tunability_reconfigurability ],
-    (),
     smallcaps[Tunability],
     align(
       left,
@@ -111,7 +111,7 @@ the following sections.
       device.
     ],
     [ @sec_programmability ],
-    colspanx(2)[#smallcaps[Simulation]],
+    table.cell(colspan: 2, smallcaps[Simulation]),
     align(
       left,
     )[
@@ -120,7 +120,7 @@ the following sections.
       allows the user to experiment without having access to the device.
     ],
     [ @sec_intent_simulation ],
-    colspanx(2)[#smallcaps[Platform independence]],
+    table.cell(colspan: 2, smallcaps[Platform independence]),
     align(
       left,
     )[
@@ -130,7 +130,7 @@ the following sections.
       and allowed to run on any device.
     ],
     [ @sec_platform_independence ],
-    colspanx(2)[#smallcaps[Visualisation]],
+    table.cell(colspan: 2, smallcaps[Visualisation]),
     align(
       left,
     )[
@@ -327,6 +327,8 @@ reference "empty" signal or a signal consumed without any effect on the rest of
 the system. An example of such cases is a spectrometer, which wants to switch in
 an empty signal to calibrate the dark current of the detectors.
 
+  
+#show table.cell: set block(breakable: false)
 #ufigure(
   outline: [ Intrinsic operations in photonic processors. ],
   caption: [ Intrinsic operations in photonic processors, with their name, description and
@@ -337,14 +339,15 @@ an empty signal to calibrate the dark current of the detectors.
   kind: table,
 )[
   #set list(indent: 0cm)
-  #tablex(
+  #table(
     columns: (auto, 1fr, auto),
     align: center + horizon,
-    auto-vlines: false,
-    repeat-header: true,
-    smallcaps[*Intrinsic operation*],
-    smallcaps[*Description*],
-    smallcaps[*Arguments*],
+    stroke: (x: none),
+    table.header(
+      smallcaps[*Intrinsic operation*],
+      smallcaps[*Description*],
+      smallcaps[*Arguments*],
+    ),
     smallcaps[*Filter*],
     align(
       left,
@@ -627,16 +630,16 @@ constraints are listed along with their category and a short explanation.
     explanation. ],
   kind: table,
 )[
-  #tablex(
+  #table(
     columns: (2em, 0.2fr, 1fr),
     align: center + horizon,
-    auto-vlines: false,
-    repeat-header: true,
-    [],
-    smallcaps[Constraint],
-    smallcaps[Description],
-    (),
-    rowspanx(2)[#rotate(-90deg)[#box(width: 200pt)[#smallcaps[Synthesisable]]]],
+    stroke: (x: none),
+    table.header(
+      [],
+      smallcaps[Constraint],
+      smallcaps[Description],
+    ),
+    table.cell(rowspan: 2, rotate(-90deg, box(width: 200pt)[#smallcaps[Synthesisable]])),
     smallcaps[Power],
     align(
       left,
@@ -653,7 +656,7 @@ constraints are listed along with their category and a short explanation.
       detectors around a gain section to check whether a gain section is able to meet
       its parameters and to allow feedback control.
     ],
-    rowspanx(3)[#rotate(-90deg)[#box(width: 200pt)[#smallcaps[Meta]]]],
+    table.cell(rowspan: 3, rotate(-90deg, box(width: 200pt)[#smallcaps[Meta]])),
     smallcaps[Wavelength],
     align(
       left,
@@ -677,7 +680,7 @@ constraints are listed along with their category and a short explanation.
       can be used to ensure that phase-sensitive circuits are able to work as
       intended.
     ],
-    rowspanx(2)[#rotate(-90deg)[#box(width: 200pt)[#smallcaps[Simulation]]]],
+    table.cell(rowspan: 2, rotate(-90deg, box(width: 200pt)[#smallcaps[Simulation]])),
     smallcaps[Noise],
     align(
       left,
@@ -1105,13 +1108,14 @@ processor detailed in @photonic_processor.
 #ufigure(
   caption: [ List of device resources and their description. ],
   kind: table,
-  tablex(
+  table(
     columns: (auto, 1fr),
     align: center + horizon,
-    auto-vlines: false,
-    repeat-header: true,
-    smallcaps[*Resource*],
-    smallcaps[*Description*],
+    stroke: (x: none),
+    table.header(
+      smallcaps[*Resource*],
+      smallcaps[*Description*],
+    ),
     smallcaps[*Photonic gate*],
     align(
       left,

@@ -1,8 +1,7 @@
 #import "../common/colors.typ": *
 #import "../common/glossary.typ": gloss-init, gloss, glossary
 #import "../common/info.typ": uinfo, udefinition, uquestion, uimportant, uconclusion, ugood, unote
-#import "@preview/codly:0.1.0": codly-init, codly, codly-offset, codly-range, disable-codly
-#import "@preview/tablex:0.0.6": tablex, vlinex, hlinex, colspanx, rowspanx, cellx
+#import "@preview/codly:0.2.1": codly-init, codly, codly-offset, codly-range, disable-codly
 
 #let ugent-font = "UGent Panno Text"
 #let font-size = 11pt
@@ -22,7 +21,7 @@
   };
   
   let gap = 0.64em
-  let cell = block.with(
+  let cell = grid.cell.with(
     inset: (top: 0.32em, bottom: 0.32em, rest: gap),
     stroke: (left: (paint: ugent-blue, thickness: 1.5pt), rest: none),
   )
@@ -31,8 +30,8 @@
     columns: (5em, 1fr),
     gutter: 0pt,
     rows: (auto),
-    cell(height: auto, stroke: none, width: 5em, align(right)[#supplement]),
-    cell(height: auto, align(left, it.body)),
+    cell(stroke: none, align(right)[#supplement]),
+    cell(align(left, it.body)),
   )
 }
 
@@ -328,10 +327,10 @@
   show heading: ugent-heading.with(number: true, prefix: "Annex ", postfix: ": ", underline-all: true)
   
   // Set the numbering of the figures.
-  set figure(numbering: (x) => locate(loc => {
-    let idx = numbering("A", counter(heading).at(loc).first())
+  set figure(numbering: (x) => {
+    let idx = context numbering("A", counter(heading).at(here()).first())
     [#idx.#numbering("1", x)]
-  }))
+  })
   
   // Additional heading styling to update sub-counters.
   show heading: it => {
@@ -354,11 +353,11 @@
   if outline == none {
     figure(caption: caption, ..args)
   } else {
-    figure(caption: locate(loc => if state("section").at(loc) == "preface" {
+    figure(caption: context if state("section").at(here()) == "preface" {
       outline
     } else {
       caption
-    }), ..args)
+    }, ..args)
   }
 }
 

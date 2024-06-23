@@ -1,4 +1,4 @@
-#import "ugent-template.typ": *
+#import "./ugent-template.typ": *
 
 #let code-icon(icon) = text(
   font: "tabler-icons",
@@ -26,17 +26,24 @@
     ),
     js: (name: "Tokens", icon: code-icon("\u{ecd7}"), color: rgb("#656255")),
     typ: (
-      name: ref(label("bc")),
+      name: gloss("bc", short: true, long: false),
       icon: code-icon("\u{f7ff}"),
       color: rgb("#6f006f"),
     ),
     typc: (
-      name: ref(label("bc")),
+      name: gloss("bc", short: true, long: false),
       icon: code-icon("\u{f7ff}"),
       color: rgb("#6f006f"),
     ),
   ),
 )
+
+#show raw.where(lang: none, block: true): it => context {
+  let old = state("codly-numbers-format").get()
+  codly(numbers-format: (..) => none)
+  it
+  codly(numbers-format: old)
+}
 
 // Load additional syntax definitions.
 #set raw(syntaxes: (

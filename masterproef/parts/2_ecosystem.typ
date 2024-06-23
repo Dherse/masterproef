@@ -778,20 +778,17 @@ make it a good candidate for a reliable implementation of the @phos ecosystem.
     Comparison of programming ecosystem components and their importance.
   ],
   kind: table,
-  tablex(
+  table(
     columns: (auto, 1fr, 0.25fr, 0.25fr),
     align: center + horizon,
-    auto-vlines: false,
-    repeat-header: true,
-    rowspanx(2)[#smallcaps[ *Component* ]],
-    rowspanx(2)[#smallcaps[ *Description* ]],
-    colspanx(2)[#smallcaps[ *Importance* ]],
-    (),
-    (),
-    (),
-    (),
-    smallcaps[ *@api design* ],
-    smallcaps[ *language #linebreak() design* ],
+    stroke: (x: none),
+    table.header(
+      table.cell(rowspan: 2, smallcaps[ *Component* ]),
+      table.cell(rowspan: 2, smallcaps[ *Description* ]),
+      table.cell(colspan: 2, smallcaps[ *Importance* ]),
+      smallcaps[ *@api design* ],
+      smallcaps[ *language #linebreak() design* ],
+    ),
     // Language specification
     smallcaps[ *Language specification* ],
     align(left)[Defines the syntax and semantics of the language.],
@@ -825,15 +822,12 @@ make it a good candidate for a reliable implementation of the @phos ecosystem.
     not_needed,
     desired,
     // Code editor
-    rowspanx(2)[#smallcaps[ *Code editor* ]],
-    rowspanx(2)[#align(left)[Allows the user to write code in a user-friendly way.]],
+    table.cell(rowspan: 2, smallcaps[ *Code editor* ]),
+    table.cell(rowspan: 2, align(left)[Allows the user to write code in a user-friendly way.]),
     not_needed,
     not_needed,
-    hlinex(start: 2, end: 3, stroke: 0pt),
-    (),
-    (),
-    cellx(colspan: 2)[(provided by the#linebreak()ecosystem#super[2])],
-    (),
+    table.hline(stroke: 0pt),
+    table.cell(colspan: 2)[(provided by the#linebreak()ecosystem#super[2])],
     // Testing & simulation
     smallcaps[ *Testing#linebreak()& simulation* ],
     align(left)[Allows the user to test their code.],
@@ -909,26 +903,24 @@ the approach that @phos will hopefully take.
     description languages.
   ],
   kind: table,
-  tablex(
+  table(
     columns: (auto, 0.1fr, 0.1fr, 0.1fr, 0.1fr, 0.1fr),
     align: center + horizon,
-    auto-vlines: false,
-    repeat-header: true,
-    rowspanx(2)[#smallcaps[ *Components* ]],
-    colspanx(3)[#smallcaps[ *Traditional languages* ]],
-    hlinex(start: 1, end: 4, stroke: 1pt, expand: (0pt, -5pt)),
-    hlinex(start: 4, end: 6, stroke: 1pt, expand: (-5pt, 0pt)),
-    (),
-    (),
-    colspanx(
-      2,
-    )[#smallcaps[ *Hardware description#linebreak()& simulation languages* ]],
-    (),
-    smallcaps[ *C* ],
-    smallcaps[ *Rust* ],
-    smallcaps[ *Python* ],
-    smallcaps[ *#gloss("verilog-ams", short: true)* ],
-    smallcaps[ *#gloss("vhdl", short: true)* ],
+    stroke: (x: none),
+    table.header(
+      table.cell(rowspan: 2, smallcaps[ *Components* ]),
+      table.cell(colspan: 3, smallcaps[ *Traditional languages* ]),
+      table.hline(start: 1, end: 4, stroke: 1pt),
+      table.hline(start: 4, end: 6, stroke: 1pt),
+      table.cell(colspan: 2,smallcaps[
+        *Hardware description#linebreak()& simulation languages*
+      ]),
+      smallcaps[ *C* ],
+      smallcaps[ *Rust* ],
+      smallcaps[ *Python* ],
+      smallcaps(strong(gloss("verilog-ams", short: true))),
+      smallcaps(strong(gloss("vhdl", short: true))),
+    ),
     // Language specification
     smallcaps[ *Language specification* ],
     [ #required @ISO13586 ],
@@ -1617,30 +1609,28 @@ and engineering circles.
     @sec_language_summary.
   ],
   kind: table,
-  tablex(
-    columns: (0.0001fr, 0.075fr, 0.1fr, 0.1fr, 0.1fr, 0.1fr),
+  table(
+    columns: (0.75fr, 1fr, 1fr, 1fr, 1fr),
     align: center + horizon,
-    auto-vlines: false,
-    repeat-header: true,
-    rowspanx(2)[],
-    rowspanx(2)[#smallcaps[ *Language* ]],
-    colspanx(4)[#smallcaps[ *Applications* ]],
-    (),
-    smallcaps[ *Ecosystem* ],
-    smallcaps[ *@api design* ],
-    smallcaps[ *Root language* ],
-    smallcaps[ *New language* ],
-    rowspanx(2)[],
+   stroke: (x: none),
+    table.header(
+      smallcaps[ *Language* ],
+      table.cell(colspan: 4, smallcaps[ *Applications* ]),
+      smallcaps[ *Ecosystem* ],
+      smallcaps[ *@api design* ],
+      smallcaps[ *Root language* ],
+      smallcaps[ *New language* ],
+    ),
     smallcaps[ *C* ],
     score(3),
     score(2),
     score(2),
     score(4),
-    hlinex(start: 1, end: 6, stroke: (thickness: 0.5pt, dash: "dashed")),
+    table.hline(start: 0, end: 6, stroke: (thickness: 0.5pt, dash: "dashed")),
     [],
-    colspanx(
-      4,
-    )[#align(
+    table.cell(
+      colspan: 4,
+      align(
         left,
       )[
         C is a fully featured low-level language; it is performant and has a simple
@@ -1650,18 +1640,18 @@ and engineering circles.
         semantics of hardware description, making it unsuitable as a root language.
         However, its extensive array of language-implementation libraries makes it a
         good candidate for implementing a new language.
-      ]],
-    rowspanx(2)[],
+      ]
+    ),
     smallcaps[ *Rust* ],
     score(5),
     score(2),
     score(2),
     score(5),
-    hlinex(start: 1, end: 6, stroke: (thickness: 0.5pt, dash: "dashed")),
+    table.hline(start: 0, end: 6, stroke: (thickness: 0.5pt, dash: "dashed")),
     [],
-    colspanx(
-      4,
-    )[#align(
+    table.cell(
+      colspan: 4,
+      align(
         left,
       )[
         Rust is a modern low-level language; it is very performant, has excellent
@@ -1671,18 +1661,18 @@ and engineering circles.
         language. However, its extensive array of language-implementation libraries and
         its memory and thread safety make it an excellent candidate for implementing a
         new language.
-      ]],
-    rowspanx(2)[],
+      ]
+    ),
     smallcaps[ *Python* ],
     score(4),
     score(5),
     score(4),
     score(2),
-    hlinex(start: 1, end: 6, stroke: (thickness: 0.5pt, dash: "dashed")),
+    table.hline(start: 0, end: 6, stroke: (thickness: 0.5pt, dash: "dashed")),
     [],
-    colspanx(
-      4,
-    )[#align(
+    table.cell(
+      colspan: 4,
+      align(
         left,
       )[
         Python is a mature high-level language that sees wide use within the academic
@@ -1690,18 +1680,18 @@ and engineering circles.
         make it an excellent candidate for @api design and as a root language. However,
         its slowness and error-prone dynamic typing make it an unsuitable candidate for
         implementing a new language.
-      ]],
-    rowspanx(2)[],
+      ]
+    ),
     smallcaps[ *Verilog-AMS* ],
     score(1),
     score(0),
     score(3),
     score(0),
-    hlinex(start: 1, end: 6, stroke: (thickness: 0.5pt, dash: "dashed")),
+    table.hline(start: 0, end: 6, stroke: (thickness: 0.5pt, dash: "dashed")),
     [],
-    colspanx(
-      4,
-    )[#align(
+    table.cell(
+      colspan: 4,
+      align(
         left,
       )[
         @verilog-ams is a mixed signal simulation software; its ecosystem is lackluster,
@@ -1710,18 +1700,18 @@ and engineering circles.
         language, nor is it suitable for implementing a new language. However, it is a
         mature language with a familiar syntax to electrical engineers, which may make
         it suitable as the root language.
-      ]],
-    rowspanx(2)[],
+      ]
+    ),
     smallcaps[ *VHDL* ],
     score(1),
     score(0),
     score(1),
     score(0),
-    hlinex(start: 1, end: 6, stroke: (thickness: 0.5pt, dash: "dashed")),
+    table.hline(start: 0, end: 6, stroke: (thickness: 0.5pt, dash: "dashed")),
     [],
-    colspanx(
-      4,
-    )[#align(
+    table.cell(
+      colspan: 4,
+      align(
         left,
       )[
         VHDL is a mature language with a large ecosystem but suffers from the same
@@ -1730,6 +1720,7 @@ and engineering circles.
         unsuitable for @api design or the creation of a new language. Its verbose syntax
         and semantics are challenging to learn and make the language difficult to read,
         which makes it unsuitable as a root language.
-      ]],
+      ]
+    ),
   ),
 ) <tbl_language_comparison>

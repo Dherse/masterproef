@@ -141,90 +141,91 @@ first. The precedence of operators is shown in @tbl_op_precedence.
     associativity of the operator is also shown, it can be left-associative,
     right-associative or neither for special operators that only have one operand.
   ],
-  tablex(
+  table(
     columns: (auto, 1fr, auto),
     align: center + horizon,
-    auto-vlines: false,
-    repeat-header: true,
-    smallcaps[*Precedence*],
-    smallcaps[*Operator*],
-    smallcaps[*Associativity*],
-    1,
+    stroke: (x: none),
+    table.header(
+      smallcaps[*Precedence*],
+      smallcaps[*Operator*],
+      smallcaps[*Associativity*],
+    ),
+    [1],
     align(
       left,
     )[ Conditional statements, loops, parenthesized expressions, unconstrained block,
       empty expressions ],
     align(left)[ Left ],
-    2,
+    [2],
     align(left)[ Function calls ],
     align(left)[ Left ],
-    3,
+    [3],
     align(left)[ Array indexing ],
     align(left)[ Left ],
-    4,
+    [4],
     align(left)[ Field access ],
     align(left)[ Left ],
-    5,
+    [5],
     align(left)[ Type casting ],
     align(left)[ Left ],
-    6,
+    [6],
     align(left)[ Raising to a power ],
     align(left)[ Right ],
-    7,
+    [7],
     align(
       left,
     )[ Unary operators: negation, bitwise complement, logical complement ],
     align(left)[ Right ],
-    8,
+    [8],
     align(left)[ Multiplication, division, remainder ],
     align(left)[ Left ],
-    9,
+    [9],
     align(left)[ Addition, subtraction ],
     align(left)[ Left ],
-    10,
+    [10],
     align(left)[ Bitwise shift left, bitwise shift right ],
     align(left)[ Left ],
-    11,
+    [11],
     align(left)[ Bitwise and ],
     align(left)[ Left ],
-    12,
+    [12],
     align(left)[ Bitwise xor ],
     align(left)[ Left ],
-    13,
+    [13],
     align(left)[ Bitwise or ],
     align(left)[ Left ],
-    14,
+    [14],
     align(left)[ Equality operators: equal, not equal ],
     align(left)[ Left ],
-    15,
+    [15],
     align(
       left,
     )[ Relational operators: less than, less than or equal, greater than, greater than
       or equal ],
     align(left)[ Left ],
-    16,
+    [16],
     align(left)[ Logical and ],
     align(left)[ Left ],
-    17,
+    [17],
     align(left)[ Logical or ],
     align(left)[ Left ],
-    18,
+    [18],
     align(left)[ Pipe operator ],
     align(left)[ Right ],
-    19,
+    [19],
     align(left)[ Range operators: inclusive range, exclusive range ],
     align(left)[ Neither ],
-    20,
+    [20],
     align(
       left,
     )[ Assignment operators: assign, add assign, subtract assign, multiply assign,
       divide assign, remainder assign, bitwise and assign, bitwise or assign, bitwise
       xor assign, bitwise shift left assign, bitwise shift right assign ],
     align(left)[ Neither ],
-    21,
+    [21],
     align(left)[ Closures ],
     align(left)[ Neither ],
-    22,
+    [22],
     align(left)[ Control flow operators: break, continue, return, and yield ],
     align(left)[ Neither ],
   ),
@@ -388,15 +389,16 @@ as _Python_ @python_reference.
   ],
   kind: table,
 )[
-#tablex(
+#table(
   columns: (auto, 1fr, auto, auto),
   align: center + horizon,
-  auto-vlines: false,
-  repeat-header: true,
-  smallcaps[*Primitive type*],
-  smallcaps[*Description*],
-  smallcaps[*Minimum value*],
-  smallcaps[*Maximum value*],
+  stroke: (x: none),
+  table.header(
+    smallcaps[*Primitive type*],
+    smallcaps[*Description*],
+    smallcaps[*Minimum value*],
+    smallcaps[*Maximum value*],
+  ),
   `optical`,
   align(left)[ An optical signal, with _drive-once_, _read-once_ semantics. ],
   [-],
@@ -1366,28 +1368,29 @@ short example.
     as an expression, but can be used as a top level declaration.
     #underline[Legend]: #required_sml means yes, #not_needed_sml means no.
   ],
-  tablex(
+  table(
     columns: (auto, 0.2fr, 0.2fr, 0.5fr, 1fr),
-    align: left + horizon,
-    auto-vlines: false,
-    repeat-header: true,
-    align(center)[#smallcaps[*Element*]],
-    align(center)[#smallcaps[*Item*]],
-    align(center)[#smallcaps[*Statement*]],
-    align(center)[#smallcaps[*Description*]],
-    align(center)[#smallcaps[*Example*]],
-    align(center)[#smallcaps[*Import*]],
-    align(center)[#required],
-    align(center)[#required],
-    align(left)[ Imports a module into the current module. ],
+    align: (x, y) => if y == 0 { center } else if x in (0, 1, 2) { center } else { left },
+    stroke: (x: none),
+    table.header(
+      smallcaps[*Element*],
+      smallcaps[*Item*],
+      smallcaps[*Statement*],
+      smallcaps[*Description*],
+      smallcaps[*Example*]
+    ),
+    smallcaps[*Import*],
+    required,
+    required,
+    [ Imports a module into the current module. ],
     ```phos
         import std::intrinsic
             as intrinsic;
         ```,
-    align(center)[#smallcaps[*Function*]],
-    align(center)[#required],
-    align(center)[#required],
-    align(left)[ Declares a function. ],
+    smallcaps[*Function*],
+    required,
+    required,
+    [ Declares a function. ],
     ```phos
         fn sum(
             a: (uint...)
@@ -1395,10 +1398,10 @@ short example.
             ...
         }
         ```,
-    align(center)[#smallcaps[*Synthesisable*]],
-    align(center)[#required],
-    align(center)[#not_needed],
-    align(left)[ Declares a synthesisable function. ],
+    smallcaps[*Synthesisable*],
+    required,
+    not_needed,
+    [ Declares a synthesisable function. ],
     ```phos
         syn gain(
             input: optical
@@ -1406,34 +1409,34 @@ short example.
             ...
         }
         ```,
-    align(center)[#smallcaps[*Type alias*]],
-    align(center)[#required],
-    align(center)[#not_needed],
-    align(left)[ Declares a type alias. ],
+    smallcaps[*Type alias*],
+    required,
+    not_needed,
+    [ Declares a type alias. ],
     ```phos
         type Voltage = float;
         ```,
-    align(center)[#smallcaps[*Constant*]],
-    align(center)[#required],
-    align(center)[#required],
-    align(left)[ Declares a constant. ],
+    smallcaps[*Constant*],
+    required,
+    required,
+    [ Declares a constant. ],
     ```phos
         const PI = 3.141592;
         ```,
-    align(center)[#smallcaps[*Structure*]],
-    align(center)[#required],
-    align(center)[#not_needed],
-    align(left)[ Declares a new data structure. ],
+    smallcaps[*Structure*],
+    required,
+    not_needed,
+    [ Declares a new data structure. ],
     ```phos
         struct Point {
             x: float,
             y: float
         }
         ```,
-    align(center)[#smallcaps[*Enumeration*]],
-    align(center)[#required],
-    align(center)[#not_needed],
-    align(left)[ Declares a new @adt. ],
+    smallcaps[*Enumeration*],
+    required,
+    not_needed,
+    [ Declares a new @adt. ],
     ```phos
         enum Color {
             Red,
@@ -1441,16 +1444,16 @@ short example.
             Blue,
         }
         ```,
-    align(center)[#smallcaps[*Local*]],
-    align(center)[#not_needed],
-    align(center)[#required],
-    align(left)[ Declares a new local variable ],
+    smallcaps[*Local*],
+    not_needed,
+    required,
+    [ Declares a new local variable ],
     ```phos
         let (a, b...) = (1, 2, 3);
         ```,
-    align(center)[#smallcaps[*Expression*]],
-    align(center)[#not_needed],
-    align(center)[#required],
+    smallcaps[*Expression*],
+    not_needed,
+    required,
     align(left)[ Declares a new expression. ],
     ```phos
         1 + 2
@@ -1479,295 +1482,294 @@ in @tab_exprs.
     that is not easily categorised and that performs more complex actions, with
     well-defined semantics.
   ],
-  tablex(
+  table(
     columns: (0.1fr, 0.5fr, 1fr, 1fr),
-    align: left + horizon,
-    auto-vlines: false,
-    repeat-header: true,
-    colspanx(2)[
-      #align(center)[#smallcaps[*Expression*]]
-    ],
-    align(center)[#smallcaps[*Description*]],
-    align(center)[#smallcaps[*Example*]],
-    rowspanx(8)[
-      #align(
-        center,
-      )[#rotate(-90deg)[#box(width: 200pt)[#smallcaps[*Control flow*]]]]
-    ],
-    align(center)[#smallcaps[*Block*]],
-    align(left)[ Declares a new block of code. ],
+    stroke: (x: none),
+    align: (x, y) => {
+      if x == 0 {
+        center + horizon
+      } else if x in (0, 1) {
+        center + horizon
+      } else {
+        left + horizon
+      }
+    },
+    table.header(
+      table.cell(colspan: 2, smallcaps[*Expression*]),
+      smallcaps[*Description*],
+      smallcaps[*Example*]
+    ),
+    table.cell(rowspan: 8, rotate(-90deg, box(width: 200pt, smallcaps[*Control flow*]))),
+    smallcaps[*Block*],
+    [ Declares a new block of code. ],
     ```phos
         {
             let a = 10;
             a + 20
         }
         ```,
-    align(center)[#smallcaps[*If/Else/Elif*]],
-    align(left)[ A conditional statement for branching. ],
+    smallcaps[*If/Else/Elif*],
+    [ A conditional statement for branching. ],
     ```phos
         if a > b { a }
           else { b }   
         ```,
-    align(center)[#smallcaps[*Match*]],
-    align(left)[ A pattern matching statement. ],
+    smallcaps[*Match*],
+    [ A pattern matching statement. ],
     ```phos
-        match a {
-            1 => "one",
-            _ => "other"
-        }
-        ```,
-    align(center)[#smallcaps[*Loop*]],
-    align(left)[ A loop statement. ],
+      match a {
+          1 => "one",
+          _ => "other"
+      }
+    ```,
+    smallcaps[*Loop*],
+    [ A loop statement. ],
     ```phos
-        for i in 0..5 {
-            print(i)
-        }
-        ```,
-    align(center)[#smallcaps[*Return*]],
-    align(left)[ Returns a value from a function. ],
+      for i in 0..5 {
+          print(i)
+      }
+    ```,
+    smallcaps[*Return*],
+    [ Returns a value from a function. ],
     ```phos
-        return 1
-          ```,
-    align(center)[#smallcaps[*Break*]],
-    align(left)[ Breaks out of a loop. ],
+      return 1
+    ```,
+    smallcaps[*Break*],
+    [ Breaks out of a loop. ],
     ```phos
-        for i in 0..5 {
-            break;
-        }
-        ```,
-    align(center)[#smallcaps[*Continue*]],
+      for i in 0..5 {
+          break;
+      }
+    ```,
+    smallcaps[*Continue*],
     align(
       left,
     )[ Continues a loop, terminating the current iteration and moving on the the next
       one. ],
     ```phos
-        for i in 0..5 {
-            continue;
-        }
-        ```,
-    align(center)[#smallcaps[*Yield*]],
-    align(left)[ Yields a value from an iterator. ],
+      for i in 0..5 {
+          continue;
+      }
+    ```,
+    smallcaps[*Yield*],
+    [ Yields a value from an iterator. ],
     ```phos
-        for i in 0..5 {
-            yield i;
-        }
-        ```,
-    rowspanx(
-      4,
-    )[
-      #align(center)[#rotate(-90deg)[#box(width: 200pt)[#smallcaps[*Constant*]]]]
-    ],
-    align(center)[#smallcaps[*Path*]],
-    align(left)[ A path to a value, constant, or other item. ],
+      for i in 0..5 {
+          yield i;
+      }
+    ```,
+    table.cell(
+      rowspan: 4,
+      rotate(-90deg, box(width: 200pt, smallcaps[*Constant*]))
+    ),
+    smallcaps[*Path*],
+    [ A path to a value, constant, or other item. ],
     ```phos
         std::intrinsic::gain
         float::PI
         ```,
-    align(center)[#smallcaps[*Identifier*]],
-    align(left)[ A name that refers to a value, constant, or other item. ],
+    smallcaps[*Identifier*],
+    [ A name that refers to a value, constant, or other item. ],
     ```phos
         gain
         PI
         ```,
-    align(center)[#smallcaps[*Literal*]],
-    align(left)[ A literal value. ],
+    smallcaps[*Literal*],
+    [ A literal value. ],
     ```phos
         1 dBc
         true
         0.5 MHz
         ```,
-    align(center)[#smallcaps[*None*]],
-    align(left)[ The none value. ],
+    smallcaps[*None*],
+    [ The none value. ],
     ```phos
         none
         ```,
-    rowspanx(
-      3,
-    )[
-      #align(center)[#rotate(-90deg)[#box(width: 200pt)[#smallcaps[*Unary*]]]]
-    ],
-    align(center)[#smallcaps[*Negation*]],
-    align(left)[ Negates a value. ],
+    table.cell(
+      rowspan: 3,
+      rotate(-90deg, box(width: 200pt, smallcaps[*Unary*]))
+    ),
+    smallcaps[*Negation*],
+    [ Negates a value. ],
     ```phos
         -1
         ```,
-    align(center)[#smallcaps[*Not*]],
-    align(left)[ Negates a boolean value. ],
+    smallcaps[*Not*],
+    [ Negates a boolean value. ],
     ```phos
         !true
         ```,
-    align(center)[#smallcaps[*Binary not*]],
-    align(left)[ Negate a binary value. ],
+    smallcaps[*Binary not*],
+    [ Negate a binary value. ],
     ```phos
         !0xFF
         ```,
-    rowspanx(
-      19,
-    )[
-      #align(center)[#rotate(-90deg)[#box(width: 200pt)[#smallcaps[*Binary*]]]]
-    ],
-    align(center)[#smallcaps[*Addition*]],
-    align(left)[ Adds two values. ],
+    table.cell(
+      rowspan: 19,
+      rotate(-90deg, box(width: 200pt, smallcaps[*Binary*]))
+    ),
+    smallcaps[*Addition*],
+    [ Adds two values. ],
     ```phos
         1 + 2
         ```,
-    align(center)[#smallcaps[*Subtraction*]],
-    align(left)[ Subtracts two values. ],
+    smallcaps[*Subtraction*],
+    [ Subtracts two values. ],
     ```phos
         1 - 2
         ```,
-    align(center)[#smallcaps[*Multiplication*]],
-    align(left)[ Multiplies two values. ],
+    smallcaps[*Multiplication*],
+    [ Multiplies two values. ],
     ```phos
         1 * 2
         ```,
-    align(center)[#smallcaps[*Division*]],
-    align(left)[ Divides two values. ],
+    smallcaps[*Division*],
+    [ Divides two values. ],
     ```phos
         1 / 2
         ```,
-    align(center)[#smallcaps[*Modulo*]],
-    align(left)[ Calculates the remainder of a division. ],
+    smallcaps[*Modulo*],
+    [ Calculates the remainder of a division. ],
     ```phos
         1 % 2
         ```,
-    align(center)[#smallcaps[*Exponentiation*]],
-    align(left)[ Raises a value to a power. ],
+    smallcaps[*Exponentiation*],
+    [ Raises a value to a power. ],
     ```phos
         1 ** 2
         ```,
-    align(center)[#smallcaps[*Bitwise and*]],
-    align(left)[ Performs a bitwise and operation. ],
+    smallcaps[*Bitwise and*],
+    [ Performs a bitwise and operation. ],
     ```phos
         1 & 2
         ```,
-    align(center)[#smallcaps[*Bitwise or*]],
-    align(left)[ Performs a bitwise or operation. ],
+    smallcaps[*Bitwise or*],
+    [ Performs a bitwise or operation. ],
     ```phos
         1 | 2
         ```,
-    align(center)[#smallcaps[*Bitwise xor*]],
-    align(left)[ Performs a bitwise xor operation. ],
+    smallcaps[*Bitwise xor*],
+    [ Performs a bitwise xor operation. ],
     ```phos
         1 ^ 2
         ```,
-    align(center)[#smallcaps[*Bitwise shift left*]],
-    align(left)[ Performs a bitwise shift left operation. ],
+    smallcaps[*Bitwise shift left*],
+    [ Performs a bitwise shift left operation. ],
     ```phos
         1 << 2
         ```,
-    align(center)[#smallcaps[*Bitwise shift right*]],
-    align(left)[ Performs a bitwise shift right operation. ],
+    smallcaps[*Bitwise shift right*],
+    [ Performs a bitwise shift right operation. ],
     ```phos
         1 >> 2
         ```,
-    align(center)[#smallcaps[*Less than*]],
-    align(left)[ Checks if a value is less than another. ],
+    smallcaps[*Less than*],
+    [ Checks if a value is less than another. ],
     ```phos
         1 < 2
         ```,
-    align(center)[#smallcaps[*Less than or equal*]],
-    align(left)[ Checks if a value is less than or equal to another. ],
+    smallcaps[*Less than or equal*],
+    [ Checks if a value is less than or equal to another. ],
     ```phos
         1 <= 2
         ```,
-    align(center)[#smallcaps[*Greater than*]],
-    align(left)[ Checks if a value is greater than another. ],
+    smallcaps[*Greater than*],
+    [ Checks if a value is greater than another. ],
     ```phos
         1 > 2
         ```,
-    align(center)[#smallcaps[*Greater than or equal*]],
-    align(left)[ Checks if a value is greater than or equal to another. ],
+    smallcaps[*Greater than or equal*],
+    [ Checks if a value is greater than or equal to another. ],
     ```phos
         1 >= 2
         ```,
-    align(center)[#smallcaps[*Equal*]],
-    align(left)[ Checks if a value is equal to another. ],
+    smallcaps[*Equal*],
+    [ Checks if a value is equal to another. ],
     ```phos
         1 == 2
         ```,
-    align(center)[#smallcaps[*Not equal*]],
-    align(left)[ Checks if a value is not equal to another. ],
+    smallcaps[*Not equal*],
+    [ Checks if a value is not equal to another. ],
     ```phos
         1 != 2
         ```,
-    align(center)[#smallcaps[*Logical and*]],
-    align(left)[ Checks if two boolean values are both true. ],
+    smallcaps[*Logical and*],
+    [ Checks if two boolean values are both true. ],
     ```phos
         true && false
         ```,
-    align(center)[#smallcaps[*Logical or*]],
-    align(left)[ Checks if either of two boolean values are true. ],
+    smallcaps[*Logical or*],
+    [ Checks if either of two boolean values are true. ],
     ```phos
         true || false
         ```,
-    rowspanx(
-      13,
-    )[
-      #align(center)[#rotate(-90deg)[#box(width: 200pt)[#smallcaps[*Special*]]]]
-    ],
-    align(center)[#smallcaps[*Pipe*]],
-    align(left)[ Pipes a value into a function. ],
+    table.cell(
+      rowspan: 13,
+      rotate(-90deg, box(width: 200pt, smallcaps[*Special*]))
+    ),
+    smallcaps[*Pipe*],
+    [ Pipes a value into a function. ],
     ```phos
         1 |> f
         ```,
-    align(center)[#smallcaps[*Parenthesized*]],
-    align(left)[ Groups an expression. ],
+    smallcaps[*Parenthesized*],
+    [ Groups an expression. ],
     ```phos
         (1 + 2) * 3
         ```,
-    align(center)[#smallcaps[*Tuple*]],
-    align(left)[ Creates a tuple. ],
+    smallcaps[*Tuple*],
+    [ Creates a tuple. ],
     ```phos
         (1, 2)
         ```,
-    align(center)[#smallcaps[*Cast*]],
-    align(left)[ Casts a value to a different type. ],
+    smallcaps[*Cast*],
+    [ Casts a value to a different type. ],
     ```phos
         1 as uint
         ```,
-    align(center)[#smallcaps[*Index*]],
-    align(left)[ Indexes into a value. ],
+    smallcaps[*Index*],
+    [ Indexes into a value. ],
     ```phos
         a[1]
         ```,
-    align(center)[#smallcaps[*Member access*]],
-    align(left)[ Accesses a member of a value. ],
+    smallcaps[*Member access*],
+    [ Accesses a member of a value. ],
     ```phos
         a.b
         ```,
-    align(center)[#smallcaps[*Function call*]],
-    align(left)[ Calls a function. ],
+    smallcaps[*Function call*],
+    [ Calls a function. ],
     ```phos
         f(1, 2)
         ```,
-    align(center)[#smallcaps[*Method call*]],
-    align(left)[ Calls a method. ],
+    smallcaps[*Method call*],
+    [ Calls a method. ],
     ```phos
         a.f(1, 2)
         ```,
-    align(center)[#smallcaps[*Partial*]],
-    align(left)[ Partially applies a function. ],
+    smallcaps[*Partial*],
+    [ Partially applies a function. ],
     ```phos
         set f(1)
         ```,
-    align(center)[#smallcaps[*Closure*]],
-    align(left)[ Creates a closure. ],
+    smallcaps[*Closure*],
+    [ Creates a closure. ],
     ```phos
         |x| x + 1
         ```,
-    align(center)[#smallcaps[*Range*]],
-    align(left)[ Creates a range. ],
+    smallcaps[*Range*],
+    [ Creates a range. ],
     ```phos
         1..2 1..=2 ..3 4..
         ```,
-    align(center)[#smallcaps[*Array*]],
-    align(left)[ Creates an array. ],
+    smallcaps[*Array*],
+    [ Creates an array. ],
     ```phos
         [1, 2]
         ```,
-    align(center)[#smallcaps[*Object instance*]],
-    align(left)[ Creates an object instance. ],
+    smallcaps[*Object instance*],
+    [ Creates an object instance. ],
     ```phos
         A {a: 1, b: 2}
         B(1, 2)
@@ -2637,103 +2639,100 @@ the compiler and in the @vm.
     and the operations that each instruction does on the stack.
   ],
   kind: table,
-  tablex(
+  table(
     columns: (0.7fr, 0.5fr, 0.8fr),
-    align: center + top,
-    auto-vlines: false,
-    repeat-header: true,
-    rowspanx(2)[#smallcaps[*Instruction*]],
-    smallcaps[*Stack operations*],
-    rowspanx(2)[#smallcaps[*Description*]],
-    (),
+    align: (x, y) => if y == 0 or y == 1 {
+      center + horizon
+    } else {
+      left + top
+    },
+    stroke: (x: none),
+    table.header(
+      table.cell(rowspan: 2, smallcaps[*Instruction*]),
+      smallcaps[*Stack operations*],
+      table.cell(rowspan: 2, smallcaps[*Description*]),
     [ \[before\] #sym.arrow \[after\] ],
-    (),
+    ),
     ```typc
-        call_fn[
-            <function_id>
-        ]
-        ```,
+    call_fn[
+      <function_id>
+    ]
+    ```,
     ```
-        [
-            arg0,
-            arg1,
-            ...
-        ] → result
-        ```,
-    align(
-      horizon,
-    )[
+    [
+      arg0,
+      arg1,
+      ...
+    ] → result
+    ```,
+    [
       Calls the function with the given ID, the arguments are obtained from the
       function definition and then popped from the stack, and the result of the
       function call is pushed onto the stack.
     ],
     ```typc
-        call_method[
-            <type>, 
-            <function_id>
-        ]
-        ```,
+    call_method[
+      <type>, 
+      <function_id>
+    ]
+    ```,
     ```
-        [
-            arg0,
-            arg1,
-            ...
-        ] → result
-        ```,
-    align(
-      horizon,
-    )[
+    [
+      arg0,
+      arg1,
+      ...
+    ] → result
+    ```,
+    [
       Calls the method with the given ID on the given type, the arguments are obtained
       from the function definition and then popped from the stack, and the result of
       the function call is pushed onto the stack.
     ],
     ```typc
-        goto[
-            <label>
-        ]
-        ```,
+    goto[
+      <label>
+    ]
+    ```,
     ```
-        [] → []
-        ```,
-    align(horizon)[
+    [] → []
+    ```,
+    [
       Jumps to the given label. Used when branching.
     ],
     ```typc
-        pop[
-            <n>
-        ]
-        ```,
+    pop[
+      <n>
+    ]
+    ```,
     ```
-        [ a0,  a1, ... ] → []
-        ```,
-    align(horizon)[
+    [ a0,  a1, ... ] → []
+    ```,
+    [
     Pops the given number of values `n` from the stack and discards them.
     ],
     ```typc
-        repeat[
-            <n1>,
-            <n2>
-        ]
-        ```,
+    repeat[
+      <n1>,
+      <n2>
+    ]
+    ```,
     ```
-        [ a0,  a1, ... ] → [
-            [a0,  a1, ... ],
-            [a0,  a1, ...] ,
-            ... 
-        ]
-        ```,
-    align(
-      horizon,
-    )[
+    [ a0,  a1, ... ] → [
+      [a0,  a1, ... ],
+      [a0,  a1, ...] ,
+      ... 
+    ]
+    ```,
+    [
     Repeats the `n2` top values of the stack `n1` times and pushes the result onto
     the stack.
     ],
     ```typc
-        const[ <value> ]
-        ```,
+    const[ <value> ]
+    ```,
     ```
-        [] → [ <value> ]
-        ```,
+    [] → [ <value> ]
+    ```,
     align(
       horizon,
     )[
@@ -2742,11 +2741,11 @@ the compiler and in the @vm.
     passing closures to other functions.
     ],
     ```typc
-        return[]
-        ```,
+    return[]
+    ```,
     ```
-        [ a0,  a1, ... ] → []
-        ```,
+    [ a0,  a1, ... ] → []
+    ```,
     align(
       horizon,
     )[
@@ -2755,25 +2754,25 @@ the compiler and in the @vm.
     tuple, which is equivalent to the `none` value.
     ],
     ```typc
-        none[]
-        ```,
+    none[]
+    ```,
     ```
-        [] → [ none ]
-        ```,
-    align(horizon)[
+    [] → [ none ]
+    ```,
+    [
     Pushes the `none` value onto the stack.
     ],
     ```typc
-        load[ <id> ]
-        ```,
+    load[ <id> ]
+    ```,
     ```
-        [] → [
-            a0,
-            a1,
-            ...,
-            len
-        ]
-        ```,
+    [] → [
+      a0,
+      a1,
+      ...,
+      len
+    ]
+    ```,
     align(
       horizon,
     )[
@@ -2783,66 +2782,60 @@ the compiler and in the @vm.
     arguments of the function, where `n` is the number of arguments of the function.
     ],
     ```typc
-        store[
-            <id>,
-        ]
-        ```,
+    store[
+      <id>,
+    ]
+    ```,
     ```
-        [
-            a0,
-            a1,
-            ...,
-            len
-        ] → []
-        ```,
-    align(
-      horizon,
-    )[
+    [
+      a0,
+      a1,
+      ...,
+      len
+    ] → []
+    ```,
+    [
     Stores the top `len` values of the stack into the local variable with the given
     ID. If `len` is more than one, then store them as a tuple. The first `n` local
     variables are reserved for the arguments of the function, where `n` is the
     number of arguments of the function.
     ],
     ```typc
-        get[
-            <type_id>,
-            <field_id>
-        ]
-        ```,
+    get[
+      <type_id>,
+      <field_id>
+    ]
+    ```,
     ```
-        [ instance ] → [ 
-            a0,
-            a1,
-            ...,
-            len
-        ]
-        ```,
-    align(
-      horizon,
-    )[
+    [ instance ] → [ 
+      a0,
+      a1,
+      ...,
+      len
+    ]
+    ```,
+    [
     Gets the field with the given ID `field_id` from the given type `type_id`, and
     pushes it onto the stack. If it is a tuple, expands the tuple into `len` values
     on the stack, also pushes the `len` of the tuple onto the stack. Pops the
     instance of the type from the stack.
     ],
     ```typc
-        push[
-            <type_id>,
-            <field_id>,
-        ],
-        ```,
+    push[
+      <type_id>,
+      <field_id>,
+    ],
+    ```,
     ```
-        [
-            instance,
-            a0,
-            a1,
-            ...,
-            len
-        ] → [ ]
-        ```,
-    align(
-      horizon,
-    )[
+    [
+      instance,
+      a0,
+      a1,
+      ...,
+      len
+    ] → [ ]
+    ```,
+    [
     Stores the top `len` elements from the stack into the field with the given ID
     `field_id` from the given type `type_id`. If it is a tuple, expands the tuple
     into `len` values on the stack. Pops the instance of the type from the stack.
@@ -2962,41 +2955,35 @@ the compiler and in the @vm.
     )[
     Inserts the given `value` into the stack at the given `offset`, `len` times.
     This allows the insertion of values into the middle of the stack, as well as
-    interspersing values into the stack. In the cast of the stack `[a0, a1, a2,
-    "hello", 1, 3]`, calling `insert` will result in the stack `[a0, "hello", a1,
-    "hello", a2, "hello"]`.
+    interspersing values into the stack.
     ],
     ```typc
-        intrinsic[
-            <intr>
-        ]     
-        ```,
+    intrinsic[
+      <intr>
+    ]     
+    ```,
     ```
-        [ a0, a1, ... ] → [ a2, a3, ... ]
-        ```,
-    align(
-      horizon,
-    )[
+    [ a0, a1, ... ] → [ a2, a3, ... ]
+    ```,
+    [
     Execute the given photonic intrinsic operation `intr`, see
     @sec_intrinsic_operations, based on the intrinsic value, pops the arguments from
     the stack, and pushes the result onto the stack.
     ],
     ```typc
-        constraint[
-            <constr>
-        ]
-        ```,
+    constraint[
+      <constr>
+    ]
+    ```,
     ```
-        [ 
-            signal,
-            a0,
-            a1,
-            ...
-        ] → [ ]
-        ```,
-    align(
-      horizon,
-    )[
+    [ 
+      signal,
+      a0,
+      a1,
+      ...
+    ] → [ ]
+    ```,
+    [
     Applies the given photonic constraint `constr`, see @sec_constraints, based on
     the constraint value, pops the arguments from the stack, and pushes the result
     onto the `signal`.
