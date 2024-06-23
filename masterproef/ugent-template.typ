@@ -154,18 +154,17 @@
   let num = it.numbering
   
   let title(size, space: none, underlined: false, local-num: true) = {
+    // Disable justification locally
+    set par(leading: 1em, justify: false)
     // Show a big number for title level headings
     if number and level == 1 and big {
       set text(size: 80pt, font: "Bookman Old Style", weight: "thin", fill: luma(50%))
-      
-      numbering(num, ..current-level)
+      numbering(num, ..current-level) + "."
+      linebreak()
     }
     
     // Set the text to be bold, big, and blue
     set text(size: size, weight: "extrabold", font: ugent-font, fill: ugent-blue)
-    
-    // Disable justification locally
-    set par(leading: 0.4em, justify: false)
     
     let num = if number and local-num and (not big or level > 1) {
       prefix
