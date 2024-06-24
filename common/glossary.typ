@@ -20,10 +20,10 @@
   entries
 }
 
-#let __query_labels_with_key(loc, key, before: false) = {
+#let __query_labels_with_key(key, before: false) = {
   if before {
     query(selector(label("glossary:" + key))
-      .before(loc, inclusive: false))
+      .before(here(), inclusive: false))
   } else {
     query(label("glossary:" + key))
   }
@@ -36,7 +36,7 @@
 
   let entry = entries.at(key)
   let long = context {
-    let gloss = __query_labels_with_key(here(), key, before: true)
+    let gloss = __query_labels_with_key(key, before: true)
     let in_preface(loc) = state("section").at(loc) == "preface";
 
     // Find whether this is the first glossary entry.
@@ -78,11 +78,11 @@
       emph(entry.long)
       box(width: 1fr, repeat[.])
       context {
-        __query_labels_with_key(here(), entry.key)
+        __query_labels_with_key(entry.key)
           .map((x) => x.location())
           .dedup(key: (x) => x.page())
           .sorted(key: (x) => x.page())
-          .map((x) => link(x)[#numbering(x.page-numbering(), ..counter(page).at(x))])
+          .map((x) => link(x, numbering(x.page-numbering(), ..counter(page).at(x))))
           .join(", ")
       }
     })

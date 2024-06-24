@@ -327,7 +327,7 @@
   
   // Set the numbering of the figures.
   set figure(numbering: (x) => {
-    let idx = context numbering("A", counter(heading).at(here()).first())
+    let idx = context numbering("A", counter(heading).get().first())
     [#idx.#numbering("1", x)]
   })
   
@@ -352,7 +352,7 @@
   if outline == none {
     figure(caption: caption, ..args)
   } else {
-    figure(caption: context if state("section").at(here()) == "preface" {
+    figure(caption: context if state("section").get() == "preface" {
       outline
     } else {
       caption
