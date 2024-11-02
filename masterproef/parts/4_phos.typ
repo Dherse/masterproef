@@ -110,7 +110,7 @@ on, more details will be added as more components are discussed.
     purple.
   ],
   image(
-    "../assets/drawio/exec_model.png",
+    "../assets/drawio/smol/exec_model.png",
     width: 93%,
     alt: "Shows the execution model as the user code and the std lib going into the compiler, along with the platform-support package. The result is bytecode which goes into the virtual machine in the evaluation stage. The VM communicates with the constraint solver and the Z3 prover to produce the constraints & intrinsic operations. These are then fed into the synthesiser which produces the user HAL and the programming binary for the photonic processor, all the while using the platform HAL generator and the place-and-route.",
   ),
@@ -1835,7 +1835,6 @@ photonic circuits. The standard library should be written in a way that is easy
 to understand and that is well-documented, such that it can serve as a learning
 resource for new users.
 
-
 ==== Constrain
 A unique feature of the standard library is the `constrain` method. It is used
 to impose differential constraints on signals. This means that constraints over
@@ -1887,7 +1886,7 @@ in @fig_compiler_arch.
     platform-specific code in blue.
   ],
   image(
-    "../assets/drawio/compiler_arch.png",
+    "../assets/drawio/smol/compiler_arch.png",
     width: 80%,
     alt: "Shows the compiler architecture of the PHÔS programming language: going from user code into lexing, into parsing, into desugaring, into AST-to-HIR, into HIR-to-MIR, into bytecode generation. To produce the bytecode that can be executed by the VM.",
   ),
@@ -2002,7 +2001,7 @@ the compilation process.
     parse, they are not discussed further.
   ],
   image(
-    "../assets/drawio/parser-hierarchy.png",
+    "../assets/drawio/smol/parser-hierarchy.png",
     width: 90%,
     alt: "Shows the hierarchy of parser, showing that for unambiguous grammars, the subsets are LR(K), LR(1), LALR(1), SLR(1), LR(0), LL(K), LL(1), LL(0). Ambiguous grammars also exists but they are not discussed further.",
   ),
@@ -2060,7 +2059,7 @@ essential to provide a good developer experience.
   and `b`.
   ],
   image(
-    "../assets/drawio/ex_ast_out.png",
+    "../assets/drawio/smol/ex_ast_out.png",
     width: 90%,
     alt: "Partial result of parsing @lst_lexing_ex, showing the tree-like structure of nested data structures. The AST is a tree-like data structure that represent the syntax of the user's code. In this case, it shows a function which name is an identifier add, and that has two arguments: a and b, both of type it, it has a return type of type int, and a body that is a block containing a single expressions, which is a call to the + operator, with the arguments a and b.",
   ),
@@ -2428,7 +2427,7 @@ valid @phos and is purely for demonstration purposes.
   outline: [ @cfg created from the code in @lst_cfg_ex. ],
   kind: image,
   image(
-    "../assets/drawio/is_even_cfg.png",
+    "../assets/drawio/smol/is_even_cfg.png",
     width: 70%,
     alt: "Shows a control flow graph, showing first a block of code `let i = 2`, followed by `let iterator = 0..number`, followed by `let tmp = iterator.next()`, and `match tmp`. An arrow annotated as `none` goes to the left to a single block `return true`. An arrow annotated as `i` goes to two blocks: `let tmp2 = number % i` and `tmp == 0`. From that last block, an arrow annotated `true` goes to `return false`, and an arrow annotated `false` goes back to `let tmp = iterator.next()`.",
   ),
@@ -3172,7 +3171,7 @@ different configurations of the circuit.
     kind: image,
   )[
     #image(
-      "../assets/drawio/signal_proc.png",
+      "../assets/drawio/smol/signal_proc.png",
       alt: "Shows a tree of signals, at the top is input, followed by splitter, the first branch shows a filter with a wavelength constraint, and the second branch shows a filter with a wavelength constraint followed by a gain",
     )
   ]<fig_tree_ex>
@@ -3401,7 +3400,7 @@ which is closer to what is needed for synthesis, but it is still incomplete
   table(
     columns: 2,
     stroke: none,
-    image("../assets/drawio/graph_representation.png", height: 160pt),
+    image("../assets/drawio/smol/graph_representation.png", height: 160pt),
     f(160pt),
     [ (a) ],
     [ (b) ],
@@ -3617,7 +3616,7 @@ configure the different steps of the synthesis chain.
     external tools.
   ],
   image(
-    "../assets/drawio/programming.png",
+    "../assets/drawio/smol/programming.png",
     width: 100%,
     alt: "Shows the different components of the ecosystem, including the simulation, all interconnected using the marshalling library.",
   ),

@@ -43,7 +43,7 @@ directional precision of a system, such as in the case of a LiDAR
     and side lobes.
   ],
   image(
-    "../assets/drawio/beam_forming_emission.png",
+    "../assets/drawio/smol/beam_forming_emission.png",
     width: 60%,
     alt: "Shows an ellipse with long length, representing the main lobe, followed by several smaller ellipses at its sides, representing the side lobes.",
   ),
@@ -229,7 +229,7 @@ $ <eq_evm>
     points, and the @evm vector of the sample.
   ],
   image(
-    "../assets/drawio/evm.png",
+    "../assets/drawio/smol/evm.png",
     width: 60%,
     alt: "Shows a 2D cartesian plot with the X-axis labelled as I, the Y-axis labelled as Q, the vector of the ideal IQ point is shown, and the measure IQ point. The EVM vector is drawn between the two points.",
   ),
@@ -256,7 +256,7 @@ the output.
     modulators, phase shifters, and interferometer.
   ],
   image(
-    "../assets/drawio/qam_mod.png",
+    "../assets/drawio/smol/qam_mod.png",
     width: 100%,
     alt: "Show a diagram showing a laser source being split into four parts, each part being modulated then phase shifted, finally all signals are combined together.",
   ),
@@ -283,7 +283,7 @@ found in @fig_qam_tx_sgd.
   caption: [ Signal flow diagram of a 16-#gloss("qam", short: true) modulator, showing the
     different components. ],
   image(
-    "../assets/drawio/qam_tx_sgd.png",
+    "../assets/drawio/smol/qam_tx_sgd.png",
     width: 70%,
     alt: "Shows a graph of the signal flow, starting at the input, then into a splitter, the four arms go respectively into, a modulator, a modulator and a phase shifter, a modulator and a phase shifter, and a modulator and a phase shifter. The four arms are then merged together and sent to the output.",
   ),
@@ -337,7 +337,7 @@ works @ruocco_soi_2013 @guan_cmos_2014.
   caption: [ @mzi based lattice filter built of three @mzi[s] with the same path length
     difference. ],
   image(
-    "../assets/drawio/mzi_lattice.png",
+    "../assets/drawio/smol/mzi_lattice.png",
     width: 75%,
     alt: "Shows an MZI based lattice filter, built using three sections with path length difference and four couplers.",
   ),
@@ -458,7 +458,7 @@ and can multiply a vector of size $4$ with a $4 times 4$ matrix.
     and the second phase shifter is used to add a phase shift to the bottom signal.
   ],
   image(
-    "../assets/drawio/fig_mvm_mzi.png",
+    "../assets/drawio/smol/fig_mvm_mzi.png",
     alt: "Shows a single MZI with a tunable phase shifter on one of its arms, and a phase shifter on one of its ports",
     width: 50%,
   ),
@@ -472,7 +472,7 @@ and can multiply a vector of size $4$ with a $4 times 4$ matrix.
     from 6 @mzi gates, with four inputs and four outputs.
   ],
   image(
-    "../assets/drawio/fig_mvm_mzi_full.png",
+    "../assets/drawio/smol/fig_mvm_mzi_full.png",
     width: 100%,
     alt: "Shows a mesh of MZIs gates, assembles in a triangular shape, with 3 at the top, then 2 in the middle, and 1 at the top.",
   ),

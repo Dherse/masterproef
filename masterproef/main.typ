@@ -20,18 +20,18 @@
     vhdl: (name: "VHDL", icon: text(font: "UGent Panno Text")[</>], color: gray),
     spice: (name: "SPICE", icon: none, color: rgb("#283593")),
     phos: (
-      name: ref(label("phos")),
+      name: link(label("phos"))[_PHÔS_],
       icon: code-icon("\u{ed8a}"),
       color: rgb("#de8f6e"),
     ),
     js: (name: "Tokens", icon: code-icon("\u{ecd7}"), color: rgb("#656255")),
     typ: (
-      name: gloss("bc", short: true, long: false),
+      name: link(label("bc"))[_BC_],
       icon: code-icon("\u{f7ff}"),
       color: rgb("#6f006f"),
     ),
     typc: (
-      name: gloss("bc", short: true, long: false),
+      name:link(label("bc"))[_BC_],
       icon: code-icon("\u{f7ff}"),
       color: rgb("#6f006f"),
     ),
@@ -39,10 +39,10 @@
 )
 
 #show raw.where(lang: none, block: true): it => context {
-  let old = state("codly-numbers-format").get()
-  codly(numbers-format: (..) => none)
+  let old = state("codly-number-format").get()
+  codly(number-format: (..) => none)
   it
-  codly(numbers-format: old)
+  codly(number-format: old)
 }
 
 // Load additional syntax definitions.

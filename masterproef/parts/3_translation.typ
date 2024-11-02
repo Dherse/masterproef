@@ -1192,7 +1192,7 @@ processor detailed in @photonic_processor.
     user's control software. It also shows the different components of the ecosystem
     that have been discussed so far and their overall interaction with one another.
   ],
-  image("../assets/drawio/responsibilities.png"),
+  image("../assets/drawio/smol/responsibilities.png"),
 ) <fig_responsibilities>
 
 As with most ecosystems, the responsibilities for the development of different

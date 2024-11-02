@@ -19,7 +19,7 @@
     UML diagram of parts of the @ast relevant for @sec_ast. It is incomplete since
     phos contains 120 data structures to fully represent the @ast.
   ],
-  image("../assets/drawio/ex_ast.png", width: 85%),
+  image("../assets/drawio/smol/ex_ast.png", width: 85%),
 )
 
 #set page(flipped: true)
@@ -32,7 +32,7 @@
     Execution diagram of the stack of @sec_ex_bytecode_exec, showing the stack
     before and after the execution of each of the bytecode instructions.
   ],
-  image("../assets/drawio/execution.png", width: 85%),
+  image("../assets/drawio/smol/execution.png", width: 85%),
 ) <fig_annex_execution>
 
 #set page(flipped: true)
@@ -154,7 +154,7 @@
     highlight the splitter.
   ],
   image(
-    "../assets/drawio/chip_marshalling_ex.png",
+    "../assets/drawio/smol/chip_marshalling_ex.png",
     height: 90%,
     alt: "Shows a photonic chip made of a rather large hexagonal mesh, with modulators on the bottom, detectors on the top, and optical I/O on either remaining sides.",
   ),

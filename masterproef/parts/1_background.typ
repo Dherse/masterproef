@@ -67,24 +67,24 @@ direction, allowing for more general circuits to be built as explored in
     stroke: none,
     align: center + horizon,
     image(
-      "../assets/drawio/non-programmable-pic.png",
+      "../assets/drawio/smol/non-programmable-pic.png",
       width: 100%,
       alt: "Shows a non programmable PIC composed of three ports, a double ring resonator filter, a MZI-based modulator and a photodetector.",
     ),
     image(
-      "../assets/drawio/tunable-pic.png",
+      "../assets/drawio/smol/tunable-pic.png",
       width: 100%,
       alt: "Shows a non tunable PIC composed of three ports, a double ring resonator filter, where the directional couplers have been replaced with tunable couplers and the rings have been replaced with tunable phase shifter, a MZI-based modulator and a photodetector.",
     ),
     "(a)",
     "(b)",
     image(
-      "../assets/drawio/feedforward-pic.png",
+      "../assets/drawio/smol/feedforward-pic.png",
       width: 100%,
       alt: "Shows a very simple feedforward PIC composed of eight ports, each going in groups of two to gates. In total, there are five gates.",
     ),
     image(
-      "../assets/drawio/recirculating.png",
+      "../assets/drawio/smol/recirculating.png",
       width: 100%,
       alt: "Shows a very simple recirculating PIC composed of eight ports, three hexagonal sections, and two modulators.",
     ),
@@ -167,24 +167,24 @@ filtering for ring resonators or splitting.
     stroke: none,
     align: center + horizon,
     image(
-      "../assets/drawio/2x2_coupler.png",
+      "../assets/drawio/smol/2x2_coupler.png",
       width: 80%,
       alt: "Shows the general structure of a 2x2 coupler, with two ports on each end, inside of the coupler, lines are drawn to show the different paths that light can take: cross in dashed line and bar in solid line.",
     ),
     image(
-      "../assets/drawio/2x2_coupler_bar.png",
+      "../assets/drawio/smol/2x2_coupler_bar.png",
       width: 80%,
       alt: "Shows the general structure of a 2x2 coupler, with two ports on each end, inside of the coupler, lines are drawn to show the different paths that light can take: bar in solid line.",
     ),
     "(a)",
     "(b)",
     image(
-      "../assets/drawio/2x2_coupler_cross.png",
+      "../assets/drawio/smol/2x2_coupler_cross.png",
       width: 80%,
       alt: "Shows the general structure of a 2x2 coupler, with two ports on each end, inside of the coupler, lines are drawn to show the different paths that light can take: cross in solid line.",
     ),
     image(
-      "../assets/drawio/2x2_coupler_partial.png",
+      "../assets/drawio/smol/2x2_coupler_partial.png",
       width: 80%,
       alt: "Shows the general structure of a 2x2 coupler, with two ports on each end, inside of the coupler, lines are drawn to show the different paths that light can take: cross in dashed line and bar in solid line.",
     ),
@@ -243,24 +243,24 @@ capable kind of meshes @bogaerts_programmable_2020-1.
     stroke: none,
     align: center + horizon,
     image(
-      "../assets/drawio/mesh_feedforward.png",
+      "../assets/drawio/smol/mesh_feedforward.png",
       width: width,
       alt: "Shows a feedforward photonic mesh, setup in a triangular pattern.",
     ),
     image(
-      "../assets/drawio/mesh_hexagonal.png",
+      "../assets/drawio/smol/mesh_hexagonal.png",
       width: width,
       alt: "Shows an hexagonal photonic mesh.",
     ),
     "(a)",
     "(b)",
     image(
-      "../assets/drawio/mesh_square.png",
+      "../assets/drawio/smol/mesh_square.png",
       width: width,
       alt: "Shows a square photonic mesh.",
     ),
     image(
-      "../assets/drawio/mesh_triangular.png",
+      "../assets/drawio/smol/mesh_triangular.png",
       width: width,
       alt: "Shows a triangular photonic mesh.",
     ),
@@ -413,7 +413,7 @@ components may be interfaced with in a bigger system.
   ],
 )[
   #image(
-    "../assets/drawio/uses.png",
+    "../assets/drawio/smol/uses.png",
     width: 70%,
     alt: "Shows a photonic processor interfaced to two DACs and to ADCs on either side, communicating with an FPGA, the FPGA then communicates to an embedded processor, which itself communicates to the digital integrated controller for the photonic processor. This integrated controller then controls a set of ADCs and DACs inside of the photonic processor to control the photonic gates in the processor.",
   )

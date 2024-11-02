@@ -1,7 +1,7 @@
 #import "../common/colors.typ": *
 #import "../common/glossary.typ": gloss-init, gloss, glossary
 #import "../common/info.typ": uinfo, udefinition, uquestion, uimportant, uconclusion, ugood, unote
-#import "@preview/codly:0.2.1": codly-init, codly, codly-offset, codly-range, disable-codly
+#import "@preview/codly:1.0.0": codly-init, codly, codly-offset, codly-range, no-codly
 
 #let ugent-font = "UGent Panno Text"
 #let font-size = 11pt
@@ -13,7 +13,7 @@
     panic("`ugent-caption` must be provided with a `figure.caption`!")
   }
   
-  let supplement = {
+  let supplement = context {
     set text(fill: ugent-blue)
     smallcaps[
       *#it.supplement #it.counter.display(it.numbering)*
@@ -105,7 +105,7 @@
   
   // Setting code blocks.
   show: codly-init
-  codly(languages: languages)
+  codly(languages: languages, smart-indent: true)
   
   show raw.where(block: true): set align(left)
   
@@ -276,7 +276,7 @@
   set par(leading: 1em, justify: true, linebreaks: "optimized")
   
   // Set paragraph spacing.
-  show par: set block(spacing: 16pt)
+  set par(spacing: 16pt)
   
   // Number equations.
   set math.equation(numbering: "(1)")

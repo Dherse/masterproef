@@ -56,7 +56,7 @@
 }
 
 #let __ubox(body, kind: "info", radius: 5pt, footer: none, icon: true) = {
-  show par: set block(spacing: 0pt)
+  set par(spacing: 0pt)
   let settings = info-settings.at(kind);
   let extra = if footer == none {
     none
