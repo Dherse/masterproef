@@ -517,7 +517,7 @@ editors @kjaer_rask_specification_2021.
 === Testing & simulation
 
 #udefinition(
-  footer: [ Adapted from @unit-test, "simulation") ],
+  footer: [ Adapted from @unit-test ],
 )[
   *Testing* is the process of checking that a program produces the correct output
   for a given input. It is generally done by writing a separate program that runs

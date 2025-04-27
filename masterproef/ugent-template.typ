@@ -1,7 +1,7 @@
 #import "../common/colors.typ": *
 #import "../common/glossary.typ": gloss-init, gloss, glossary
 #import "../common/info.typ": uinfo, udefinition, uquestion, uimportant, uconclusion, ugood, unote
-#import "@preview/codly:1.0.0": codly-init, codly, codly-offset, codly-range, no-codly
+#import "../codly/codly.typ": codly-init, codly, codly-offset, codly-range, no-codly
 
 #let ugent-font = "UGent Panno Text"
 #let font-size = 11pt
@@ -96,7 +96,7 @@
       [
         #link(loc)[
           #it.element.supplement\u{a0}#idx.#numbers: #body
-        ]#box(width: 1fr, it.fill) #it.page
+        ]#box(width: 1fr, it.fill) #it.page()
       ]
     } else {
       it
@@ -159,7 +159,7 @@
     // Show a big number for title level headings
     if number and level == 1 and big {
       set text(size: 80pt, font: "Bookman Old Style", weight: "thin", fill: luma(50%))
-      numbering(num, ..current-level) + "."
+      numbering(it.numbering, ..current-level) + "."
       linebreak()
     }
     
@@ -168,7 +168,7 @@
     
     let num = if number and local-num and (not big or level > 1) {
       prefix
-      numbering(num, ..current-level)
+      numbering(it.numbering, ..current-level)
       postfix
     }
     
@@ -236,7 +236,7 @@
   listings: true,
 ) = {
   if heading {
-    outline(title: "Table of contents", indent: true, depth: 3)
+    outline(title: "Table of contents", indent: auto, depth: 3)
   }
   
   if acronyms {
