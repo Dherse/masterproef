@@ -50,7 +50,12 @@
         let (x0, y0) = (ax + node-r * calc.cos(θab), ay + node-r * calc.sin(θab))
         let (x1, y1) = (bx - 2 * node-r * calc.cos(θab), by - 2 * node-r * calc.sin(θab))
          
-        place(line(start: (x0, y0), end: (x1, y1), stroke: node-s))
+        place(curve(
+          stroke: node-s,
+          fill: none,
+          curve.move((x0, y0)),
+          curve.line((x1, y1)),
+        ))
          
         let p0 = (x1, y1)
         let p1 = (
@@ -62,8 +67,15 @@
           y1 - 0.35 * node-r * calc.sin(θab - 80deg),
         )
         let p3 = (x1 + node-r * calc.cos(θab), y1 + node-r * calc.sin(θab))
-         
-        place(path(p3, p1, p0, p2, closed: true, stroke: none, fill: black))
+        place(curve(
+          stroke: none,
+          fill: black,
+          curve.move(p3),
+          curve.line(p1),
+          curve.line(p0),
+          curve.line(p2),
+          curve.close(),
+        ))
       }
        
       let interconnect(in-index) = {
@@ -147,7 +159,12 @@
       let (x0, y0) = (ax + r * calc.cos(θab), ay + r * calc.sin(θab))
       let (x1, y1) = (bx - 2 * r * calc.cos(θab), by - 2 * r * calc.sin(θab))
        
-      place(line(start: (x0, y0), end: (x1, y1), stroke: s))
+      place(curve(
+        stroke: s,
+        fill: none,
+        curve.move((x0, y0)),
+        curve.line((x1, y1)),
+      ))
       
       let p0 = (x1, y1)
       let p1 = (
@@ -160,7 +177,15 @@
       )
       let p3 = (x1 + r * calc.cos(θab), y1 + r * calc.sin(θab))
        
-      place(path(p3, p1, p0, p2, closed: true, stroke: none, fill: black))
+      place(curve(
+        stroke: none,
+        fill: black,
+        curve.move(p3),
+        curve.line(p1),
+        curve.line(p0),
+        curve.line(p2),
+        curve.close(),
+      ))
     }
     
     for θ in range(3) {

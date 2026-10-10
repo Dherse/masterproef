@@ -266,8 +266,12 @@
   set page(numbering: "1 of 1")
   counter(page).update(1)
   
-  // Titles in the preface are not numbered and are not outlined.
-  set heading(numbering: "1.1.a", outlined: true)
+  // Preserve "1.1.a" numbering, including zero for skipped heading levels.
+  set heading(numbering: (..numbers) => {
+    numbers.pos().enumerate().map(((level, value)) => {
+      numbering(if level < 2 or value == 0 { "1" } else { "a" }, value)
+    }).join(".")
+  }, outlined: true)
   
   // Show titled without numbering
   show heading: ugent-heading.with(number: true, big: true)
@@ -327,7 +331,10 @@
   
   // Set the numbering of the figures.
   set figure(numbering: (x) => {
-    let idx = context numbering("A", counter(heading).get().first())
+    let idx = context {
+      let chapter = counter(heading).get().first()
+      if chapter == 0 { "0" } else { numbering("A", chapter) }
+    }
     [#idx.#numbering("1", x)]
   })
   
